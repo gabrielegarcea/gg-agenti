@@ -11,7 +11,7 @@ const tl = JSON.parse(fs.readFileSync(tlPath, 'utf8'));
 const base = path.dirname(path.resolve(cfgPath));
 const NST = cfg.style || {};
 const FPS = cfg.fps || (NST.fps60 ? 60 : 30);
-const LOGO_SVG = (() => { try { return fs.readFileSync(path.join(__dirname, '..', '..', 'brand', 'gg-simbolo.svg'), 'utf8').replace(/ width="\d+" height="\d+"/, ''); } catch (e) { return ''; } })();
+const LOGO_SVG = (() => { for (const f of [path.join(__dirname, 'brand', 'gg-simbolo.svg'), path.join(__dirname, '..', '..', 'brand', 'gg-simbolo.svg')]) { try { return fs.readFileSync(f, 'utf8').replace(/ width="\d+" height="\d+"/, ''); } catch (e) {} } console.error('ATTENZIONE: logo gg-simbolo.svg non trovato'); return ''; })();
 const rel = p => (path.isAbsolute(p) ? p : path.join(base, p));
 
 const font = (pkg, file) => 'data:font/woff2;base64,' +
