@@ -271,7 +271,7 @@ if (cfg.outro) {
   const tt = $('<div class="ttl" style="top:300px;font-size:104px"></div>');
   (o.title || []).forEach((l, i) => tt.appendChild($('<div style="' + (i ? 'color:var(--blue)' : '') + '">' + esc(l.replace(/\\*/g, '')) + '</div>')));
   outro.appendChild(tt);
-  const poll = $('<div class="poll" style="position:absolute;left:130px;top:700px"><div class="k">' + esc(o.pollLabel || 'TU COSA DICI?') + '</div>' + (o.options || []).map(x => '<div class="op">' + esc(x) + '</div>').join('') + '</div>');
+  const poll = $('<div class="poll" style="position:absolute;left:130px;top:700px"><div class="k">' + esc(o.pollLabel || 'YOUR TAKE?') + '</div>' + (o.options || []).map(x => '<div class="op">' + esc(x) + '</div>').join('') + '</div>');
   outro.appendChild(poll);
   const cur = $('<svg class="cursor" viewBox="0 0 24 24"><path d="M4 2l15 9-6.5 1.6L16 20l-3 1.4-3.4-7.4L4 18z" fill="#fff" stroke="#0B1F3A" stroke-width="1.6" stroke-linejoin="round"/></svg>');
   outro.appendChild(cur);
