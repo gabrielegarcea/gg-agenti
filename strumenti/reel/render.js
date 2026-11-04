@@ -36,31 +36,29 @@ const CSS = `
 :root{--paper:#F4F1EA;--ink:#0B1F3A;--blue:#1F4FD1;--orange:#FF6A13;--gray:#B4AEA2;--line:#DDD7CB;--mark:#FFC9A3}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1080px;height:1920px;background:var(--paper);overflow:hidden}
-body{background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 63px,#E4DDCE 63px,#E4DDCE 65px)}
-body::before{content:'';position:absolute;left:40px;top:0;bottom:0;width:3px;background:var(--orange);opacity:.45;z-index:0}
 body{font-family:Inter;color:var(--ink)}
 .view{position:absolute;inset:0;display:none}
 .prog{display:none}
 .prog i{flex:1;height:6px;background:var(--line);position:relative;overflow:hidden}
 .prog i b{position:absolute;left:0;top:0;bottom:0;background:var(--ink)}
 .prog i.cur b{background:var(--orange)}
-.col{position:absolute;left:64px;right:64px;top:280px;bottom:820px;display:flex;flex-direction:column}
+.col{position:absolute;left:120px;right:120px;top:262px;bottom:760px;display:flex;flex-direction:column}
 .chn{font:700 26px Mono;color:var(--orange);letter-spacing:.08em}
 .ttl{margin-top:10px;margin-right:130px;font:400 88px/1.02 Anton;text-transform:uppercase;letter-spacing:.005em}
 .sub{margin-top:14px;font:400 25px Mono;color:#6E6A62}
 .area{flex:1;min-height:0;margin-top:40px;display:flex;flex-direction:column;justify-content:center;gap:34px}
-.kar{position:absolute;left:64px;width:790px;top:1128px;text-align:left;font:700 44px/1.25 Inter;z-index:5}
+.kar{position:absolute;left:120px;width:715px;top:1230px;text-align:left;font:700 44px/1.25 Inter;z-index:5}
 .kar span{color:var(--gray);padding:0 2px}
 .kar span.on{color:var(--ink)}
 .kar span.hi.on{background:linear-gradient(transparent 12%,var(--mark) 12%,var(--mark) 92%,transparent 92%)}
-.foot{position:absolute;right:64px;top:272px;width:112px;height:112px;z-index:6}.foot svg{width:100%;height:100%;display:block}
+.foot{position:absolute;right:120px;top:258px;width:112px;height:112px;z-index:6}.foot svg{width:100%;height:100%;display:block}
 .foot .gg{font:900 44px Inter;letter-spacing:-.02em}.foot .gg em{font-style:normal;color:var(--orange)}
 .foot .h{font:400 24px Mono;color:#6E6A62}
 /* cover */
-.cv-t{position:absolute;left:64px;right:190px;top:290px;font:400 136px/0.98 Anton;text-transform:uppercase}
+.cv-t{position:absolute;left:120px;right:250px;top:270px;font:400 136px/0.98 Anton;text-transform:uppercase}
 .cv-t .l{display:block}
 .cv-t .l.hi span{color:var(--orange);background:linear-gradient(transparent 8%,var(--mark) 8%,var(--mark) 94%,transparent 94%);padding:0 6px;margin-left:-6px}
-.cv-s{position:absolute;left:66px;right:64px;font:600 40px/1.3 Inter}
+.cv-s{position:absolute;left:122px;right:120px;font:600 40px/1.3 Inter}
 .cv-ph{position:absolute;left:0;right:0;top:660px;height:440px;overflow:hidden}
 .cv-ph .disc{position:absolute;left:50%;top:0;height:100%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:var(--orange)}
 .cv-ph img{position:absolute;left:50%;bottom:0;height:100%;transform:translateX(-50%);filter:drop-shadow(14px 8px 0 var(--blue))}
@@ -88,7 +86,7 @@ body{font-family:Inter;color:var(--ink)}
 .txt .ln{font:800 66px/1.15 Inter;letter-spacing:-.02em;opacity:0}
 .txt .ln b{color:var(--blue)}.txt .ln .x{color:var(--orange)}
 .line svg{overflow:visible}
-.poll{margin:0 auto;width:820px;background:#fff;border:5px solid var(--ink);border-radius:26px;padding:34px 40px 44px;box-shadow:14px 14px 0 var(--ink);position:relative}
+.poll{margin:0 auto;width:760px;background:#fff;border:5px solid var(--ink);border-radius:26px;padding:34px 40px 44px;box-shadow:14px 14px 0 var(--ink);position:relative}
 .poll .k{font:700 24px Mono;text-align:center;letter-spacing:.1em;color:#6E6A62;margin-bottom:26px}
 .poll .op{font:800 36px Inter;text-align:center;border:4px solid var(--ink);border-radius:60px;padding:12px;margin-top:16px;text-transform:uppercase}
 .poll .op:nth-child(2){border-color:var(--blue);color:var(--blue)}.poll .op:nth-child(4){border-color:var(--orange);color:var(--orange)}
@@ -98,7 +96,7 @@ body{font-family:Inter;color:var(--ink)}
 .dnut svg{flex:0 0 auto;overflow:visible}
 .dnut .dl{font:700 40px/1.25 Inter}
 .dnut .dl b{color:var(--orange)}
-.splt .b100{display:flex;height:120px;width:952px;background:var(--line)}
+.splt .b100{display:flex;height:120px;width:100%;background:var(--line)}
 .splt .sg{height:100%;width:0;display:flex;align-items:center;justify-content:center;font:900 40px Inter;color:#fff;overflow:hidden;white-space:nowrap}
 .splt .lg{margin-top:34px;display:flex;flex-direction:column;gap:18px}
 .splt .li{display:flex;align-items:center;gap:20px;font:700 38px Inter;opacity:0}
@@ -143,7 +141,8 @@ body{font-family:Inter;color:var(--ink)}
 .trov .rg{position:absolute;left:50%;top:50%;width:900px;height:580px;margin:-290px 0 0 -450px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 46px var(--paper),0 0 0 64px var(--orange)}
 .term{background:#fff;border:4px solid var(--ink);padding:26px 34px 30px;box-shadow:12px 12px 0 var(--blue)}
 .term .k{font:700 24px Mono;letter-spacing:.12em;color:var(--orange)}
-.term .tm{display:inline-block;font:400 76px/1.05 Anton;text-transform:uppercase;margin-top:8px;background:linear-gradient(var(--mark),var(--mark)) no-repeat left 88%/0% 22%}
+.term .tmw{font:400 76px/1.05 Anton;text-transform:uppercase;margin-top:8px}
+.term .tm{background:linear-gradient(var(--mark),var(--mark)) no-repeat left 88%/0% 22%;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .term .df{font:600 36px/1.3 Inter;margin-top:12px}
 .ldg{display:flex;gap:26px}
 .ldg .cl{flex:1}
@@ -191,8 +190,8 @@ if (cfg.cover) {
     const ph = $('<div class="cv-ph">' + (c.disc !== false && c.cutout !== false ? '<div class="disc"></div>' : '') + '<img class="' + (c.cutout === false ? 'box' : '') + '" src="' + c.photo + '"></div>');
     cover.appendChild(ph);
   }
-  if (!c.photo && c.big) cover.appendChild($('<div class="cv-ph"><div class="bigc" style="position:absolute;left:64px;top:0;font:400 430px/0.9 Anton;color:var(--blue)">' + esc(c.big) + '</div></div>'));
-  if (c.note) cover.appendChild($('<div class="note" style="left:' + (c.note.x ?? 90) + 'px;top:' + (c.note.y ?? 990) + 'px;transform:rotate(' + (c.note.rot ?? -8) + 'deg)">' + esc(c.note.text) + '</div>'));
+  if (!c.photo && c.big) cover.appendChild($('<div class="cv-ph"><div class="bigc" style="position:absolute;left:120px;top:0;font:400 430px/0.9 Anton;color:var(--blue)">' + esc(c.big) + '</div></div>'));
+  if (c.note) cover.appendChild($('<div class="note" style="left:' + (c.note.x ?? 140) + 'px;top:' + (c.note.y ?? 1110) + 'px;transform:rotate(' + (c.note.rot ?? -8) + 'deg)">' + esc(c.note.text) + '</div>'));
   cover.insertAdjacentHTML('beforeend', footer());
   root.appendChild(cover);
 }
@@ -205,7 +204,7 @@ const builders = {
     return { n, upd(lt) { const bg = n.querySelector('.big'); if (!fitted) { bg.textContent = (e.prefix || '') + fmtN(e.to || 0, e.decimals) + (e.suffix || ''); const w = bg.scrollWidth; if (w > bg.clientWidth) bg.style.fontSize = Math.floor(230 * bg.clientWidth / w) + 'px'; fitted = true; }
       if (e.punch) { const q = ease(lt / 0.55); bg.style.transform = 'scale(' + (1.6 - 0.6 * q) + ')'; bg.style.transformOrigin = 'left center'; }
       const v = (e.from || 0) + ((e.to || 0) - (e.from || 0)) * ease(lt / (e.dur || 0.9)); n.querySelector('.big').textContent = (e.prefix || '') + fmtN(v, e.decimals) + (e.suffix || ''); } }; },
-  dots(e) { const N = e.n || 100, cols = e.cols || 20, W = 952, gap = 10, rows = Math.ceil(N / cols); const sz = Math.min(Math.floor((W - gap * (cols - 1)) / cols), Math.floor(((e.h || 460) - gap * (rows - 1)) / rows));
+  dots(e) { const N = e.n || 100, cols = e.cols || 20, W = 840, gap = 10, rows = Math.ceil(N / cols); const sz = Math.min(Math.floor((W - gap * (cols - 1)) / cols), Math.floor(((e.h || 460) - gap * (rows - 1)) / rows));
     const n = $('<div class="el"><div class="dots" style="grid-template-columns:repeat(' + cols + ',' + sz + 'px)"></div>' + (e.label ? '<div class="lab">' + esc(e.label) + '</div>' : '') + '</div>');
     const g = n.firstChild; const idx = [...Array(N).keys()]; let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
     if (!e.ordered) for (let i = N - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
@@ -246,7 +245,7 @@ const builders = {
     return { n, upd(lt, t, t0) { e.parts.forEach((p, k) => { const s = T(p.at, t0 + k * 0.5); const q = ease((t - s) / 0.6); const [d, l] = sg[k];
       d.style.width = (p.value / tot * 100 * q) + '%'; d.textContent = (q > 0.8 && p.value / tot > 0.14) ? (p.display ?? p.value) : ''; l.style.opacity = clamp((t - s) / 0.3); }); } }; },
   h2h(e) { const n = $('<div class="el hh2"><div class="nm"><span class="sd2">' + LGO(e.a.logo) + esc(e.a.name) + '</span><span class="sd2 b">' + LGO(e.b.logo) + '<span class="b">' + esc(e.b.name) + '</span></span></div></div>');
-    const rs = e.rows.map(r => { const m = Math.max(r.a, r.b) || 1; const d = $('<div class="r"><div class="rl">' + esc(r.label) + '</div><div class="rb"><div class="sd a"><span class="vv">' + esc(r.da ?? r.a) + '</span><div class="br"></div></div><div class="sd b"><div class="br"></div><span class="vv">' + esc(r.db ?? r.b) + '</span></div></div></div>'); n.appendChild(d); return { d, wa: Math.max(8, r.a / m * 300), wb: Math.max(8, r.b / m * 300) }; });
+    const rs = e.rows.map(r => { const m = Math.max(r.a, r.b) || 1; const d = $('<div class="r"><div class="rl">' + esc(r.label) + '</div><div class="rb"><div class="sd a"><span class="vv">' + esc(r.da ?? r.a) + '</span><div class="br"></div></div><div class="sd b"><div class="br"></div><span class="vv">' + esc(r.db ?? r.b) + '</span></div></div></div>'); n.appendChild(d); return { d, wa: Math.max(8, r.a / m * 230), wb: Math.max(8, r.b / m * 230) }; });
     return { n, upd(lt, t, t0) { rs.forEach((x, k) => { const s = T(e.rows[k].at, t0 + 0.3 + k * 0.6); const q = ease((t - s) / 0.7); const bs = x.d.querySelectorAll('.br');
       x.d.style.opacity = clamp((t - s) / 0.2); bs[0].style.width = (x.wa * q) + 'px'; bs[1].style.width = (x.wb * q) + 'px'; }); } }; },
   timeline(e) { const hi = e.highlight ?? e.events.length - 1; const n = $('<div class="el tln"><div class="ax"></div></div>'); const ax = n.querySelector('.ax');
@@ -258,7 +257,7 @@ const builders = {
     return { n, upd(lt, t, t0) { ls.forEach((d, k) => { const s = T((e.at || [])[k], t0 + k * 0.3); const q = ease((t - s) / 0.35); d.style.opacity = clamp((t - s) / 0.15); d.style.transform = 'scale(' + (0.6 + 0.4 * q) + ')'; }); } }; },
   photo(e) { const n = $('<div class="el" style="position:relative;height:' + (e.h || 560) + 'px"><img src="' + e.src + '" style="position:absolute;left:50%;bottom:0;height:100%;transform:translateX(-50%);filter:drop-shadow(12px 8px 0 var(--blue))"></div>');
     return { n, upd() {} }; },
-  term(e) { const n = $('<div class="el term"><div class="k">' + esc(e.kicker || 'KEY TERM') + '</div><div class="tm">' + esc(e.term) + '</div><div class="df">' + md(e.def) + '</div></div>');
+  term(e) { const n = $('<div class="el term"><div class="k">' + esc(e.kicker || 'KEY TERM') + '</div><div class="tmw"><span class="tm">' + esc(e.term) + '</span></div><div class="df">' + md(e.def) + '</div></div>');
     const tm = n.querySelector('.tm');
     return { n, upd(lt) { tm.style.backgroundSize = (ease((lt - 0.35) / 0.6) * 100) + '% 22%'; } }; },
   ledger(e) { const col = (cls, label, items) => '<div class="cl ' + cls + '"><div class="hd">' + esc(label) + '</div>' + (items || []).map(x => '<div class="it">' + md(x.text ?? x) + '</div>').join('') + '</div>';
@@ -292,11 +291,11 @@ const chapters = (cfg.chapters || []).map((ch, ci) => {
 let outro = null;
 if (cfg.outro) {
   const o = cfg.outro; outro = $('<div class="view"></div>');
-  outro.appendChild($('<div class="chn" style="position:absolute;left:64px;top:290px;color:#6E6A62">' + esc(o.kicker || 'YOUR CALL') + '</div>'));
-  const tt = $('<div class="ttl" style="position:absolute;left:64px;top:326px;margin:0;right:190px;font-size:104px"></div>');
+  outro.appendChild($('<div class="chn" style="position:absolute;left:120px;top:270px;color:#6E6A62">' + esc(o.kicker || 'YOUR CALL') + '</div>'));
+  const tt = $('<div class="ttl" style="position:absolute;left:120px;top:306px;margin:0;right:250px;font-size:104px"></div>');
   (o.title || []).forEach((l, i) => tt.appendChild($('<div style="' + (i ? 'color:var(--blue)' : '') + '">' + esc(l.replace(/\\*/g, '')) + '</div>')));
   outro.appendChild(tt);
-  const poll = $('<div class="poll" style="position:absolute;left:130px;top:640px"><div class="k">' + esc(o.pollLabel || 'YOUR TAKE?') + '</div>' + (o.options || []).map(x => '<div class="op">' + esc(x) + '</div>').join('') + '</div>');
+  const poll = $('<div class="poll" style="position:absolute;left:160px;top:660px"><div class="k">' + esc(o.pollLabel || 'YOUR TAKE?') + '</div>' + (o.options || []).map(x => '<div class="op">' + esc(x) + '</div>').join('') + '</div>');
   outro.appendChild(poll);
   const cur = $('<svg class="cursor" viewBox="0 0 24 24"><path d="M4 2l15 9-6.5 1.6L16 20l-3 1.4-3.4-7.4L4 18z" fill="#fff" stroke="#0B1F3A" stroke-width="1.6" stroke-linejoin="round"/></svg>');
   outro.appendChild(cur);
@@ -393,8 +392,8 @@ window.draw = function (t) {
 
   if (active === cover) { const c = cfg.cover, a = looping ? -10 : (cvSeg ? cvSeg.start : 0);
     const ls = cover.querySelectorAll('.cv-t .l'); ls.forEach((l, i) => { const p = ease((t - a - i * 0.35) / 0.4); l.style.opacity = p; l.style.transform = 'translateY(' + (1 - p) * 40 + 'px)'; });
-    const tt = cover.querySelector('.cv-t'); const sub = cover.querySelector('.cv-s'); sub.style.top = (290 + tt.offsetHeight + 26) + 'px'; sub.style.opacity = ease((t - a - 0.8) / 0.4);
-    const ph = cover.querySelector('.cv-ph'); if (ph) { const top = sub.offsetTop + sub.offsetHeight + 24; ph.style.top = top + 'px'; ph.style.height = Math.max(200, 1100 - top) + 'px'; const bg = ph.querySelector('.bigc'); if (bg) bg.style.fontSize = Math.round(Math.max(200, 1100 - top) * 0.95) + 'px';
+    const tt = cover.querySelector('.cv-t'); const sub = cover.querySelector('.cv-s'); sub.style.top = (270 + tt.offsetHeight + 26) + 'px'; sub.style.opacity = ease((t - a - 0.8) / 0.4);
+    const ph = cover.querySelector('.cv-ph'); if (ph) { const top = sub.offsetTop + sub.offsetHeight + 24; ph.style.top = top + 'px'; ph.style.height = Math.max(200, 1200 - top) + 'px'; const bg = ph.querySelector('.bigc'); if (bg) bg.style.fontSize = Math.round(Math.max(200, 1200 - top) * 0.95) + 'px';
     const p = ease((t - a - 0.3) / 0.6); ph.style.opacity = p; ph.style.transform = 'translateY(' + (1 - p) * 60 + 'px) scale(' + (1 + 0.04 * clamp((t - a) / 6)) + ')'; }
     const nt = cover.querySelector('.note'); if (nt) { const p = ease((t - a - 1.4) / 0.7); nt.style.clipPath = 'inset(0 ' + (100 - p * 100) + '% 0 0)'; }
   }
@@ -405,7 +404,7 @@ window.draw = function (t) {
     c.els.forEach(x => { const lt = t - x.t0; const p = ease(lt / 0.35); x.b.n.style.opacity = x.e.type === 'bars' || x.e.type === 'cards' || x.e.type === 'text' ? (lt >= 0 ? 1 : 0) : p;
       if (!['bars','cards','text','note'].includes(x.e.type)) x.b.n.style.transform = 'translateY(' + (1 - p) * 26 + 'px)';
       if (lt >= -0.01) x.b.upd(Math.max(lt, 0), t, x.t0); });
-    { const area = c.v.querySelector('.area'); c.els.forEach(x => { if (x.e.type === 'bignum' && t < x.t0) x.b.upd(0, t, x.t0); }); if (c.fit == null) { let h = 0; [...area.children].forEach(x => h += x.offsetHeight); h += 34 * Math.max(0, area.children.length - 1); c.fit = Math.min(1, area.clientHeight / Math.max(1, h * 1.05)); }
+    { const area = c.v.querySelector('.area'); c.els.forEach(x => { if (x.e.type === 'bignum' && t < x.t0) x.b.upd(0, t, x.t0); }); if (c.fit == null) { let h = 0; [...area.children].forEach(x => h += x.offsetHeight); h += 34 * Math.max(0, area.children.length - 1); c.fit = Math.min(0.96, area.clientHeight / Math.max(1, h * 1.05)); }
       const dr = ST.drift ? 1 + 0.035 * clamp((t - c.a) / Math.max(1, c.z - c.a)) : 1; area.style.transform = 'scale(' + (c.fit * dr) + ')'; }
   });
   if (active === outro) { const a = ouSeg.start, P = outro._p;
