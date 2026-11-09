@@ -99,6 +99,13 @@ Per la NOTIZIA DEL REEL (la quarta, Fase 1 punto 3b) prepara un reel animato nel
   - transizione "ring" in "style.transition": l'anello del logo che si apre sullo schermo (oltre a cut, iris, wipe, rise).
 - DURATA LIBERA, decisa dalla notizia: niente limite fisso. Una notizia semplice può stare in 45-60 secondi; una notizia importante con tanti dati merita 90-150 secondi. Non tagliare mai informazioni utili per stare corto, ma ogni frase deve aggiungere qualcosa.
 - È un reel EDUCATIVO: chi lo guarda deve capire come funziona la cosa, non solo cosa è successo. Spiega il meccanismo, i numeri, il contesto, i precedenti, chi ci guadagna e chi ci perde, cosa succede adesso.
+- SEMPLICE PRIMA DI TUTTO (decisione di GG del 9 nov 2026, dopo un reel di collaudo pieno di termini tecnici che nemmeno GG aveva capito; il reel deve poter diventare virale, non solo di nicchia):
+  1. Livello "tifoso curioso": scrivi per chi segue lo sport ma non sa niente di finanza o di gestione, non per un addetto ai lavori.
+  2. UN SOLO CONCETTO per reel (quello del "term"), spiegato con un paragone di vita quotidiana (es. leveraged buyout = "you buy a house with a mortgage, then make the house pay the mortgage"). Ogni altro termine tecnico si toglie o si dice con parole normali.
+  3. Hook sulle persone e sul conflitto, non sul concetto (es. "Man United fans want their owners gone. Here's why.", non "Leveraged buyouts explained").
+  4. Pochi numeri, al massimo 3-4, ognuno reso concreto con un paragone o una traduzione ("that's X per season").
+  5. Ordine dei capitoli: cosa è successo (una frase) → perché ti riguarda → il meccanismo spiegato semplice → i numeri → "Who wins, who loses." → "My take.".
+  6. PROVA DI COMPRENSIONE prima del render: rileggi lo script come un sedicenne tifoso che non sa nulla di business. Ogni frase che non capirebbe al primo ascolto va riscritta. Nel messaggio finale scrivi "Prova di comprensione: fatta, riscritte N frasi".
 - Numero di capitoli: vale questa regola, non i "3-4 capitoli" della skill gg-motion.
 - Struttura: cover (hook) → 4-7 capitoli con 1-3 step ciascuno (es. cosa è successo, come funziona, i numeri, il confronto, i precedenti, cosa cambia), ognuno con un elemento animato e numeri verificati → un capitolo "Who wins, who loses." con l'elemento "ledger" → un ultimo capitolo "My take." con una o due frasi d'opinione di GG dal Codice (elemento "text" con la frase-simbolo) → outro con sondaggio a 3 opzioni e domanda per i commenti.
 - ELEMENTI FISSI (obbligatori in OGNI reel, decisione di GG del 4 nov 2026): (1) un elemento "term" con il concetto di sport management che il reel insegna (la "lezione"), dentro il capitolo dove la voce lo spiega, mai nel primo secondo; (2) il capitolo "Who wins, who loses." con "ledger", subito prima di "My take.". Chi vince e chi perde devono essere fatti verificati, non opinioni.
@@ -157,7 +164,7 @@ Per ogni notizia (1, 2, 3):
 - CAPTION: la caption completa della Fase 2B, dentro un blocco di codice (```) così GG la copia con un tocco
 - 3 hook per i Trial Reels (max 12 parole, concreti, con numero o nome)
 - Fonti (2-3 link)
-Poi "Ordine di pubblicazione:" in che ordine pubblicare i 3 caroselli e perché, in una frase. Riga successiva: "Grafici di oggi:" i 3 tipi usati.
+Poi "Ordine di pubblicazione:" in che ordine pubblicare i 3 caroselli e perché, in una frase, con gli orari fissi (ora italiana, decisi da GG il 9 nov 2026, da rivedere con i dati dell'Analista): carosello 1 alle 13:00, carosello 2 alle 18:00, reel (quello preparato ieri) alle 20:00 su Instagram e TikTok, carosello 3 alle 22:00. Riga successiva: "Grafici di oggi:" i 3 tipi usati.
 Poi "🎙️ REEL DI DOMANI (registra la voce oggi)": titolo e notizia (con 2 link fonte), "Perché questa:" i segnali di rumore online trovati e perché regge fino a domani (Fase 1 punto 3b), "La mia:" l'opinione usata + articolo del Codice, foto usata dall'archivio (o "nessuna"), durata stimata, "Stile:" (vedi skill), il TESTO DA LEGGERE dentro un blocco di codice, e una riga: "Leggi il testo così com'è (se cambi qualche parola dimmelo), con una piccola pausa tra una frase e l'altra, e mandami qui l'audio insieme alle correzioni che vuoi (testi, numeri, grafici): monto il reel con i sottotitoli sincronizzati sulla tua voce. Se vuoi un'altra foto del protagonista (meglio PNG scontornato), allegala."
 In fondo, solo se serve:
 - "🏷️ Loghi mancanti: <nome> (carosello N / reel), <nome> (...)": tutti i loghi che servivano e che né l'archivio né logo.py avevano.
