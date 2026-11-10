@@ -24,7 +24,7 @@ Leggi "Il Codice GG" con gli strumenti Claude Docs: read con ref {"object":"proj
 4. Cerca 2-3 STUDI o REPORT seri sul concetto: articoli accademici (Google Scholar, SSRN, Journal of Sports Economics, Sport Management Review), report di settore (Deloitte Football Money League, UEFA European Club Finance and Investment Landscape, KPMG Football Benchmark, PwC Sports Survey, Nielsen), libri di riferimento (es. Szymanski, Kuper). Aprili davvero: titolo, autori, anno, link e cosa dicono. Mai uno studio citato a memoria.
 
 == 2. FACT-CHECK ==
-Ogni numero, data, nome e citazione va confermato da almeno 2 fonti aperte da te (mai a memoria). Se non è confermato, toglilo. Gli studi si citano solo se li hai aperti.
+Ogni numero, data, nome e citazione va confermato da almeno 2 fonti aperte da te (mai a memoria). Due copie dello stesso articolo d'agenzia contano come una fonte sola. Se non è confermato, toglilo. Gli studi si citano solo se li hai aperti.
 
 == 3. STRUTTURA (2.000-2.600 parole, metà prima del paywall) ==
 Titolo del numero: il concetto, detto in modo concreto (es. "Why TV money decides who wins in Europe"), più un sottotitolo di una riga.
