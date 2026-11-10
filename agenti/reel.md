@@ -30,6 +30,16 @@ Capitoli: hook sulla persona e sul conflitto → **Atto 1, il problema**: chi è
 Target: 60-85 secondi (è il format che può permettersi di essere il più lungo, perché la storia tira).
 Regola: una persona sola al centro. Se nella storia ci sono tre protagonisti, scegline uno e gli altri diventano contesto.
 
+## 1b. Le due regole che GG non deve più ripetere (10 nov 2026)
+**1. Le zone morte.** La zona utile del reel NON è il riquadro 1080x1920. Sono via 250 px in alto, 320 in basso, 120 per lato, e in basso a DESTRA la colonna dei pulsanti di Instagram, alta 768 px (da x=835 in poi, sotto y=1152). La parte bassa a SINISTRA si usa: lì stanno i sottotitoli. Il motore è impostato così (contenuto allineato a sinistra al titolo, largo 715 px, sottotitoli a y=1470): non spostare niente a mano e non centrare niente. Prima del render si controlla con `zone.py` (punto 4.6): se un testo, un numero o un grafico tocca il rosso, si corregge.
+
+**2. Mai lo schermo vuoto.** Ogni 4 secondi al massimo deve comparire qualcosa di NUOVO e di vero sullo schermo: una riga di testo, una voce di un grafico, un numero, una tappa della timeline. Uno stemma o una nota scritta a mano da soli NON contano: con uno stemma sullo schermo per dieci secondi lo spettatore scorre via. In pratica:
+- il primo elemento di ogni capitolo compare sulla PRIMA parola della prima frase (marker all'inizio del `say`, non in fondo);
+- una frase lunga ha almeno due marker, e quindi due cose che compaiono;
+- uno step che ha solo `logos` o `note` è vietato;
+- i grafici a più voci (timeline, testo a più righe, ledger, bars, split, h2h) si costruiscono un pezzo alla volta mentre la voce li nomina: è quello che tiene vivo lo schermo.
+`controllo.py` con `--timeline` misura tutto questo sui tempi veri e blocca il reel se c'è un buco: non si renderizza finché non dà zero errori.
+
 ## 2. Regole di scrittura del reel (valide per tutti i format)
 SEMPLICE PRIMA DI TUTTO (GG, 9 nov 2026: il reel deve poter diventare virale, non solo di nicchia):
 1. Livello "tifoso curioso": scrivi per chi segue lo sport ma non sa niente di finanza o di gestione.
@@ -67,9 +77,10 @@ GG vuole il reel completo, con i sottotitoli del testo proposto, ma **senza ness
    espeak-ng si installa con DUE comandi separati: prima `apt-get update`, poi `DEBIAN_FRONTEND=noninteractive apt-get install -y espeak-ng` (senza `apt-get update` fallisce; senza DEBIAN_FRONTEND si blocca su una domanda). Playwright, ffmpeg, numpy e scipy sono già presenti. Il motore è già in inglese e tiene tutto dentro le zone sicure di Instagram: non spostare gli elementi a mano.
 2. `cp ~/gg-agenti/strumenti/voce_guida.py ~/ggm/voce_guida.py` — serve SOLO a calcolare i tempi dei sottotitoli, non deve mai sentirsi nel video.
 3. `mkdir -p ~/ggm/lavoro && cp ~/gg/reel/reel.json ~/ggm/lavoro/ && cd ~/ggm && python3 voce_guida.py lavoro/reel.json lavoro/voce-guida.wav && python3 timing.py lavoro/reel.json lavoro/timeline.json` (con `"audio":"voce-guida.wav"` nel reel.json di lavoro).
+3b. **CONTROLLO DEL RITMO, obbligatorio:** `cp ~/gg-agenti/strumenti/controllo.py ~/ggm/ && python3 controllo.py lavoro/reel.json --timeline lavoro/timeline.json`. Misura sui tempi veri i buchi sullo schermo (regola 2 del punto 1b). Se dà un ERRORE, correggi il reel.json (sposta un marker all'inizio della frase, aggiungi una riga o una voce al grafico), rilancia `timing.py` e poi di nuovo il controllo. Si va avanti solo con zero errori.
 4. Traccia muta della stessa durata: `ffmpeg -y -f lavfi -i anullsrc=r=44100:cl=mono -t $(ffprobe -v error -show_entries format=duration -of csv=p=0 lavoro/voce-guida.wav) lavoro/muto.wav`; poi nel reel.json di lavoro metti `"audio":"muto.wav"` (i tempi restano quelli di timeline.json), i loghi e, se c'è, `photo` nella cover (preferisci una `_cut.png` dall'archivio, altrimenti una foto normale con `"cutout": false`).
 5. Render del video come da skill, salvato in `~/ggm/lavoro/reel-bozza.mp4`.
-6. **CONTROLLO VISIVO ECONOMICO:** guarda con Read **un foglio di miniature** delle anteprime (non le anteprime una per una) più **2 fotogrammi** del video, scelti dove c'è più testo a schermo. Apri a grandezza piena solo la cover e l'outro, che sono le due che si rompono più spesso. Verifica che non si senta nessuna voce (solo gli effetti) e che i sottotitoli si leggano. Nella bozza i tempi dei sottotitoli possono essere imprecisi verso la fine (`timing.py` lavora sulla voce guida): non perderci tempo, li sistema `align.py` con la voce vera.
+6. **CONTROLLO VISIVO CON LE ZONE MORTE (economico):** prima del video genera un'anteprima per capitolo, scelta verso la FINE di ogni capitolo (quando lo schermo è più pieno), più la cover e l'outro: `node render.js lavoro/reel.json lavoro/timeline.json lavoro/p --preview <istanti>`. Poi `python3 ~/gg-agenti/strumenti/reel/zone.py lavoro/p_*.png --out lavoro/zone.png` e guarda con Read SOLO quel foglio: le zone morte sono in rosso. Niente deve toccarle; niente deve stare al centro con il vuoto attorno; nessun capitolo deve avere metà schermo vuota sotto il contenuto. Dopo il video, 2 fotogrammi passati anch'essi da `zone.py`. Verifica che non si senta nessuna voce (solo gli effetti) e che i sottotitoli si leggano. Nella bozza i tempi dei sottotitoli possono essere imprecisi verso la fine (`timing.py` lavora sulla voce guida): non perderci tempo, li sistema `align.py` con la voce vera.
 
 ## 5. Consegna
 Manda `reel-bozza.mp4` con `SendUserFile` (status "proactive", display "render"), caption `Reel di domani – titolo (montato senza voce, da rifare con la tua voce)`.

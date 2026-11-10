@@ -11,7 +11,7 @@ Istruzioni e strumenti degli agenti automatici di GG on Sport (@ggonsport).
   - `full-time.md` — newsletter del sabato
   - `analista.md` — report della domenica
   - `mini-tesi.md` — approfondimenti, in chat
-- `strumenti/` — script per caroselli, loghi, sottotitoli e reel, più `controllo.py` (controllo automatico dei JSON prima del render)
+- `strumenti/` — script per caroselli, loghi, sottotitoli e reel, più `controllo.py` (controllo automatico dei JSON prima del render; con `--timeline` misura i buchi sullo schermo del reel) e `reel/zone.py` (zone morte di Instagram disegnate sulle anteprime)
 - `loghi/` — archivio loghi
 
 Gli agenti clonano questo repository e lo usano in sola lettura.

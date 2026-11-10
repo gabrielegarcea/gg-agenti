@@ -29,11 +29,13 @@ Queste regole le decide GG: gli agenti le applicano e non le modificano.
 - Tre format in rotazione, uno al giorno, mai lo stesso due giorni di fila: **Explainer** (il meccanismo e i numeri), **Confronto** (due soggetti a specchio, con un verdetto), **Storia in 3 atti** (una persona, un problema, una svolta). Descritti in `agenti/reel.md`; il format di turno lo scrive l'agente Ricerca negli appunti.
 - In ogni reel, qualunque format: un elemento `term` (il concetto insegnato) e un capitolo "Who wins, who loses." subito prima di "My take.".
 - Livello "tifoso curioso", un solo concetto per reel spiegato con un paragone di vita quotidiana, hook sulle persone e sul conflitto, max 3-4 numeri resi concreti, prova di comprensione prima del render.
+- **Zone morte (GG, ribadito il 10 nov 2026):** via 250 px in alto, 320 in basso, 120 per lato, e in basso a destra la colonna dei pulsanti alta 768 px. La parte bassa a sinistra si usa (sottotitoli). Contenuto allineato a sinistra al titolo, mai centrato. Si verifica con `strumenti/reel/zone.py`.
+- **Mai lo schermo vuoto (GG, 10 nov 2026):** al massimo 4 secondi senza qualcosa di nuovo e di vero sullo schermo; uno stemma o una nota a mano da soli non contano. Si verifica con `controllo.py --timeline`.
 
 ## La giornata (GG, 10 nov 2026)
 Tre turni, tre sessioni separate che si passano un file di appunti su Drive: Ricerca (6:45) → Caroselli (7:25) → Reel (8:15). Ogni turno legge `agenti/comuni.md` + il proprio file. Le ricerche e i controlli pesanti si fanno fare a dei sotto-agenti. Chi viene dopo non rifà le ricerche di chi viene prima.
 
 ## Il repository
 - In sola lettura per gli agenti: niente modifiche, niente commit, niente push. I loghi nuovi si elencano nel messaggio finale e li aggiunge GG.
-- `strumenti/`: `render.js` (caroselli), `logo.py` (loghi), `voce_guida.py` e `align.py` (sottotitoli), `reel/` (motore reel), `controllo.py` (controllo automatico dei JSON prima del render: lunghezze, slide obbligatorie, loghi, numeri, marker doppi, parole italiane).
+- `strumenti/`: `render.js` (caroselli), `logo.py` (loghi), `voce_guida.py` e `align.py` (sottotitoli), `reel/` (motore reel), `controllo.py` (controllo automatico dei JSON prima del render: lunghezze, slide obbligatorie, loghi, numeri, marker doppi, parole italiane; con `--timeline` misura i buchi sullo schermo del reel), `reel/zone.py` (disegna le zone morte di Instagram sulle anteprime).
 - `loghi/`: archivio loghi; `loghi/auto/` = loghi aggiunti dopo.

@@ -5,6 +5,9 @@ Uso:
     python3 controllo.py n1.json n2.json n3.json      # caroselli (anche uno solo)
     python3 controllo.py reel/reel.json               # reel
     python3 controllo.py n1.json caption1.txt         # anche le caption (.txt)
+    python3 controllo.py reel.json --timeline timeline.json
+                                                      # reel + ritmo sui tempi veri:
+                                                      # buchi sullo schermo, pagine vuote
 
 Stampa ERRORE (da correggere sempre) e AVVISO (da guardare e decidere).
 Esce con codice 1 se c'e' almeno un ERRORE: cosi' si vede subito se e' pulito.
@@ -280,7 +283,7 @@ def controlla_reel(path, d):
     def marker_di(x, out):
         if isinstance(x, dict):
             for k, v in x.items():
-                if k in ("at", "id"):
+                if k in ("at", "id", "hiAt"):
                     for m in ([v] if isinstance(v, str) else (v or [])):
                         if isinstance(m, str) and m:
                             out.add(m)
@@ -339,6 +342,7 @@ def controlla_reel(path, d):
     if doppi:
         err(nome, "marker usati da due elementi diversi (uno non apparira'): %s"
             % ", ".join(sorted(doppi)))
+    controlla_step_deboli(nome, d)
     if not ha_term:
         err(nome, "manca l'elemento 'term' (key term): obbligatorio in ogni reel")
     if not ha_ledger:
@@ -388,10 +392,126 @@ def controlla_reel(path, d):
     if orfani:
         err(nome, "marker citati in un 'say' ma senza elemento (non appariranno): %s"
             % ", ".join(orfani))
-    mai_citati = sorted(set(visti) - citati)
-    if mai_citati:
+    # un elemento va segnalato solo se NESSUNO dei suoi marker e' citato
+    per_elemento = {}
+    for m, chi in visti.items():
+        per_elemento.setdefault(chi, set()).add(m)
+    muti = sorted(min(ms) for chi, ms in per_elemento.items() if not (ms & citati))
+    if muti:
         avv(nome, "elementi senza marker nel 'say' (compaiono all'inizio dello step): %s"
-            % ", ".join(mai_citati))
+            % ", ".join(muti))
+
+
+# ---------------------------------------------------------------- ritmo del reel
+# Un elemento "debole" (logo, nota a mano, foto) da solo non tiene lo schermo:
+# lo spettatore vede una pagina quasi vuota e scorre via (GG, 10 nov 2026).
+DEBOLI = {"logos", "note", "photo"}
+BUCO_MAX = 4.0          # secondi massimi senza un elemento forte nuovo
+INIZIO_CAP_MAX = 1.5    # secondi massimi di pagina con il solo titolo
+
+
+def elementi_reel(c):
+    out = list(c.get("elements") or []) + list(c.get("els") or [])
+    for st in (c.get("steps") or []):
+        out += list(st.get("els") or [])
+    return out
+
+
+def controlla_step_deboli(nome, d):
+    for i, c in enumerate(d.get("chapters") or []):
+        for j, st in enumerate(c.get("steps") or []):
+            els = st.get("els") or []
+            if els and all(e.get("type") in DEBOLI for e in els):
+                err("%s cap.%d step %d" % (nome, i + 1, j + 1),
+                    "lo step ha solo %s: da soli non tengono lo schermo, serve un "
+                    "elemento vero (testo, grafico, numero)"
+                    % "/".join(sorted({e.get("type") for e in els})))
+
+
+def controlla_ritmo(nome, d, tl):
+    """Misura, sui tempi veri, quanto resta lo schermo senza niente di nuovo."""
+    segs = tl.get("segments") or []
+    mark = {}
+    for s in segs:
+        for w in s.get("words") or []:
+            for m in w.get("m") or []:
+                mark[m] = w["start"]
+            for m in w.get("m_after") or []:
+                mark[m] = w["end"]
+
+    def inizio_step(ci, si):
+        for s in segs:
+            if s.get("kind") == "step" and s.get("ci") == ci and s.get("si") == si:
+                return s["start"]
+        return None
+
+    eventi = []      # (tempo, capitolo)
+    inizi_cap = {}
+    for ci, c in enumerate(d.get("chapters") or []):
+        inizi_cap[ci] = inizio_step(ci, 0)
+        for si, st in enumerate(c.get("steps") or []):
+            t_step = inizio_step(ci, si)
+            if t_step is None:
+                continue
+            for e in st.get("els") or []:
+                tipo = e.get("type")
+                if tipo in DEBOLI:
+                    continue
+                t0 = mark.get(e.get("id"), t_step)
+                voci, passo = [], 0.6
+                if tipo == "timeline":
+                    voci, passo = e.get("events") or [], 0.9
+                elif tipo == "bars":
+                    voci, passo = e.get("items") or [], 0.35
+                elif tipo in ("split",):
+                    voci, passo = e.get("parts") or [], 0.5
+                elif tipo == "cards":
+                    voci, passo = e.get("items") or [], 0.5
+                elif tipo == "h2h":
+                    voci, passo = e.get("rows") or [], 0.6
+                elif tipo == "ledger":
+                    voci, passo = (e.get("wins") or []) + (e.get("loses") or []), 0.5
+                if tipo == "text":
+                    ats = e.get("at") or []
+                    for k, _ in enumerate(e.get("lines") or []):
+                        a = ats[k] if k < len(ats) else None
+                        eventi.append((mark.get(a, t0 + k * 0.6), ci))
+                elif voci:
+                    for k, v in enumerate(voci):
+                        eventi.append((mark.get(v.get("at"), t0 + k * passo), ci))
+                else:
+                    eventi.append((t0, ci))
+                if tipo == "dots" and e.get("hiAt") in mark:
+                    eventi.append((mark[e["hiAt"]], ci))   # il pallino che si accende
+
+    cover = next((s for s in segs if s.get("kind") == "cover"), None)
+    outro = next((s for s in segs if s.get("kind") == "outro"), None)
+    t_da = cover["vend"] if cover else 0.0
+    t_a = outro["start"] if outro else tl.get("duration", 0)
+
+    # pagina con il solo titolo all'inizio di ogni capitolo
+    for ci, t_cap in inizi_cap.items():
+        if t_cap is None:
+            continue
+        primi = [t for t, c in eventi if c == ci]
+        if not primi:
+            err("%s cap.%d" % (nome, ci + 1),
+                "nessun elemento forte in tutto il capitolo: solo titolo per tutta la durata")
+            continue
+        vuoto = min(primi) - t_cap
+        if vuoto > INIZIO_CAP_MAX:
+            err("%s cap.%d" % (nome, ci + 1),
+                "%.1fs di pagina con il solo titolo (da %.1fs a %.1fs): metti il primo "
+                "elemento all'inizio della prima frase" % (vuoto, t_cap, min(primi)))
+
+    # buchi fra un elemento forte e il successivo
+    tempi = sorted({round(t, 2) for t, _ in eventi if t_da - 0.01 <= t <= t_a + 0.01})
+    punti = [t_da] + tempi + [t_a]
+    for a, b in zip(punti, punti[1:]):
+        if b - a > BUCO_MAX:
+            err(nome, "%.1fs senza niente di nuovo sullo schermo (da %.1fs a %.1fs): "
+                "lo spettatore scorre via. Aggiungi un elemento o un marker in quel tratto"
+                % (b - a, a, b))
 
 
 # ---------------------------------------------------------------- caption
@@ -415,6 +535,11 @@ def main(paths):
     if not paths:
         print(__doc__)
         return 2
+    timeline = None
+    if "--timeline" in paths:
+        k = paths.index("--timeline")
+        timeline = paths[k + 1] if k + 1 < len(paths) else None
+        paths = paths[:k] + paths[k + 2:]
 
     grafici_caroselli = {}
     for p in paths:
@@ -434,6 +559,12 @@ def main(paths):
 
         if "chapters" in d or "capitoli" in d:
             controlla_reel(p, d)
+            if timeline:
+                try:
+                    with open(timeline, encoding="utf-8") as f:
+                        controlla_ritmo(p.split("/")[-1], d, json.load(f))
+                except (FileNotFoundError, json.JSONDecodeError) as e:
+                    err(timeline, "timeline non leggibile: %s" % e)
         elif "slides" in d:
             grafici_caroselli[p] = controlla_carosello(p, d)
         else:
