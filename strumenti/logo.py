@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # GG on Sport — loghi automatici da archivi pubblici su GitHub (raggiungibili dal container)
 # Uso: python3 logo.py "Nome" out.png        es. python3 logo.py "TNT" foto/tnt.png
+#      python3 logo.py "Nome" out.png --tipo club   (club|lega|tv|marchio: per club e leghe non usa mai i canali TV)
 #      python3 logo.py --cerca "Nome"        mostra i candidati senza scaricare
+#      python3 logo.py --file "tv: countries/united-states/nbc-us.png" out.png   usa un candidato preciso di --cerca
+# Uscita: "OK" = logo giusto; "ATTENZIONE" = nome non identico, guardalo prima di usarlo; "NON TROVATO" = va nei Loghi mancanti.
 # Ordine: 1) archivio GG nel repository (cartella loghi/), 2) archivi pubblici su GitHub.
 # Fonti: tv-logo/tv-logos (canali TV e streaming, a colori), luukhopman/football-logos (club di calcio europei),
 #        klunn91/team-logos (NBA, NFL, MLB e leghe USA), simple-icons (marchi e sponsor, nel colore del brand).
@@ -24,9 +27,20 @@ ALIAS = {
  "rai sport": ("tv", "countries/italy/rai-sport-it.png"), "rai": ("tv", "countries/italy/rai-1-it.png"),
  "canale 5": ("tv", "countries/italy/canale5-it.png"), "mediaset": ("tv", "countries/italy/canale5-it.png"),
  "bein sports": ("tv", "countries/international/beinsports/old/stacked/bein-sports-int.png"),
- "cbs": ("marchi", "cbs"), "paramount+": ("marchi", "paramountplus"), "max": ("marchi", "max"), "hbo max": ("marchi", "hbomax"),
+ "cbs": ("marchi", "cbs"), "cbs sports": ("marchi", "cbs"),
+ # 10 nov 2026: in simple-icons "paramountplus" è la sola montagna Paramount e "hbomax" è il vecchio "max": si usano i file TV giusti
+ "paramount+": ("tv", "countries/united-states/paramount-plus-us.png"), "paramount plus": ("tv", "countries/united-states/paramount-plus-us.png"),
+ "hbo max": ("tv", "countries/united-states/hbo-max-us.png"), "max": ("tv", "countries/united-states/hbo-max-color-us.png"),
+ "fox sports": ("tv", "countries/united-states/fox-sports-us.png"), "sky sports": ("tv", "countries/united-kingdom/sky-sports-hz-uk.png"),
+ "tnt sports": ("tv", "countries/world-latin-america/tnt-sports-lam.png"), "tnt sports uk": ("tv", "countries/world-latin-america/tnt-sports-lam.png"),
+ "disney+": ("tv", "countries/united-states/disney-plus-us.png"), "disney plus": ("tv", "countries/united-states/disney-plus-us.png"),
  "nba": ("usa", "NBA/_NBA_logo.png"), "nfl": ("usa", "NFL/_NFL_logo.png"), "premier league": ("usa", "Premier_League/_PremierLeague_logo.png"),
 }
+# nomi che NON hanno un logo affidabile negli archivi: meglio "non trovato" che il marchio sbagliato
+SENZA_LOGO = {"disney": "c'è solo Disney+ (\"Disney+\") o i canali Disney Jr./XD, non il marchio Walt Disney Company",
+              "skydance": "nessun archivio pubblico ha il marchio Skydance Media"}
+NOTE = {"tnt sports": "marchio TNT Sports di UK e America Latina (cerchio rosa); negli USA si usa \"TNT\"",
+        "max": "vecchio marchio Max (2023-2025); dal luglio 2025 il servizio si chiama di nuovo HBO Max: usa \"HBO Max\""}
 
 def norm(s):
     s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower()
@@ -102,7 +116,16 @@ def archive(name):
         if q2 and q2 != q: return archive(q2)
     return sorted(out)
 
-def get(name, dst):
+def save(k, f, dst):
+    os.makedirs(os.path.dirname(os.path.abspath(dst)), exist_ok=True)
+    if k == "marchi": svg_png(f, dst)
+    else:
+        import shutil; shutil.copy(checkout(k, f), dst)
+    fix_light(dst)
+
+def get(name, dst, tipo=None):
+    # tipo: "club" o "lega" = mai canali TV; "tv" = solo canali TV e streaming; "marchio" = solo marchi e sponsor
+    key = name.lower().strip()
     a = archive(name)
     if a and a[0][0] < 2:
         from PIL import Image
@@ -110,17 +133,29 @@ def get(name, dst):
         Image.open(a[0][1]).convert("RGBA").save(dst)
         fix_light(dst)
         print(f"OK {name} -> {dst}  (archivio GG: {os.path.relpath(a[0][1], os.path.dirname(ARCH))})"); return True
-    k, f = ALIAS.get(name.lower().strip(), (None, None))
-    if not k:
-        c = candidates(name)
-        if not c: print(f"NON TROVATO: {name}"); return False
-        _, k, f = c[0]
-    os.makedirs(os.path.dirname(os.path.abspath(dst)), exist_ok=True)
-    if k == "marchi": svg_png(f, dst)
-    else:
-        import shutil; shutil.copy(checkout(k, f), dst)
-    fix_light(dst)
-    print(f"OK {name} -> {dst}  ({k}: {f})"); return True
+    if key in SENZA_LOGO:
+        print(f"NON TROVATO: {name} ({SENZA_LOGO[key]}). Mettilo nei Loghi mancanti."); return False
+    if key in ALIAS:
+        k, f = ALIAS[key]; save(k, f, dst)
+        print(f"OK {name} -> {dst}  ({k}: {f})" + (f"  NOTA: {NOTE[key]}" if key in NOTE else "")); return True
+    c = candidates(name)
+    if tipo in ("club", "lega"): c = [x for x in c if x[1] != "tv"]
+    elif tipo == "tv": c = [x for x in c if x[1] == "tv"]
+    elif tipo == "marchio": c = [x for x in c if x[1] == "marchi"]
+    esatti = [x for x in c if x[0] < 1]
+    if esatti:
+        _, k, f = esatti[0]; save(k, f, dst)
+        print(f"OK {name} -> {dst}  ({k}: {f})"); return True
+    # nessun nome identico: un canale TV con nome simile (es. "Birmingham" -> una TV locale di Birmingham) non si usa mai da solo
+    simili = [x for x in c if x[1] != "tv"]
+    if simili:
+        _, k, f = simili[0]; save(k, f, dst)
+        print(f"ATTENZIONE {name} -> {dst}  ({k}: {f}): il nome del file non è identico a \"{name}\". "
+              f"Guarda il logo con Read: se non è il marchio giusto cancellalo e mettilo nei Loghi mancanti.")
+        return True
+    altri = "; ".join(f"{k}: {f}" for _, k, f in c[:4])
+    print(f"NON TROVATO: {name}" + (f" (solo nomi simili, non usati: {altri}. Se uno è davvero quello giusto: "
+          f"python3 logo.py --file \"<archivio>: <percorso>\" out.png)" if altri else "")); return False
 
 def fix_light(p):
     # loghi bianchi o chiarissimi (pensati per fondi scuri) diventano blu scuro, così si vedono nel cerchio bianco
@@ -136,8 +171,19 @@ def fix_light(p):
     im.save(p)
 
 if __name__ == "__main__":
-    if sys.argv[1] == "--cerca":
-        for s, f in archive(sys.argv[2])[:8]: print(f"{s:.2f}  archivio GG: {os.path.relpath(f, os.path.dirname(ARCH))}")
-        for s, k, f in candidates(sys.argv[2]): print(f"{s:.2f}  {k}: {f}")
+    args = sys.argv[1:]; tipo = None
+    if "--tipo" in args:
+        i = args.index("--tipo"); tipo = args[i + 1]; del args[i:i + 2]
+    if args[0] == "--cerca":
+        for s, f in archive(args[1])[:8]: print(f"{s:.2f}  archivio GG: {os.path.relpath(f, os.path.dirname(ARCH))}")
+        for s, k, f in candidates(args[1]): print(f"{s:.2f}  {k}: {f}")
+    elif args[0] == "--file":
+        # usa un file preciso scelto da --cerca, es. --file "tv: countries/united-states/nbc-us.png" out.png
+        k, f = [x.strip() for x in args[1].split(":", 1)]
+        if k == "archivio GG":
+            from PIL import Image
+            Image.open(os.path.join(os.path.dirname(ARCH), f)).convert("RGBA").save(args[2]); fix_light(args[2])
+        else: save(k, f, args[2])
+        print(f"OK -> {args[2]}  ({k}: {f})")
     else:
-        sys.exit(0 if get(sys.argv[1], sys.argv[2]) else 1)
+        sys.exit(0 if get(args[0], args[1], tipo) else 1)

@@ -23,6 +23,12 @@ const imgData = p => {
 // immagini incorporate come data URI
 const walk = o => { if (o && typeof o === 'object') for (const k in o) { if ((k === 'photo' || k === 'src' || k === 'logo') && typeof o[k] === 'string' && !o[k].startsWith('data:')) o[k] = imgData(o[k]); else if (k === 'logos' && Array.isArray(o[k])) o[k] = o[k].map(p => p.startsWith('data:') ? p : imgData(p)); else walk(o[k]); } };
 walk(cfg);
+// controlli prima del render: donut con "display" diverso da "value"
+(cfg.chapters || []).forEach((ch, ci) => (ch.steps || []).forEach(st => (st.els || []).forEach(e => {
+  if (e.type !== 'donut' || e.display == null) return;
+  const m = String(e.display).match(/([0-9][0-9,]*(?:\.[0-9]+)?)\s*%/);
+  if (m && Math.abs(parseFloat(m[1].replace(/,/g, '')) - e.value) > 0.5) console.error(`ATTENZIONE: capitolo ${ci + 1}, donut con value ${e.value} ma display "${e.display}": l'anello e il numero non coincidono`);
+})));
 
 const CSS = `
 @font-face{font-family:Inter;font-weight:500;src:url(${font('inter', 'inter-latin-500-normal.woff2')})}
@@ -68,6 +74,8 @@ body{font-family:Inter;color:var(--ink)}
 .el{opacity:0}
 .big{white-space:nowrap;font:400 220px/0.95 Anton;color:var(--blue)}
 .big-l{font:600 34px/1.3 Inter;margin-top:18px}
+.bigl{position:absolute;left:124px;right:250px;font:700 46px/1.2 Inter;color:var(--ink)}
+.bigl b{color:var(--orange)}
 .lab{font:400 24px Mono;color:#6E6A62;margin-top:14px}
 .dots{display:grid;gap:10px;justify-content:start}
 .dots i{border-radius:50%;background:#C9C3B6;transform:scale(0)}
@@ -190,7 +198,7 @@ if (cfg.cover) {
     const ph = $('<div class="cv-ph">' + (c.disc !== false && c.cutout !== false ? '<div class="disc"></div>' : '') + '<img class="' + (c.cutout === false ? 'box' : '') + '" src="' + c.photo + '"></div>');
     cover.appendChild(ph);
   }
-  if (!c.photo && c.big) cover.appendChild($('<div class="cv-ph"><div class="bigc" style="position:absolute;left:120px;top:0;font:400 430px/0.9 Anton;color:var(--blue)">' + esc(c.big) + '</div></div>'));
+  if (!c.photo && c.big) cover.appendChild($('<div class="cv-ph"><div class="bigc" style="position:absolute;left:120px;top:0;font:400 430px/0.9 Anton;color:var(--blue);white-space:nowrap">' + esc(c.big) + '</div>' + (c.bigLabel ? '<div class="bigl">' + md(c.bigLabel) + '</div>' : '') + '</div>'));
   if (c.note) cover.appendChild($('<div class="note" style="left:' + (c.note.x ?? 140) + 'px;top:' + (c.note.y ?? 1110) + 'px;transform:rotate(' + (c.note.rot ?? -8) + 'deg)">' + esc(c.note.text) + '</div>'));
   cover.insertAdjacentHTML('beforeend', footer());
   root.appendChild(cover);
@@ -235,8 +243,13 @@ const builders = {
   donut(e) { const R = 230, SW = 84, Z = 2 * R + SW, C = 2 * Math.PI * R, v = Math.max(0, Math.min(100, e.value));
     const n = $('<div class="el dnut"><svg width="' + Z + '" height="' + Z + '"><g transform="rotate(-90 ' + Z / 2 + ' ' + Z / 2 + ')"><circle cx="' + Z / 2 + '" cy="' + Z / 2 + '" r="' + R + '" fill="none" stroke="#DDD7CB" stroke-width="' + SW + '"/><circle class="rv" cx="' + Z / 2 + '" cy="' + Z / 2 + '" r="' + R + '" fill="none" stroke="var(--orange)" stroke-width="' + SW + '" stroke-dasharray="0 ' + C + '"/></g><text x="' + Z / 2 + '" y="' + Z / 2 + '" text-anchor="middle" dominant-baseline="central" font-family="Inter" font-weight="900" font-size="120" fill="var(--ink)"></text></svg>' + (e.label ? '<div class="dl">' + md(e.label) + '</div>' : '') + '</div>');
     const rv = n.querySelector('.rv'), tx = n.querySelector('text');
+    // il numero al centro sale fino al numero di "display" (con il suo prefisso e suffisso), così non cambia alla fine;
+    // se "display" non contiene un numero (es. "half") resta fisso dall'inizio
+    let dm = e.display != null ? String(e.display).match(/^([^0-9]*)([0-9][0-9,]*(?:\\.[0-9]+)?)(.*)$/) : null; if (dm && /[0-9]/.test(dm[3])) dm = null; // es. "3 in 5": due numeri, resta fisso
+    const dN = dm ? parseFloat(dm[2].replace(/,/g, '')) : v, dD = dm ? ((dm[2].split('.')[1] || '').length) : (e.decimals || 0);
+    const dPre = dm ? dm[1] : '', dSuf = dm ? dm[3] : (e.suffix ?? '%');
     return { n, upd(lt) { const p = ease(lt / (e.dur || 1.4)); rv.setAttribute('stroke-dasharray', (C * v / 100 * p) + ' ' + C);
-      tx.textContent = p >= 0.999 && e.display ? e.display : fmtN(v * p, e.decimals) + (e.suffix ?? '%'); } }; },
+      tx.textContent = (e.display != null && !dm) ? e.display : (p >= 0.999 && e.display != null) ? e.display : dPre + fmtN(dN * p, dD) + dSuf; } }; },
   split(e) { const tot = e.parts.reduce((a, p) => a + p.value, 0) || 1, hi = e.highlight ?? 0; const sh = ['#0B1F3A', '#1F4FD1', '#8A93A6', '#B4AEA2', '#DDD7CB'];
     let j = 0; const cols = e.parts.map((p, k) => k === hi ? 'var(--orange)' : sh[Math.min(j++, 4)]);
     const n = $('<div class="el splt"><div class="b100"></div><div class="lg"></div></div>'); const bar = n.querySelector('.b100'), lg = n.querySelector('.lg');
@@ -393,7 +406,9 @@ window.draw = function (t) {
   if (active === cover) { const c = cfg.cover, a = looping ? -10 : (cvSeg ? cvSeg.start : 0);
     const ls = cover.querySelectorAll('.cv-t .l'); ls.forEach((l, i) => { const p = ease((t - a - i * 0.35) / 0.4); l.style.opacity = p; l.style.transform = 'translateY(' + (1 - p) * 40 + 'px)'; });
     const tt = cover.querySelector('.cv-t'); const sub = cover.querySelector('.cv-s'); sub.style.top = (270 + tt.offsetHeight + 26) + 'px'; sub.style.opacity = ease((t - a - 0.8) / 0.4);
-    const ph = cover.querySelector('.cv-ph'); if (ph) { const top = sub.offsetTop + sub.offsetHeight + 24; ph.style.top = top + 'px'; ph.style.height = Math.max(200, 1200 - top) + 'px'; const bg = ph.querySelector('.bigc'); if (bg) bg.style.fontSize = Math.round(Math.max(200, 1200 - top) * 0.95) + 'px';
+    const ph = cover.querySelector('.cv-ph'); if (ph) { const top = sub.offsetTop + sub.offsetHeight + 24; ph.style.top = top + 'px'; ph.style.height = Math.max(200, 1200 - top) + 'px'; const bg = ph.querySelector('.bigc'); if (bg) { const bl = ph.querySelector('.bigl'), H = Math.max(200, 1200 - top), lh = bl ? bl.offsetHeight + 22 : 0;
+      let fsz = Math.round((H - lh) * 0.95); bg.style.fontSize = fsz + 'px'; const maxW = 1080 - 120 - 130; if (bg.scrollWidth > maxW) { fsz = Math.floor(fsz * maxW / bg.scrollWidth); bg.style.fontSize = fsz + 'px'; }
+      if (bl) bl.style.top = (bg.offsetHeight + 14) + 'px'; }
     const p = ease((t - a - 0.3) / 0.6); ph.style.opacity = p; ph.style.transform = 'translateY(' + (1 - p) * 60 + 'px) scale(' + (1 + 0.04 * clamp((t - a) / 6)) + ')'; }
     const nt = cover.querySelector('.note'); if (nt) { const p = ease((t - a - 1.4) / 0.7); nt.style.clipPath = 'inset(0 ' + (100 - p * 100) + '% 0 0)'; }
   }
