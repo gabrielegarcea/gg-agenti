@@ -49,3 +49,34 @@ Non hai accesso in scrittura: non fare mai commit né push e non modificare ness
 
 ## Appunti del giorno (il passaggio di consegne)
 I tre agenti della giornata si parlano con un unico file su Drive, nella cartella "Appunti del giorno" (`{APPUNTI_DEL_GIORNO}`): `appunti-GG.MM.md`, scritto dalla Ricerca e letto da Caroselli e Reel. Contiene le 4 notizie scelte, i fatti verificati con le fonti, il contesto per le caption, l'opinione dal Codice e il format del reel di turno. Chi legge NON rifà le ricerche: se un dato manca, lo cerca solo per quel dato.
+
+## L'ARCHIVIO SPORT MANAGEMENT (decisione di GG, 10 nov 2026)
+Ogni contenuto prodotto si registra nel foglio Google "GG on Sport – Archivio Sport Management" (`{ARCHIVIO}`). È il posto dove sta TUTTO il sapere di sport management accumulato da GG: serve per la newsletter, le mini-tesi e i progetti più grandi che verranno. **Niente di quello che impariamo deve restare solo nel messaggio di una mattina.**
+
+Scheda `Contenuti`, una riga per contenuto, colonne A-R in quest'ordine:
+`Data` (SEMPRE nel formato AAAA-MM-GG, serve per ordinare) · `Formato` (carosello 1 / carosello 2 / carosello 3 / reel) · `Sport` (calcio / NBA / NFL) · `Categoria` (Money / Power / Culture) · `Titolo (EN)` · `La notizia in una riga` · `LA LEZIONE (concetto di sport management)` · `Come funziona (il meccanismo)` (2-3 righe, il cuore della lezione) · `Numeri chiave` (separati da ;) · `Key terms` (i 3 della caption, separati da ;) · `Opinione di GG` · `Codice (Art./principio)` · `Grafico / Format reel` · `Tema (antiripetizione)` · `Soggetti (club, leghe, persone)` (separati da ;) · `Fonti` · `Pubblicato` (lo riempie GG) · `Numeri social` (li riempie l'Analista).
+
+- Si scrive con Google Sheets `append_values` (range `Contenuti!A1`, una chiamata sola con tutte le righe del proprio turno). **Ognuno scrive le righe dei contenuti che ha prodotto lui**, alla fine del proprio turno, dopo la consegna: Caroselli scrive le sue 3 righe, Reel la sua. La Ricerca non scrive: legge.
+- Le due altre schede sono formule, non si toccano: `Antiripetizione` (tutti i contenuti dal più recente, usata dalla Ricerca) e `Lezioni` (l'elenco dei concetti già insegnati e quante volte).
+- Se la scrittura non riesce, riprova una volta e scrivilo nel messaggio finale. Una riga mancante nell'archivio è un pezzo di sapere perso.
+- La data della riga è il giorno di PUBBLICAZIONE: per i caroselli oggi, per il reel domani.
+
+## IL MESSAGGIO A GG: solo le cose da fare (decisione di GG, 10 nov 2026)
+GG legge il messaggio sul telefono, la mattina, di fretta. Il messaggio contiene **il materiale da copiare e le azioni da fare, nient'altro.** Vietati nel messaggio: la lezione, il meccanismo, l'opinione usata, l'articolo del Codice, le fonti, i segnali di rumore, la prova di comprensione, i riepiloghi dei passaggi, le introduzioni, i complimenti. Tutte quelle cose vanno nell'archivio e negli appunti, dove GG le ritrova quando le serve. La lezione GG la impara guardando il contenuto, non leggendo un riassunto.
+
+Ogni messaggio finisce con questo blocco, sempre identico, così GG impara a leggere solo lui:
+
+```
+━━━━━━━━━━━━━━━━━━
+🔴 COSA DEVI FARE
+━━━━━━━━━━━━━━━━━━
+ORA, mandami qui:
+• <una riga per ogni cosa che manca, con cosa cercare>
+(se non manca niente: "Nulla da mandare, è tutto pronto.")
+
+OGGI, pubblica (ora italiana):
+13:00  ① <titolo corto>   → caption ①
+...
+```
+
+Regole del blocco: le azioni "ORA" prima di quelle di pubblicazione, perché sono quelle che bloccano il lavoro. Una riga per azione, mai un paragrafo. I contenuti si chiamano ① ② ③ per i caroselli e 🎙️ per il reel, e la caption di ognuno sta in un blocco di codice (```) marcato con lo stesso simbolo, così GG copia con un tocco e nel blocco azioni legge solo quale numero va a che ora. Niente domande a GG nel blocco: solo cose da fare.

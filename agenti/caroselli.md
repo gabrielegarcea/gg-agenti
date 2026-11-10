@@ -88,20 +88,46 @@ Per ogni carosello chiama `SendUserFile` con i PNG in ordine (status "proactive"
 - senza foto: tutti i PNG dalla 02, caption `Notizia N – titolo (manca la copertina)`.
 Se `SendUserFile` non esiste in questa sessione, carica i PNG su Drive (`create_file` con base64Content, contentMimeType image/png, `disableConversionToGoogleType` true) in una nuova sottocartella `GG.MM titolo` dentro "Pronti da pubblicare" (`{PRONTI_DA_PUBBLICARE}`).
 
-Poi il messaggio finale, in italiano, senza introduzioni e senza riepilogo dei passaggi. Per ogni notizia (1, 2, 3):
-- Titolo
-- **La lezione:** il concetto insegnato, in una riga
-- **La mia:** l'opinione usata in una riga + `Codice: Art. N` (oppure `⚠️ opinione dedotta, da confermare: ... (principio N)`)
-- **Foto copertina:** se dall'archivio, `foto archivio: <nome file> (se vuoi cambiarla mandami un'altra foto)`; se manca, cosa cercare in una riga (soggetto, tipo di scatto, verticale o orizzontale)
-- **Caption:** la caption completa dentro un blocco di codice (```) così GG la copia con un tocco
-- **3 hook** per i Trial Reels (max 12 parole, concreti, con numero o nome)
-- **Fonti** (2-3 link)
+### Il messaggio finale
+Vale la regola di `comuni.md`: **solo materiale e azioni.** Niente lezione, niente opinione, niente fonti, niente hook (i caroselli non li usano, decisione di GG del 10 nov 2026), niente introduzioni, niente riepilogo dei passaggi. Tutto il resto è già nell'archivio.
 
-Poi `Ordine di pubblicazione:` in che ordine pubblicarli e perché, in una frase, con gli orari (ora italiana): carosello 1 alle 13:00, carosello 2 alle 18:00, reel (quello preparato ieri) alle 20:00 su Instagram e TikTok, carosello 3 alle 22:00. Riga successiva: `Grafici di oggi:` i 3 tipi usati.
-In fondo, solo se serve: `🏷️ Loghi mancanti: <nome> (carosello N)`, `📸 Foto mancanti: copertine N, N (cosa cercare)`, `🆕 Loghi nuovi: <nome> (fonte)`, e la riga `Rispondi qui allegando loghi e foto (scrivi a cosa si riferiscono) e ti rimando tutto completo.` Se non manca niente, non chiedere nulla.
+Struttura esatta, in italiano, con le caption in inglese:
 
-## 6. Quando GG manda foto o loghi (nella tua chat)
+```
+① <titolo corto in italiano> — 8 slide, copertina OK
+<la caption completa in un blocco di codice>
+
+② <titolo corto> — 7 slide, manca la copertina
+<la caption completa in un blocco di codice>
+
+③ <titolo corto> — 9 slide, copertina OK
+<la caption completa in un blocco di codice>
+
+━━━━━━━━━━━━━━━━━━
+🔴 COSA DEVI FARE
+━━━━━━━━━━━━━━━━━━
+ORA, mandami qui:
+• copertina ② — Mbappé in primo piano con la maglia del Real, verticale
+• logo FanDuel + logo DraftKings (vanno nel ③)
+Appena arrivano ti rimando i caroselli completi.
+
+OGGI, pubblica (ora italiana):
+13:00  ① <titolo corto>  → caption ①
+18:00  ② <titolo corto>  → caption ②
+20:00  🎙️ il reel di IERI su Instagram e TikTok
+22:00  ③ <titolo corto>  → caption ③
+```
+
+- Se non manca niente, la prima parte del blocco è una riga sola: `Nulla da mandare, è tutto pronto.`
+- La riga delle 20:00 c'è sempre: il reel che si pubblica oggi è quello preparato ieri, e la sua caption sta nel messaggio di ieri dell'agente Reel.
+- L'ordine di pubblicazione: ① il carosello più forte alle 13:00, ③ quello più "da conversazione" alle 22:00. Non spiegare perché: assegna e basta.
+- I loghi nuovi presi dagli archivi pubblici si elencano DOPO il blocco, in una riga sola: `🆕 Loghi nuovi da archiviare: <nome> (fonte)`. È l'unica cosa che può stare sotto il blocco azioni.
+
+## 6. Scrivi nell'archivio
+Dopo la consegna, aggiungi le 3 righe dei caroselli nel foglio "Archivio Sport Management" (`{ARCHIVIO}`) come dice `comuni.md`: una sola chiamata `append_values` su `Contenuti!A1` con le 3 righe, 18 colonne ciascuna, data di oggi in formato AAAA-MM-GG. I contenuti delle colonne li prendi dagli appunti (lezione, meccanismo, numeri, opinione, Codice, tema, soggetti, fonti) e dal tuo lavoro (titolo EN, key terms della caption, tipo di grafico). Se la chiamata non riesce, riprova una volta e aggiungi una riga al messaggio: `⚠️ archivio non aggiornato`.
+
+## 7. Quando GG manda foto o loghi (nella tua chat)
 Gli allegati sono in `/mnt/user-data/uploads/`. Distingui: loghi (PNG/SVG/JPG di stemmi e marchi, o quelli che GG indica come loghi) → nelle slide dove mancavano; immagini → foto delle copertine. I file audio NON sono tuoi: sono la voce del reel, la gestisce l'agente Reel.
 - LOGHI: salva in `~/gg/foto/`, aggiungili alle slide e ai grafici dove servivano, rigenera i caroselli interessati, rimanda tutti i loro PNG. Elencali in "🆕 Loghi nuovi" (fonte: "mandato da GG").
 - FOTO: associale alle copertine ancora senza foto, nell'ordine in cui GG le manda (1, 2, 3 saltando quelle già complete), salvo indicazioni diverse. Copia in `~/gg/foto/N.<estensione>`, guarda con Read, scegli `focus` così che il soggetto stia nella metà alta, aggiungi `image` e `focus` alla cover e rigenera tutto il carosello. Ricontrolla la copertina con Read.
-- Poi `SendUserFile` con tutti i PNG di ogni carosello completato, caption `Notizia N – pronta`. Messaggio finale di una riga.
+- Poi `SendUserFile` con tutti i PNG di ogni carosello completato, caption `Notizia N – pronta`. Messaggio finale: una riga, più il blocco `🔴 COSA DEVI FARE` aggiornato se manca ancora qualcosa (altrimenti solo gli orari di pubblicazione). Se una copertina nuova cambia il titolo o le slide, aggiorna anche la riga dell'archivio di quel carosello con `update_values`.

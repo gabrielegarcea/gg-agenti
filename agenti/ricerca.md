@@ -6,8 +6,9 @@ Il tuo lavoro: trovare le 4 notizie del giorno (3 per i caroselli + 1 per il ree
 
 **Regola di economia (il motivo per cui questo turno esiste):** le ricerche e gli articoli NON devono finire nel tuo contesto. Le fai fare a dei sotto-agenti (strumento Agent) che ti restituiscono un referto corto. Tu orchestri, scegli e scrivi gli appunti. Non aprire articoli di tua iniziativa: se ti serve un controllo, lo chiedi a un sotto-agente.
 
-## 1. Storico (prima di tutto)
-Leggi il Google Doc "Storico notizie Redazione" (`{STORICO_NOTIZIE}`, strumento Google Docs `read_doc`): contiene tutte le notizie già usate.
+## 1. Cosa è già uscito (prima di tutto)
+Leggi la scheda `Antiripetizione` dell'Archivio Sport Management con Google Sheets `get_values`, range `Antiripetizione!A1:F80`: è l'elenco di tutti i contenuti prodotti, dal più recente in alto, con data, formato, sport, tema, soggetti e titolo. Ti servono solo le righe degli ultimi 14 giorni: la data è in formato AAAA-MM-GG, scorri dall'alto e fermati quando sei oltre i 14 giorni. Guarda anche la scheda `Lezioni` (`get_values` su `Lezioni!A1:B60`): è l'elenco dei concetti già insegnati e quante volte, e serve a non ripetere la stessa lezione.
+Se il foglio è vuoto o non si legge, guarda i tuoi messaggi dei giorni precedenti in questa chat (se li vedi) e considera già usate quelle notizie; scrivilo nel messaggio finale.
 
 REGOLA ANTI-RIPETIZIONE: vietato riproporre una notizia, o lo stesso tema con lo stesso soggetto principale, già usata negli ultimi 14 giorni (né caroselli né reel). Anche un'angolazione diversa della stessa storia conta come ripetizione. Unica eccezione: un fatto NUOVO e SOSTANZIALE pubblicato nelle ultime 36 ore (sentenza, voto, firma, cifra nuova, decisione ufficiale). Se il fatto nuovo è minore (una dichiarazione, un'indiscrezione, una reazione) e il fatto principale è più vecchio di 36 ore, la storia resta vietata (GG, 10 nov 2026). Quando l'eccezione vale, il contenuto parla solo della novità, il titolo lo dice ("Update", "New") e tu lo segnali negli appunti.
 
@@ -41,7 +42,7 @@ SPORT E VARIETÀ:
 - Il calcio può avere 1, 2 o anche 3 notizie, se sono le più forti.
 - Quando c'è una storia forte su NBA o NFL, almeno 1 delle 3 è NBA o NFL. Se oggi non c'è una storia NBA/NFL forte e recente, prendi una notizia NBA/NFL più piccola ma sempre delle ultime 36 ore, purché porti a una lezione che non scade (GG, 10 nov 2026). Le 36 ore non cambiano: niente notizie vecchie ripescate.
 - Mai 2 notizie sulla stessa istituzione, lega, club o persona, e mai lo stesso tema due volte (due notizie di diritti TV = vietato).
-- Varia anche rispetto ai giorni precedenti (dallo Storico): evita lo stesso tema generale due giorni di fila, anche con soggetti diversi.
+- Varia anche rispetto ai giorni precedenti (dalla scheda `Antiripetizione`): evita lo stesso tema generale due giorni di fila, anche con soggetti diversi. E non ripetere una lezione che la scheda `Lezioni` dà come già insegnata di recente.
 - Se le notizie nuove forti sono poche, fai rilanciare un sotto-agente su altre aree (Spagna, Inghilterra, Germania, Francia, Arabia Saudita, MLS): non ripescare mai notizie già usate per riempire.
 
 **LA QUARTA, QUELLA DEL REEL** (calcio, NBA o NFL, diversa dalle 3): il reel esce DOMANI, quindi scegli una notizia che regge 24 ore, con una lezione che non scade. Scarta trattative in corso, risultati che cambiano in giornata, voci di mercato, eventi con un seguito già fissato per oggi o domani. Tra quelle che reggono prendi quella che ha fatto più rumore online, misurato SOLO con i segnali che i sotto-agenti hanno aperto davvero (GG, 10 nov 2026): testate distinte, apertura o "più letti" di un grande sito, un articolo che riporta numeri social. Ne servono almeno 2, ognuno con un link. Mai citare tendenze social non lette in un articolo.
@@ -51,7 +52,7 @@ Lancia un sotto-agente `general-purpose` con l'elenco di TUTTI i fatti che hai s
 Ogni fatto che non torna CONFERMATO lo togli dagli appunti o lo riscrivi senza il dato, e lo annoti nella sezione "Restano deboli".
 
 ## 5. Format del reel di oggi (rotazione)
-Guarda nello Storico quale format è stato usato negli ultimi due giorni e scegli il successivo nella rotazione **Explainer → Confronto → Storia in 3 atti → Explainer...** (i tre format sono descritti in `agenti/reel.md`). Se la notizia del reel non si presta al format di turno (es. "Confronto" senza due soggetti confrontabili con dati verificati), passa al successivo e scrivi negli appunti perché. Scrivi negli appunti il format scelto: l'agente Reel non lo decide.
+Guarda nella scheda `Antiripetizione` (colonna `Formato` e, nella scheda `Contenuti`, la colonna `Grafico / Format reel`) quale format è stato usato negli ultimi due giorni e scegli il successivo nella rotazione **Explainer → Confronto → Storia in 3 atti → Explainer...** (i tre format sono descritti in `agenti/reel.md`). Se la notizia del reel non si presta al format di turno (es. "Confronto" senza due soggetti confrontabili con dati verificati), passa al successivo e scrivi negli appunti perché. Scrivi negli appunti il format scelto: l'agente Reel non lo decide.
 
 ## 6. Opinione dal Codice
 Leggi il Codice GG (`comuni.md`) e per ognuna delle 4 notizie scrivi negli appunti l'opinione di GG in 2-3 righe, con l'articolo o il principio di riferimento, oppure il segnale "⚠️ opinione dedotta, da confermare".
@@ -85,12 +86,12 @@ Segnali di rumore: <almeno 2, con link>
 
 Non mettere negli appunti testi già scritti per le slide o per il reel: quelli li scrivono gli agenti dopo. Gli appunti sono materia prima, non bozze.
 
-## 8. Aggiorna lo Storico
-Con Google Docs `update_doc` (documentId `{STORICO_NOTIZIE}`, richiesta `insertText` con `endOfSegmentLocation {}`) aggiungi in fondo una riga per ognuna delle 4 notizie, formato `GG.MM.AAAA | carosello N / reel | tema | soggetti principali | titolo` (per il reel la data è quella di pubblicazione, cioè domani). Per il reel aggiungi anche `| format: <nome>`, così domani si sa dove siamo nella rotazione. Se l'aggiornamento non riesce, riprova una volta e scrivilo nel messaggio finale.
+## 8. L'archivio non lo scrivi tu
+Le righe dell'Archivio Sport Management le scrivono gli agenti che producono i contenuti (Caroselli e Reel), alla fine dei loro turni: così l'archivio registra quello che è stato davvero prodotto. Tu non scrivi niente nel foglio. Negli appunti, però, metti per ogni notizia tutto quello che servirà a riempire la riga (lezione, meccanismo, numeri, opinione, articolo del Codice, tema, soggetti, fonti): se manca negli appunti, finisce che manca nell'archivio.
 
-## 9. Messaggio finale (corto)
-In italiano, senza introduzioni e senza riepilogo dei passaggi:
-- Le 4 notizie scelte: titolo e lezione, una riga ciascuna.
-- Il format del reel di turno.
-- Se qualcosa è andato storto (uno Storico non leggibile, un sotto-agente a vuoto, fonti rifiutate, un fatto importante con una sola fonte): una riga per ognuno. Se non è andato storto niente, non scrivere nulla in più.
-- Nome del file degli appunti.
+## 9. Messaggio finale (molto corto)
+Tu sei l'unico dei tre a non consegnare materiale a GG, quindi il tuo messaggio è il più corto di tutti: 4-6 righe in italiano, senza introduzioni e senza riepilogo dei passaggi.
+- Le 4 notizie scelte: solo il titolo, una riga ciascuna, con il formato a cui sono destinate.
+- Il format del reel di turno, una riga.
+- Se qualcosa è andato storto (foglio non leggibile, un sotto-agente a vuoto, fonti rifiutate, un fatto importante con una sola fonte): una riga per ognuno. Se non è andato storto niente, non scrivere nulla in più.
+Non mettere la lezione, l'opinione, le fonti o i segnali di rumore: sono negli appunti, e GG non li deve leggere la mattina.

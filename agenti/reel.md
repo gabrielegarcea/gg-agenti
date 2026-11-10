@@ -73,20 +73,52 @@ GG vuole il reel completo, con i sottotitoli del testo proposto, ma **senza ness
 
 ## 5. Consegna
 Manda `reel-bozza.mp4` con `SendUserFile` (status "proactive", display "render"), caption `Reel di domani – titolo (montato senza voce, da rifare con la tua voce)`.
-Poi il messaggio finale, in italiano, senza introduzioni:
-- `🎙️ REEL DI DOMANI (registra la voce oggi)`: titolo e notizia con 2 link fonte
-- `Format:` quale dei tre e perché calza
-- `Perché questa:` i segnali di rumore online (dagli appunti) e perché regge fino a domani
-- `La mia:` l'opinione usata + articolo o principio del Codice
-- Foto usata dall'archivio (o "nessuna"), durata, `Stile:` gli effetti usati
-- `Prova di comprensione: fatta, riscritte N frasi`
-- Il TESTO DA LEGGERE dentro un blocco di codice
-- La riga: `Leggi il testo così com'è (se cambi qualche parola dimmelo), con una piccola pausa tra una frase e l'altra, e mandami qui l'audio insieme alle correzioni che vuoi (testi, numeri, grafici): monto il reel con i sottotitoli sincronizzati sulla tua voce. Se vuoi un'altra foto del protagonista (meglio PNG scontornato), allegala.`
-- In fondo, se serve: `🏷️ Loghi mancanti`, `🆕 Loghi nuovi`.
+
+Poi il messaggio finale. Vale la regola di `comuni.md`: **solo materiale e azioni.** Niente lezione, niente opinione, niente articolo del Codice, niente fonti, niente segnali di rumore, niente prova di comprensione, niente stile degli effetti: sono negli appunti e nell'archivio. Struttura esatta:
+
+```
+🎙️ REEL DI DOMANI — <titolo corto in italiano> (circa 68 secondi)
+
+<il TESTO DA LEGGERE, in un blocco di codice>
+
+━━━━━━━━━━━━━━━━━━
+🔴 COSA DEVI FARE
+━━━━━━━━━━━━━━━━━━
+ORA:
+• registra la voce leggendo il testo qui sopra, una piccola pausa tra una frase e l'altra, e mandami l'audio qui. Se cambi qualche parola, dimmelo.
+• se vuoi, allegami un PNG scontornato di <protagonista> per la copertina
+• mandami il logo <nome> (manca nel capitolo <N>)
+
+DOMANI alle 20:00 pubblichi questo reel su Instagram e TikTok.
+Caption e i 3 hook per i Trial Reels te li mando insieme al video finito, appena ricevo la voce.
+```
+
+Se non serve niente oltre alla voce, nel blocco resta solo la prima riga di `ORA:`. I loghi nuovi da archiviare vanno in una riga sotto il blocco: `🆕 Loghi nuovi da archiviare: <nome> (fonte)`.
+
+## 5b. Scrivi nell'archivio
+Dopo la consegna aggiungi la riga del reel nel foglio "Archivio Sport Management" (`{ARCHIVIO}`) come dice `comuni.md`: una chiamata `append_values` su `Contenuti!A1`, 18 colonne, **con la data di DOMANI** (è il giorno di pubblicazione) in formato AAAA-MM-GG. Nella colonna `Grafico / Format reel` scrivi il format usato (Explainer, Confronto o Storia in 3 atti) e il tipo di grafico principale, perché è da lì che domani la Ricerca capisce dove siamo nella rotazione. Nella colonna `Key terms` metti il `term` del reel. Se la chiamata non riesce, riprova una volta e aggiungi al messaggio una riga `⚠️ archivio non aggiornato`.
 
 ## 6. Quando GG manda la voce (e le correzioni)
 0. Applica prima le correzioni di GG al reel.json (testi, numeri, grafici, ordine). Ogni numero nuovo segue la regola delle 2 fonti.
 1. Se `~/ggm` non c'è più, ricostruiscila come al punto 4.1. Copia l'audio (e l'eventuale PNG scontornato e i loghi) in `~/ggm/lavoro/`, usa il reel.json corretto e metti `audio` = il file di GG (e `photo` nella cover: quella nuova se l'ha mandata, altrimenti quella dell'archivio).
 2. SOTTOTITOLI PRECISI: al posto di `timing.py` usa `align.py`, che allinea parola per parola sulla voce vera. Una volta per sessione: `pip install --break-system-packages librosa`; `cp ~/gg-agenti/strumenti/align.py ~/ggm/align.py`. Poi `cd ~/ggm && python3 align.py lavoro/reel.json lavoro/timeline.json`. Se librosa non si installa, usa `timing.py` e scrivilo nel messaggio finale.
 3. I `say` devono contenere esattamente le parole che GG ha detto: se ha cambiato qualche parola leggendo (te lo dice, o lo vedi dai tempi stampati: una frase troppo lunga o troppo corta rispetto alle altre), correggi i `say` e rilancia `align.py`.
-4. Controlla i sottotitoli: genera le anteprime (`--preview`) in 6-8 istanti a metà di frasi diverse, mettile in un foglio di miniature e verifica con Read che la parola evidenziata sia quella che GG sta dicendo in quel momento (confronta con i tempi stampati). Poi genera il video, controlla 2-3 fotogrammi, manda `reel.mp4` con `SendUserFile` e nel messaggio finale una caption breve per il reel (2-3 righe + 3-5 hashtag) in un blocco di codice.
+4. Controlla i sottotitoli: genera le anteprime (`--preview`) in 6-8 istanti a metà di frasi diverse, mettile in un foglio di miniature e verifica con Read che la parola evidenziata sia quella che GG sta dicendo in quel momento (confronta con i tempi stampati). Poi genera il video, controlla 2-3 fotogrammi e manda `reel.mp4` con `SendUserFile`.
+5. Il messaggio che accompagna il video finito è quello che GG userà domani per pubblicare, quindi contiene solo questo:
+```
+🎙️ <titolo corto> — pronto (<durata> secondi)
+
+<caption del reel: 2-3 righe + 3-5 hashtag, in un blocco di codice>
+
+3 hook per i Trial Reels:
+① <max 12 parole, con un numero o un nome>
+② <...>
+③ <...>
+
+━━━━━━━━━━━━━━━━━━
+🔴 COSA DEVI FARE
+━━━━━━━━━━━━━━━━━━
+DOMANI alle 20:00: pubblica questo reel su Instagram e TikTok con la caption qui sopra.
+Per i Trial Reels usa un hook diverso per ogni prova.
+```
+Se hai corretto testi o numeri su indicazione di GG, aggiorna anche la riga dell'archivio con `update_values`.
