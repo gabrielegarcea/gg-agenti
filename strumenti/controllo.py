@@ -271,25 +271,31 @@ def controlla_reel(path, d):
         err(nome, "nessun capitolo trovato ('chapters')")
         return
 
-    # marker unici in tutto il reel
-    visti = {}
+    # marker: unici fra elementi diversi (dentro un elemento lo stesso marker
+    # si puo' ripetere, es. due righe di 'text' che compaiono insieme)
+    proprietario = {}
     doppi = set()
     testo_tutto = [testo_slide(d.get("cover") or {}), testo_slide(d.get("outro") or {})]
 
-    def raccogli_marker(x, dove):
+    def marker_di(x, out):
         if isinstance(x, dict):
             for k, v in x.items():
-                if k == "at":
+                if k in ("at", "id"):
                     for m in ([v] if isinstance(v, str) else (v or [])):
                         if isinstance(m, str) and m:
-                            if m in visti:
-                                doppi.add(m)
-                            visti.setdefault(m, dove)
+                            out.add(m)
                 else:
-                    raccogli_marker(v, dove)
+                    marker_di(v, out)
         elif isinstance(x, list):
             for v in x:
-                raccogli_marker(v, dove)
+                marker_di(v, out)
+
+    def elementi(c):
+        """gli els stanno dentro gli steps; accetta anche le forme vecchie"""
+        out = list(c.get("elements") or []) + list(c.get("els") or [])
+        for st in (c.get("steps") or []):
+            out += list(st.get("els") or [])
+        return out
 
     tipi = []
     ha_term = ha_ledger = False
@@ -297,12 +303,20 @@ def controlla_reel(path, d):
     for i, c in enumerate(caps):
         dove = "%s cap.%d" % (nome, i + 1)
         titoli.append(str(c.get("title", "")).strip().lower())
-        raccogli_marker(c, dove)
         testo_tutto.append(testo_slide(c))
-        for e in (c.get("elements") or c.get("els") or []):
+        for j, e in enumerate(elementi(c)):
+            chiave = "%s el.%d" % (dove, j + 1)
+            miei = set()
+            marker_di(e, miei)
+            for m in miei:
+                if m in proprietario and proprietario[m] != chiave:
+                    doppi.add(m)
+                proprietario.setdefault(m, chiave)
             t = e.get("type")
             if t == "term":
                 ha_term = True
+                if i == 0:
+                    err(dove, "il 'term' non va nel primo capitolo (mai nel primo secondo)")
                 if parole(e.get("term")) > 4:
                     err(dove, "'term' di %d parole, il massimo e' 4" % parole(e.get("term")))
                 if parole(e.get("def")) > 20:
@@ -320,11 +334,11 @@ def controlla_reel(path, d):
             elif t in GRAFICI:
                 tipi.append(t)
                 controlla_grafico(dove, e)
-            if t and i == 0 and t == "term":
-                err(dove, "il 'term' non va nel primo capitolo (mai nel primo secondo)")
 
+    visti = proprietario
     if doppi:
-        err(nome, "marker doppi (un elemento non apparira'): %s" % ", ".join(sorted(doppi)))
+        err(nome, "marker usati da due elementi diversi (uno non apparira'): %s"
+            % ", ".join(sorted(doppi)))
     if not ha_term:
         err(nome, "manca l'elemento 'term' (key term): obbligatorio in ogni reel")
     if not ha_ledger:
@@ -342,10 +356,14 @@ def controlla_reel(path, d):
                 % (t, tipi.count(t)))
 
     outro = d.get("outro") or {}
-    for riga in str(outro.get("title", "")).split("\n"):
-        if len(riga) > 14:
-            avv(nome + " outro", "riga di %d caratteri: oltre ~12 copre il sondaggio (%r)"
-                % (len(riga), riga))
+    tit = outro.get("title")
+    righe = tit if isinstance(tit, list) else str(tit or "").split("\n")
+    if len(righe) > 2:
+        err(nome + " outro", "titolo su %d righe: il massimo e' 2" % len(righe))
+    for riga in righe:
+        if len(str(riga)) > 18:
+            avv(nome + " outro", "riga di %d caratteri: oltre ~18 rischia di coprire il sondaggio (%r)"
+                % (len(str(riga)), riga))
 
     cerca_italiano(nome, " ".join(testo_tutto))
     cerca_inviti(nome, " ".join(testo_tutto))
@@ -358,8 +376,22 @@ def controlla_reel(path, d):
     if not says:
         avv(nome, "nessun 'say' trovato: senza testo parlato i sottotitoli non si allineano")
     for s in says:
-        if "{" in s or "}" in s:
-            err(nome, "un 'say' contiene un {marker}: va ripulito nel testo da leggere")
+        if parole(re.sub(r"\{\w+\}", "", s)) > 26:
+            avv(nome, "un 'say' di %d parole: una frase per step, corta (%r)"
+                % (parole(s), s[:60]))
+    # ogni {marker} dentro un 'say' deve corrispondere a un id o a un at
+    citati = set()
+    for s in says + [str((d.get("cover") or {}).get("say", "")),
+                     str((d.get("outro") or {}).get("say", ""))]:
+        citati |= set(re.findall(r"\{(\w+)\}", s))
+    orfani = sorted(citati - set(visti))
+    if orfani:
+        err(nome, "marker citati in un 'say' ma senza elemento (non appariranno): %s"
+            % ", ".join(orfani))
+    mai_citati = sorted(set(visti) - citati)
+    if mai_citati:
+        avv(nome, "elementi senza marker nel 'say' (compaiono all'inizio dello step): %s"
+            % ", ".join(mai_citati))
 
 
 # ---------------------------------------------------------------- caption
