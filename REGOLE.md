@@ -17,7 +17,7 @@ Queste regole le decide GG: gli agenti le applicano e non le modificano.
 - Mai "corruzione" o accuse di reati senza sentenza: si parla di conflitto di interessi, decisioni poco trasparenti, regole non applicate.
 - Critiche a decisioni e istituzioni, mai a persone o gruppi. Mai schierarsi politicamente.
 - Ogni numero, data, nome e citazione: confermato da almeno 2 fonti aperte. Altrimenti si toglie. Due copie dello stesso articolo d'agenzia contano come una fonte sola (GG, 10 nov 2026).
-- Le opinioni vengono dal Codice GG (Claude Docs, `{CODICE_GG}`). Se il Codice non copre un tema, l'opinione è "dedotta" e va confermata da GG.
+- Le opinioni vengono dal Codice GG (Google Doc, `{CODICE_GG}`, letto con `read_doc`). Se il Codice non copre un tema, l'opinione è "dedotta" e va confermata da GG.
 - Niente autoreferenze nei contenuti ("Codice GG", "Art. N", "come dico sempre").
 - Niente inviti a salvare, mandare o condividere.
 - Loghi obbligatori quando si nominano club, leghe, broadcaster, aziende (mai su prima e ultima slide). Copertine con foto.

@@ -1,6 +1,6 @@
 Istruzioni per le mini-tesi di GG on Sport (@ggonsport). Non c'è un'attività pianificata: si usano in chat, quando GG porta un'idea ("mini-tesi: ...").
 
-> **ID privati:** i nomi in maiuscolo tra graffe (es. `{CODICE_GG}`) sono ID di Claude Docs. Il valore di `{CODICE_GG}` è nel Manuale privato (repository ggonsport) e nei prompt delle attività.
+> **ID privati:** i nomi in maiuscolo tra graffe (es. `{CODICE_GG}`) sono ID di Google Docs. Il valore di `{CODICE_GG}` è nel Manuale privato (repository ggonsport) e nei prompt delle attività.
 
 == COSA SONO (deciso da GG il 3 nov 2026) ==
 - Approfondimenti su Substack, pubblicati "quando sono pronti", accanto a Full Time. Esempi: il caso dei LA Clippers, Jordan e LeBron come specchio delle società in cui hanno giocato.
@@ -8,7 +8,7 @@ Istruzioni per le mini-tesi di GG on Sport (@ggonsport). Non c'è un'attività p
 - Niente nome di rubrica: ogni mini-tesi ha il suo titolo.
 - Lingua: INGLESE (inglese semplice e chiaro, niente slang, numeri in formato inglese). Le domande e i messaggi a GG in italiano.
 - Paywall a metà come Full Time: gratis la tesi, i fatti e la spiegazione; a pagamento l'analisi approfondita, gli studi e "My take". Riga a sé `———— PAYWALL ————`. Finché i pagamenti non sono attivi, esce tutta gratis.
-- Regole: quelle di REGOLE.md e del Codice GG (tab "The GG Code (EN)", vedi agenti/full-time.md, fase 0).
+- Regole: quelle di REGOLE.md e del Codice GG (Google Doc `{CODICE_GG}`, vedi agenti/comuni.md).
 
 == COME SI LAVORA ==
 1. Prima di scrivere, conferma con GG in 3 righe: la tesi in una frase, le 3-4 domande a cui risponderà la mini-tesi, cosa NON tratterà. Si parte solo quando GG dice ok.
