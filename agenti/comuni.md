@@ -44,6 +44,12 @@ Usa **WebFetch direttamente** sui link usciti da una WebSearch (verificato il 10
 - Ogni logo nuovo preso dagli archivi pubblici (non già in `~/gg-agenti/loghi`) va nell'elenco "🆕 Loghi nuovi" del messaggio finale, con nome e fonte: lo aggiunge GG con Claude in chat.
 - FOTO: solo archivio Drive "GG on Sport / Archivio foto" o foto mandate da GG. **Mai cercare o scaricare foto dal web.** Giocatori `{FOTO_GIOCATORI}` (Cognome_NN.jpg, Cognome_NN_cut.png scontornata), dirigenti `{FOTO_DIRIGENTI}`, stadi `{FOTO_STADI}` (NomeStadio_stadio.jpg). Strumenti Google Drive `search_files` (query `parentId = '<id>' and title contains '<Cognome>'`, cognome senza accenti, prova le varianti con e senza trattino, scorri tutte le pagine) e `download_file_content` (il risultato è base64: decodificalo con python). Guardale con Read prima di usarle. Se usi una foto di stadio, leggi autore e licenza nel Doc "Fonti e licenze" (`{REGISTRO_FONTI}`, sezione REGISTRO FOTO) e aggiungi in caption la riga "Foto: Autore / Licenza" (non serve con CC0).
 
+## Quando uno strumento si rompe (16 nov 2026)
+Gira in un'attività pianificata: alle 7 del mattino non c'è nessuno che risponde. Quindi:
+- **Lo stesso comando non si rilancia più di due volte.** Se fallisce la seconda, è rotto: fermati. Il 16 nov 2026 l'agente Reel ha rilanciato quattro volte lo stesso render, ha esaurito il tempo e la sessione si è bloccata in attesa di una conferma che nessuno poteva dare.
+- **Non riordinare i passaggi per riempire il tempo.** Se Bash non risponde, non si va avanti a fare altro: l'ordine dei passaggi è quello che garantisce che l'archivio registri solo ciò che esiste davvero.
+- **Fermarsi bene è parte del lavoro.** Quando ti fermi, manda a GG un messaggio di UNA riga: `⚠️ <Nome>: <cosa si è rotto, con l'errore esatto>, oggi niente <consegna>`. Niente spiegazioni, niente riepilogo dei tentativi. Un'attività che si pianta in silenzio è peggio di un'attività che dice "oggi no".
+
 ## Sola lettura sul repository
 Non hai accesso in scrittura: non fare mai commit né push e non modificare nessun file in `~/gg-agenti`. Quello che va aggiunto al repository (loghi nuovi) lo elenchi nel messaggio finale.
 
@@ -58,6 +64,7 @@ Scheda `Contenuti`, una riga per contenuto, colonne A-R in quest'ordine:
 
 - Si scrive con Google Sheets `append_values` (range `Contenuti!A1`, una chiamata sola con tutte le righe del proprio turno). **Ognuno scrive le righe dei contenuti che ha prodotto lui**, alla fine del proprio turno, dopo la consegna: Caroselli scrive le sue 3 righe, Reel la sua. La Ricerca non scrive: legge.
 - Le due altre schede sono formule, non si toccano: `Antiripetizione` (tutti i contenuti dal più recente, usata dalla Ricerca) e `Lezioni` (l'elenco dei concetti già insegnati e quante volte).
+- **La riga si scrive SOLO dopo che il contenuto è stato davvero consegnato con `SendUserFile`. Mai prima, mai "intanto", mai per riempire il tempo mentre uno strumento non funziona.** Se la consegna non è avvenuta, la riga non si scrive: una riga per un contenuto che non esiste è peggio di una riga mancante, perché sporca l'antiripetizione e fa credere a Full Time e all'Analista che quel contenuto ci sia. (Il 16 nov 2026 l'agente Reel ha scritto la riga del reel del 17 mentre il render falliva: il reel non è mai esistito e la riga è rimasta.)
 - Se la scrittura non riesce, riprova una volta e scrivilo nel messaggio finale. Una riga mancante nell'archivio è un pezzo di sapere perso.
 - La data della riga è il giorno di PUBBLICAZIONE: per i caroselli oggi, per il reel domani.
 
