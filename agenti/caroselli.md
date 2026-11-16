@@ -9,7 +9,21 @@ Cerca su Drive con `search_files` il file `appunti-GG.MM.md` di oggi nella carte
 Se il file non c'è: aspetta 10 minuti e riprova, due volte. Se dopo mezz'ora non c'è, cerca da solo le 3 notizie seguendo `ricerca.md` punti 1-4 e scrivilo nel messaggio finale: l'agente Ricerca è da controllare.
 
 ## 1. Testo dei caroselli
-Per ogni notizia scrivi `~/gg/nN.json` (N = 1, 2, 3). LUNGHEZZA LIBERA: da 6 a 10 slide, decise dalla notizia. Una notizia piccola ne ha 6; una importante, con tanti dati, 8-10. Non tagliare mai informazioni utili per stare corto. Ordine:
+
+**Non scrivi il JSON delle slide: scrivi una "voce" (GG, 16 nov 2026).** Per ogni notizia scrivi `~/gg/voceN.json` (N = 1, 2, 3) con il solo CONTENUTO — cosa e' successo, come funziona, il grafico, l'opinione, la domanda — e poi:
+
+```
+cp ~/gg-agenti/strumenti/costruisci.py ~/gg/ && cd ~/gg
+python3 costruisci.py voce1.json n1.json --loghi
+```
+
+Lo script costruisce le slide: ordine, tipi, `theme`, la `source` su ogni slide con dei fatti, i `logos` sulle slide giuste, la copertina (foto se c'e', loghi se no), la slide finale senza loghi. Scarica anche i loghi dei soggetti con `logo.py` e ti dice quali non ha trovato: quelli vanno nell'elenco "🏷️ Loghi mancanti" per GG.
+
+Se dice ERRORE non ha scritto niente, e il messaggio dice cosa fare (`"My take: 41 parole, il massimo e' 35"`). Correggi la voce e rilancia. **Perche':** prima si scriveva il JSON intero — 36 campi per carosello invece di 12 — e meta' di quello che `controllo.py` segnalava erano errori meccanici su campi che adesso non scrivi piu'. Ogni giro di correzione ripaga tutto il contesto, ed e' li' che se ne andavano i token.
+
+Il formato della voce e' documentato in cima a `strumenti/costruisci.py`. **Se una notizia vuole una forma che la voce non prevede, scrivi `nN.json` a mano** con lo schema qui sotto: lo script e' una scorciatoia, non una gabbia.
+
+LUNGHEZZA LIBERA: da 6 a 10 slide, decise dalla notizia. Una notizia piccola ne ha 6; una importante, con tanti dati, 8-10. Non tagliare mai informazioni utili per stare corto. Ordine:
 1. **cover** — tag Money/Power/Culture, titolo max 10 parole con `*una parte evidenziata*`, sottotitolo max 18 parole. Niente grafici in copertina. **L'immagine della copertina (decisione di GG, 16 nov 2026):** se il soggetto della notizia è già nell'archivio foto di Drive, usa la foto (`image` e `focus`); **altrimenti metti `logos` con gli stemmi dei soggetti** (club, lega, federazione, broadcaster, azienda) e il motore costruisce la copertina con i loghi grandi. Il primo logo è il soggetto principale ed esce più grande, gli altri (massimo 3 in tutto) fanno da contesto. **La copertina non si chiede mai a GG**: in archivio ci sono 401 loghi, una copertina si fa sempre.
 2. **text "What happened"** — solo fatti, max 35 parole, con `source`, con `logos` dei soggetti coinvolti.
 3. **text "How it works"** (SEMPRE, 1-2 slide) — è la LEZIONE del carosello: il meccanismo dietro la notizia spiegato semplice e concreto (come si vendono i diritti TV, cosa prevede la regola, come guadagna quel tipo di proprietario), con nomi, cifre e date precise. È la slide che insegna.
@@ -33,7 +47,8 @@ Per ogni notizia scrivi `~/gg/nN.json` (N = 1, 2, 3). LUNGHEZZA LIBERA: da 6 a 1
 
 REGOLE: i 3 caroselli del giorno usano 3 TIPI DIVERSI, possibilmente non la stessa combinazione del giorno prima. Scegli il tipo che racconta meglio il dato (tempo → line; parte di un tutto → donut o split; due soggetti → h2h; più soggetti → bars; prima/dopo → compare; sequenza → timeline; quanti su quanti → dots). STESSO LIVELLO (GG, 10 nov 2026): nello stesso grafico solo entità dello stesso livello (es. le 6 confederazioni, oppure le sotto-unioni di una sola, mai UEFA accanto ai Caraibi), con l'unità scritta nel titolo o nella frase di lettura.
 
-### Schema
+### Schema delle slide
+E' quello che `costruisci.py` produce. Serve per leggerlo e per i casi scritti a mano.
 ```json
 {"rubrica":"Explained","date":"29.10","slides":[
  {"type":"cover","tag":"Money","title":"...","sub":"...","image":"foto/1.jpg","focus":"center"},
