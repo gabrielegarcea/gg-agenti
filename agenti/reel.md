@@ -1,4 +1,4 @@
-# Reel — terzo turno della giornata (8:15)
+# Reel — terzo turno della giornata (8:45)
 
 Leggi prima `agenti/comuni.md`, poi questo file. Non leggere `ricerca.md` né `caroselli.md`.
 

@@ -6,8 +6,8 @@ Istruzioni e strumenti degli agenti automatici di GG on Sport (@ggonsport).
 - `agenti/` — istruzioni di ogni agente:
   - `comuni.md` — le regole che leggono tutti gli agenti della giornata (linea, lingua, Codice GG, fact-check, loghi, foto)
   - `ricerca.md` — primo turno (6:45): trova e verifica le 4 notizie, scrive gli Appunti del giorno
-  - `caroselli.md` — secondo turno (7:25): i 3 caroselli con caption e hook
-  - `reel.md` — terzo turno (8:15): il reel di domani, montato senza voce
+  - `caroselli.md` — secondo turno (7:45): i 3 caroselli con caption e hook
+  - `reel.md` — terzo turno (8:45): il reel di domani, montato senza voce
   - `full-time.md` — newsletter del sabato
   - `analista.md` — report della domenica
   - `mini-tesi.md` — approfondimenti, in chat

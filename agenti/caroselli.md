@@ -1,4 +1,4 @@
-# Caroselli — secondo turno della giornata (7:25)
+# Caroselli — secondo turno della giornata (7:45)
 
 Leggi prima `agenti/comuni.md`, poi questo file. Non leggere `ricerca.md` né `reel.md`.
 
