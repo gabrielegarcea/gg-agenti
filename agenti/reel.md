@@ -34,8 +34,7 @@ Regola: una persona sola al centro. Se nella storia ci sono tre protagonisti, sc
 **1. Le zone morte.** La zona utile del reel NON è il riquadro 1080x1920. Sono via 250 px in alto, 320 in basso, 120 per lato, e in basso a DESTRA la colonna dei pulsanti di Instagram, alta 768 px (da x=835 in poi, sotto y=1152). La parte bassa a SINISTRA si usa: lì stanno i sottotitoli. Il motore è impostato così (contenuto allineato a sinistra al titolo, largo 715 px, sottotitoli a y=1470): non spostare niente a mano e non centrare niente. Prima del render si controlla con `zone.py` (punto 4.6): se un testo, un numero o un grafico tocca il rosso, si corregge.
 
 **2. Mai lo schermo vuoto.** Ogni 4 secondi al massimo deve comparire qualcosa di NUOVO e di vero sullo schermo: una riga di testo, una voce di un grafico, un numero, una tappa della timeline. Uno stemma o una nota scritta a mano da soli NON contano: con uno stemma sullo schermo per dieci secondi lo spettatore scorre via. In pratica:
-- il primo elemento di ogni capitolo compare sulla PRIMA parola della prima frase (marker all'inizio del `say`, non in fondo);
-- una frase lunga ha almeno due marker, e quindi due cose che compaiono;
+- il primo elemento di ogni capitolo compare sulla PRIMA parola della prima frase e una frase lunga ha almeno due cose che compaiono: **questo non lo scrivi tu, lo fa `marker.py`** (punto 3b). Tu scrivi le frasi e gli elementi;
 - uno step che ha solo `logos` o `note` è vietato;
 - i grafici a più voci (timeline, testo a più righe, ledger, bars, split, h2h) si costruiscono un pezzo alla volta mentre la voce li nomina: è quello che tiene vivo lo schermo.
 `controllo.py` con `--timeline` misura tutto questo sui tempi veri e blocca il reel se c'è un buco: non si renderizza finché non dà zero errori.
@@ -62,14 +61,21 @@ Elementi in più rispetto alla skill:
 - Elementi disponibili nel motore: `bignum`, `bars`, `h2h`, `split`, `donut`, `line`, `timeline`, `dots`, `cards`, `text`, `note`, `logos`, `term`, `ledger`.
 
 Regole del motore:
-- **OGNI MARKER DEVE ESSERE UNICO IN TUTTO IL REEL**, non solo nel capitolo: se lo stesso id compare in due capitoli il motore non avvisa e un elemento non appare. Usa prefissi per capitolo (c1a, c2a, ...) e controlla i doppioni prima del render (lo fa anche `controllo.py`).
-- Usa i marker `{id}` e `at` per far comparire ogni pezzo quando la voce lo nomina.
+- **NON SCRIVERE NESSUN MARKER E NESSUN `at` (GG, 16 nov 2026).** Nei `say` scrivi solo le parole, negli elementi solo i contenuti. I marker li calcola `marker.py` al punto 3b: primo sulla prima parola, gli altri distribuiti lungo la frase, mai sull'ultima, e con id unici in tutto il reel. Finche' i marker si piazzavano a mano il controllo del ritmo passava al terzo o quarto giro, e ogni giro rigenera audio, tempi e controllo.
+- **Una frase per `say`, corta, senza punti ne' virgole interne** (dal collaudo del 13 nov 2026): `timing.py` ricava i confini dei segmenti dai silenzi della voce guida, e una pausa dentro la frase viene scambiata per la fine del segmento, allungando o accorciando i tempi anche del doppio.
+- Servono circa due cose che compaiono per step. Se un elemento non ha abbastanza voci (`text` a 5-8 righe, `ledger` a 3 voci per colonna) `marker.py` te lo dice e spezzi lo step.
 - COVER senza foto con `big`: il numero gigante conta già come momento firma, usane uno diverso dal punch dei capitoli. `bigLabel` = 2-6 parole sotto il numero che dicono cosa conta (`"big":"$2.5bn","bigLabel":"for a *minority stake*"`, `*x*` = arancione). Usala quando il numero da solo non si capisce.
 - DONUT: `value` è la percentuale vera (0-100) e `display` il testo finale. Se `display` è una percentuale deve essere lo stesso numero di `value` (il motore fa salire il numero fino a quello). Se è un testo diverso ("3 in 5"), lo mostra fisso.
 - OUTRO: titolo al massimo 2 righe corte (~12 caratteri per riga), altrimenti copre il sondaggio. Controllalo nell'anteprima. Nello stesso reel non usare due volte lo stesso tipo di grafico.
 - LOGHI OBBLIGATORI quando un capitolo nomina club, leghe, federazioni, broadcaster o aziende: almeno in 2-3 capitoli.
 
-Salva la bozza in `~/gg/reel/reel.json`. Poi **controlla con lo script**: `cp ~/gg-agenti/strumenti/controllo.py ~/gg/ && cd ~/gg && python3 controllo.py reel/reel.json` (marker doppi, elementi fissi presenti, parole italiane, lunghezze, coerenza donut, `lang`). Correggi ogni `ERRORE` e rilancialo.
+Salva la bozza in `~/gg/reel/reel.json`, **senza marker e senza `at`**.
+
+**3b. I marker, con lo script (obbligatorio, prima di ogni altra cosa):**
+`cp ~/gg-agenti/strumenti/reel/marker.py ~/gg/ && cd ~/gg && python3 marker.py reel/reel.json`
+Mette i `{id}` nei `say` e gli `at` sugli elementi, da solo. Se dice ERRORE non ha scritto niente: vuol dire che uno step ha piu' cose da far comparire che parole per dirle — spezza lo step in due o togli una voce al grafico, e rilancia. Lo script e' idempotente: se rilanciato lascia stare gli step che hanno gia' i marker.
+
+**3c. Poi il controllo del JSON:** `cp ~/gg-agenti/strumenti/controllo.py ~/gg/ && cd ~/gg && python3 controllo.py reel/reel.json` (elementi fissi presenti, parole italiane, lunghezze, coerenza donut, `lang`, marker doppi). Correggi ogni `ERRORE` e rilancialo.
 
 ## 4. Reel montato senza voce
 GG vuole il reel completo, con i sottotitoli del testo proposto, ma **senza nessuna voce**: la voce la mette lui dopo. Nessuna voce sintetica deve sentirsi nel video.
