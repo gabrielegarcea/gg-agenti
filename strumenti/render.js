@@ -135,6 +135,9 @@ h1 em{font-style:normal;color:var(--acc)}
 .lgo{width:var(--lg,92px);height:var(--lg,92px);border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:0 0 0 4px color-mix(in srgb,var(--fg) 15%,transparent)}
 .lgo img{width:80%;height:80%;object-fit:contain}
 .lgo.sm{--lg:58px}
+.lgo.big{--lg:300px;box-shadow:0 0 0 8px color-mix(in srgb,var(--fg) 12%,transparent)}
+.lgs-big{display:flex;gap:44px;align-items:center;flex-wrap:wrap;height:100%;padding-top:70px;align-content:flex-start}
+.lgs-big .lgo:nth-child(n+3),.lgs-big .lgo:nth-child(2):nth-last-child(1){--lg:220px}
 .lb .nmw{display:flex;align-items:center;gap:16px}
 .hh .nm .side{display:flex;align-items:center;gap:16px}
 .hh .nm .side.b{flex-direction:row-reverse}
@@ -167,12 +170,16 @@ function slide(s, i, total) {
   const top = `<div class="top"><div class="kick">${esc(rub)}</div><div class="meta">${date}<div class="n">${i + 1}/${total}</div></div></div>`;
   const last = i === total - 1;
   const foot = `<div class="foot"><div class="sig">GG<span>.</span></div><div class="swipe">${last ? '@ggonsport' : 'swipe →'}</div></div>`;
-  const tag = (s.tag ? `<div class="tag">${esc(s.tag)}</div>` : '') + ((s.logos && !isCover && s.type !== 'end') ? `<div class="lgs">${s.logos.map(p => LG(p)).join('')}</div>` : '');
+  const coverLoghi = isCover && !s.image && Array.isArray(s.logos) && s.logos.length > 0;
+  const tag = (s.tag ? `<div class="tag">${esc(s.tag)}</div>` : '') + ((s.logos && s.type !== 'end' && !coverLoghi) ? `<div class="lgs">${s.logos.map(p => LG(p)).join('')}</div>` : '');
   const src = s.source ? `<div class="src">Source: ${esc(s.source)}</div>` : '';
   let inner;
   switch (s.type) {
-    case 'cover':
-      inner = `<div class="grow"></div><div class="fit">${tag}<div class="bar"></div><h1>${fmtH(s.title)}</h1>${s.sub ? `<div class="sub">${fmt(s.sub)}</div>` : ''}</div>`; break;
+    case 'cover': {
+      // Senza foto la copertina si regge sui loghi (401 in archivio) invece che su una faccia (GG, 16 nov 2026).
+      const blocco = coverLoghi ? `<div class="lgs-big">${s.logos.slice(0, 3).map(p => LG(p, 'big')).join('')}</div>` : '';
+      inner = `<div class="grow">${blocco}</div><div class="fit">${tag}<div class="bar"></div><h1>${fmtH(s.title)}</h1>${s.sub ? `<div class="sub">${fmt(s.sub)}</div>` : ''}</div>`; break;
+    }
     case 'stat':
       inner = `<div class="grow"></div><div class="fit">${tag}<div class="num">${esc(s.stat)}</div><div class="lab">${fmt(s.body)}</div>${src}</div><div class="grow"></div>`; break;
     case 'bars': {

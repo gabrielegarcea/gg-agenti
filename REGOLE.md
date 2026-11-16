@@ -20,7 +20,7 @@ Queste regole le decide GG: gli agenti le applicano e non le modificano.
 - Le opinioni vengono dal Codice GG (Google Doc, `{CODICE_GG}`, letto con `read_doc`). Se il Codice non copre un tema, l'opinione è "dedotta" e va confermata da GG.
 - Niente autoreferenze nei contenuti ("Codice GG", "Art. N", "come dico sempre").
 - Niente inviti a salvare, mandare o condividere.
-- Loghi obbligatori quando si nominano club, leghe, broadcaster, aziende (mai su prima e ultima slide). Copertine con foto.
+- Loghi obbligatori quando si nominano club, leghe, broadcaster, aziende; **mai sull'ultima slide**. **Copertina (GG, 16 nov 2026): foto se il soggetto è già nell'archivio Drive, altrimenti i loghi dei soggetti, grandi.** Il primo logo è il soggetto principale, gli altri fanno da contesto. La copertina non si chiede mai a GG: si consegna comunque.
 - Foto di persone: solo dall'archivio Drive o mandate da GG, mai dal web. Loghi: dall'archivio `loghi/` o da archivi pubblici.
 - Palette: navy `#0B1F3A`, blu `#1F4FD1`, arancio `#FF6A13`, carta `#F4F1EA`. Font: Anton + Inter.
 - GG pubblica a mano: gli agenti non pubblicano nulla da nessuna parte.

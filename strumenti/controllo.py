@@ -234,8 +234,8 @@ def controlla_carosello(path, d):
             if str(s.get("tag", "")) not in ("Money", "Power", "Culture"):
                 err(dove, "tag di copertina: serve Money, Power o Culture (ora: %r)"
                     % s.get("tag"))
-            if not s.get("image"):
-                avv(dove, "copertina senza foto: va chiesta a GG")
+            if not s.get("image") and not s.get("logos"):
+                avv(dove, "copertina senza foto: mettici i loghi dei soggetti (GG, 16 nov 2026). La foto si usa solo se il soggetto e' gia' in archivio")
         if t == "text" and parole(s.get("body")) > 35:
             err(dove, "corpo di %d parole, il massimo e' 35" % parole(s.get("body")))
         if t in GRAFICI:
@@ -254,8 +254,8 @@ def controlla_carosello(path, d):
                 ha_loghi = True
         if ha_loghi:
             con_loghi += 1
-            if i == 0 or i == n - 1:
-                err(dove, "loghi sulla prima o ultima slide: non si fa mai")
+            if i == n - 1:
+                err(dove, "loghi sull'ultima slide: non si fa mai")
 
     if con_loghi < 2:
         err(nome, "solo %d slide con loghi: ne servono almeno 2-3" % con_loghi)
