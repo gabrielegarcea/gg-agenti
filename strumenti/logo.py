@@ -86,15 +86,31 @@ def candidates(name):
         elif q in t.split(): out.append((2.5 + len(t) / 100, "marchi", slug))
     return sorted(out)[:8]
 
+def svg2png(svg, dst, size=512):
+    """SVG -> PNG senza dipendere da pip: cairosvg se c'e', altrimenti rsvg-convert, altrimenti Chromium (Playwright)."""
+    try:
+        import cairosvg
+        return cairosvg.svg2png(bytestring=svg.encode(), write_to=dst, output_width=size, output_height=size)
+    except ImportError:
+        pass
+    import shutil, tempfile
+    if shutil.which("rsvg-convert"):
+        r = subprocess.run(["rsvg-convert", "-w", str(size), "-h", str(size), "-o", dst], input=svg.encode(), capture_output=True)
+        if r.returncode == 0 and os.path.exists(dst): return
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as pw:
+        b = pw.chromium.launch(); pg = b.new_page(viewport={"width": size, "height": size})
+        pg.set_content('<html><body style="margin:0;background:transparent">' + svg.replace("<svg ", f'<svg width="{size}" height="{size}" ', 1) + "</body></html>")
+        pg.screenshot(path=dst, omit_background=True); b.close()
+
 def svg_png(slug, dst):
-    import cairosvg
     p = checkout("marchi", f"icons/{slug}.svg")
     data = json.load(open(checkout("marchi", "data/simple-icons.json")))
     data = data["icons"] if isinstance(data, dict) else data
     hexc = next((i["hex"] for i in data if (i.get("slug") or re.sub(r"[^a-z0-9]", "", norm(i["title"]))) == slug), "0B1F3A")
     if hexc.upper() in ("FFFFFF", "FFF"): hexc = "0B1F3A"
     svg = open(p).read().replace("<svg ", f'<svg fill="#{hexc}" ', 1)
-    cairosvg.svg2png(bytestring=svg.encode(), write_to=dst, output_width=512, output_height=512)
+    svg2png(svg, dst)
 
 ARCH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "loghi")
 

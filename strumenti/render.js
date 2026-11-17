@@ -10,9 +10,12 @@ const data = JSON.parse(fs.readFileSync(input, 'utf8'));
 const baseDir = path.dirname(path.resolve(input));
 fs.mkdirSync(outDir, { recursive: true });
 
-const font = (pkg, file) =>
-  'data:font/woff2;base64,' +
-  fs.readFileSync(path.join(__dirname, 'node_modules/@fontsource', pkg, 'files', file)).toString('base64');
+// font: prima quelli nel repository (strumenti/fonts, nessuna installazione), poi node_modules
+const FONT_DIRS = [path.join(__dirname, 'fonts'), path.join(__dirname, '..', 'fonts'), path.join(require('os').homedir(), 'gg-agenti', 'strumenti', 'fonts')];
+const fontFile = (pkg, file) => { for (const d of FONT_DIRS) { const f = path.join(d, file); if (fs.existsSync(f)) return f; }
+  const f = path.join(__dirname, 'node_modules/@fontsource', pkg, 'files', file); if (fs.existsSync(f)) return f;
+  console.error('ERRORE: font ' + file + ' non trovato (cercato in strumenti/fonts e node_modules)'); process.exit(1); };
+const font = (pkg, file) => 'data:font/woff2;base64,' + fs.readFileSync(fontFile(pkg, file)).toString('base64');
 
 const css = `
 @font-face{font-family:Anton;src:url(${font('anton', 'anton-latin-400-normal.woff2')})}

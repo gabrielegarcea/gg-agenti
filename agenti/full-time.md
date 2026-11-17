@@ -46,7 +46,7 @@ PARTE A PAGAMENTO
 - Chiusura: una domanda ai lettori (where do you stand? hit reply) + firma "GG.".
 - Sources: elenco dei link usati.
 
-GRAFICI: 1-2 per numero, PNG 1600x1000, fatti con Python (pip install --break-system-packages matplotlib se serve). Palette: navy #0B1F3A, blu #1F4FD1, arancio #FF6A13, fondo carta #F4F1EA; testo in inglese; titolo che dice la conclusione (es. "Premier League clubs earn 2x more from TV than LaLiga's"); fonte in basso a sinistra ("Source: ..."); firma "GG." in basso a destra. Ogni numero del grafico segue la regola delle 2 fonti. Guarda ogni grafico con Read prima di consegnarlo (testo leggibile, niente sovrapposizioni).
+GRAFICI: 1-2 per numero, PNG 1600x1000, fatti con Python e matplotlib (già presente: non installare niente). Palette: navy #0B1F3A, blu #1F4FD1, arancio #FF6A13, fondo carta #F4F1EA; testo in inglese; titolo che dice la conclusione (es. "Premier League clubs earn 2x more from TV than LaLiga's"); fonte in basso a sinistra ("Source: ..."); firma "GG." in basso a destra. Ogni numero del grafico segue la regola delle 2 fonti. Guarda ogni grafico con Read prima di consegnarlo (testo leggibile, niente sovrapposizioni).
 
 == 4. CONSEGNA ==
 Salva la newsletter come ~/fulltime/full-time-AAAA-MM-GG.md (markdown semplice: titoli con ##, grassetti, link; la riga del paywall resta com'è; nel punto di ogni grafico scrivi [CHART: nome-file.png]) e i grafici come ~/fulltime/chart-1.png ecc. Manda tutto con SendUserFile (status "proactive", display "attach").

@@ -14,8 +14,12 @@ const FPS = cfg.fps || (NST.fps60 ? 60 : 30);
 const LOGO_SVG = (() => { for (const f of [path.join(__dirname, 'brand', 'gg-simbolo.svg'), path.join(__dirname, '..', '..', 'brand', 'gg-simbolo.svg')]) { try { return fs.readFileSync(f, 'utf8').replace(/ width="\d+" height="\d+"/, ''); } catch (e) {} } console.error('ATTENZIONE: logo gg-simbolo.svg non trovato'); return ''; })();
 const rel = p => (path.isAbsolute(p) ? p : path.join(base, p));
 
-const font = (pkg, file) => 'data:font/woff2;base64,' +
-  fs.readFileSync(path.join(__dirname, 'node_modules/@fontsource', pkg, 'files', file)).toString('base64');
+// font: prima quelli nel repository (strumenti/fonts, nessuna installazione), poi node_modules
+const FONT_DIRS = [path.join(__dirname, 'fonts'), path.join(__dirname, '..', 'fonts'), path.join(require('os').homedir(), 'gg-agenti', 'strumenti', 'fonts')];
+const fontFile = (pkg, file) => { for (const d of FONT_DIRS) { const f = path.join(d, file); if (fs.existsSync(f)) return f; }
+  const f = path.join(__dirname, 'node_modules/@fontsource', pkg, 'files', file); if (fs.existsSync(f)) return f;
+  console.error('ERRORE: font ' + file + ' non trovato (cercato in strumenti/fonts e node_modules)'); process.exit(1); };
+const font = (pkg, file) => 'data:font/woff2;base64,' + fs.readFileSync(fontFile(pkg, file)).toString('base64');
 const imgData = p => {
   const ext = path.extname(p).slice(1).toLowerCase().replace('jpg', 'jpeg');
   return `data:image/${ext};base64,${fs.readFileSync(rel(p)).toString('base64')}`;

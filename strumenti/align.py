@@ -4,8 +4,19 @@
 # Nessun servizio esterno, nessun modello da scaricare. Serve: pip install librosa (una volta).
 # Uso: python3 align.py reel.json timeline.json   (stesso output di timing.py, ma preciso)
 import json, os, re, subprocess, sys, tempfile, wave
-import numpy as np
-import librosa
+import numpy as np, shutil
+# Senza librosa o senza espeak-ng (sessioni senza rete per pip/apt) non si blocca: passa a timing.py,
+# che lavora sulle pause della voce vera di GG (17 nov 2026).
+try:
+    import librosa
+    if not shutil.which("espeak-ng"): raise ImportError("espeak-ng non installato")
+except ImportError as _e:
+    _t = next((c for c in (os.path.join(os.path.dirname(os.path.abspath(__file__)), "timing.py"),
+                           os.path.join(os.path.dirname(os.path.abspath(__file__)), "reel", "timing.py"),
+                           os.path.expanduser("~/gg-agenti/strumenti/reel/timing.py")) if os.path.exists(c)), None)
+    print("align.py: %s -> uso timing.py (tempi dalle pause della voce vera)" % _e)
+    if not _t: sys.exit("ERRORE: timing.py non trovato")
+    sys.exit(subprocess.run([sys.executable, _t] + sys.argv[1:]).returncode)
 
 cfg = json.load(open(sys.argv[1], encoding="utf-8"))
 base = os.path.dirname(os.path.abspath(sys.argv[1]))
