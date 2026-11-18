@@ -8,8 +8,9 @@ Queste regole le decide GG: gli agenti le applicano e non le modificano.
 - **Lente:** "Uso lo sport per spiegare come funziona il mondo: soldi, potere, cultura."
 - **Pubblico:** internazionale. Chi vuole lavorare nel mondo dello sport (dirigente, scout, marketing, club, leghe, federazioni, media) o ci è ai margini, più i curiosi.
 - **Specializzazione:** lo SPORT MANAGEMENT, non un singolo sport. La notizia del giorno è il gancio, la lezione di sport management è il contenuto: ogni contenuto deve insegnare ancora qualcosa tra sei mesi.
-- **Sport:** calcio, NBA, NFL. Nient'altro.
-- **Lingua:** INGLESE, punto di vista internazionale, senza centralità italiana. Il messaggio degli agenti a GG resta in italiano.
+- **Sport (GG, 18 nov 2026):** calcio e basket (NBA, NBA Europe, EuroLeague, campionati europei). La NFL solo per le storie di business enormi. Nient'altro. Quote per sport e area in `agenti/ricerca.md`.
+- **Identità (GG, 18 nov 2026):** radici europee, sguardo internazionale. GG è un europeo che spiega lo sport business al mondo: il centro è il calcio europeo, l'America entra come termine di paragone o quando i suoi soldi e i suoi modelli arrivano in Europa.
+- **Lingua:** INGLESE, senza centralità italiana (al massimo 1 contenuto italiano al giorno e 4 a settimana). Il messaggio degli agenti a GG resta in italiano.
 - **Cosa ci distingue:** brand EDUCATIVO. Ogni contenuto spiega il meccanismo, i numeri, il contesto, chi ci guadagna e chi ci perde, e contiene l'opinione di GG (dal Codice GG). Mai riassunti generici.
 
 ## Regole fisse

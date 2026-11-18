@@ -141,7 +141,7 @@ OGGI, pubblica (ora italiana):
 - I loghi nuovi presi dagli archivi pubblici si elencano DOPO il blocco, in una riga sola: `🆕 Loghi nuovi da archiviare: <nome> (fonte)`. È l'unica cosa che può stare sotto il blocco azioni.
 
 ## 6. Scrivi nell'archivio
-Dopo la consegna, aggiungi le 3 righe dei caroselli nel foglio "Archivio Sport Management" (`{ARCHIVIO}`) come dice `comuni.md`: una sola chiamata `append_values` su `Contenuti!A1` con le 3 righe, 18 colonne ciascuna, data di oggi in formato AAAA-MM-GG. I contenuti delle colonne li prendi dagli appunti (lezione, meccanismo, numeri, opinione, Codice, tema, soggetti, fonti) e dal tuo lavoro (titolo EN, key terms della caption, tipo di grafico). Se la chiamata non riesce, riprova una volta e aggiungi una riga al messaggio: `⚠️ archivio non aggiornato`.
+Dopo la consegna, aggiungi le 3 righe dei caroselli nel foglio "Archivio Sport Management" (`{ARCHIVIO}`) come dice `comuni.md`: una sola chiamata `append_values` su `Contenuti!A1` con le 3 righe, 19 colonne (A-S) ciascuna, data di oggi in formato AAAA-MM-GG. I contenuti delle colonne li prendi dagli appunti (lezione, meccanismo, numeri, opinione, Codice, tema, soggetti, fonti) e dal tuo lavoro (titolo EN, key terms della caption, tipo di grafico). Se la chiamata non riesce, riprova una volta e aggiungi una riga al messaggio: `⚠️ archivio non aggiornato`.
 
 ## 7. Quando GG manda foto o loghi (nella tua chat)
 Gli allegati sono in `/mnt/user-data/uploads/`. Distingui: loghi (PNG/SVG/JPG di stemmi e marchi, o quelli che GG indica come loghi) → nelle slide dove mancavano; immagini → foto delle copertine. I file audio NON sono tuoi: sono la voce del reel, la gestisce l'agente Reel.

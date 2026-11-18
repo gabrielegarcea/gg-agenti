@@ -17,9 +17,9 @@ Prepara la lista dei temi e soggetti vietati: la passi ai sotto-agenti.
 ## 2. Tre sotto-agenti di ricerca (in parallelo, una sola chiamata)
 Lancia tre sotto-agenti (`general-purpose`) nello stesso blocco, uno per ambito. A ognuno passi: la lista dei temi/soggetti vietati, la data di oggi, le fonti che si aprono e quelle da evitare (da `comuni.md`), e il referto che devi ricevere.
 
-- **A — Calcio:** diritti TV, proprietà e fondi nei club, stadi, sponsor, bilanci, governance (UEFA, FIFA, FIGC, Lega Serie A, Premier League, LaLiga, Bundesliga, Ligue 1).
-- **B — NBA e NFL:** business, proprietà e quote, contratti, diritti TV, stadi e arene, salary cap, scommesse e integrità, scandali.
-- **C — Soldi, potere e cultura attorno allo sport:** Stati e fondi sovrani, sportswashing, grandi eventi, sanzioni, soft power, scommesse e betting, leghe emergenti (MLS, Saudi, Asia), cultura e identità dei tifosi.
+- **A — Calcio europeo:** diritti TV, proprietà e fondi nei club (compresi i proprietari americani e del Golfo), stadi, sponsor, bilanci, governance (UEFA, Unione europea e Corte di giustizia, Premier League, LaLiga, Bundesliga, Ligue 1, Serie A, Eredivisie, Liga Portugal, Scozia), cultura e identità dei tifosi.
+- **B — Basket:** EuroLeague, NBA Europe, FIBA, campionati europei (ACB, LBA, BBL, Grecia, Turchia), e il business della NBA (proprietà, diritti TV, arene, salary cap, espansione). Fonti utili da provare: Eurohoops, Basketnews, Sportando.
+- **C — Mondo:** FIFA e grandi eventi, Stati e fondi sovrani, sportswashing, Golfo, Sudamerica, MLS e calcio americano, scommesse e integrità. La NFL solo se passa il filtro della sezione 3.
 
 Istruzioni identiche per tutti e tre (scrivile nel prompt del sotto-agente):
 1. Cerca con WebSearch (mode "extended") solo i fatti delle **ultime 24-36 ore**. Metti il nome della testata nella ricerca per farla uscire (es. "Front Office Sports NBA ownership").
@@ -31,7 +31,7 @@ Istruzioni identiche per tutti e tre (scrivile nel prompt del sotto-agente):
    - I fatti e i numeri utili, **ognuno con i 2 link che lo confermano** (testate distinte; due copie della stessa agenzia contano come una)
    - Contesto per la caption: precedenti, un caso simile in un'altra lega o paese, cifre di confronto, chi ci guadagna e chi ci perde, cosa succede dopo
    - Segnali di rumore online trovati, con link: quante testate distinte ne parlano, se è in apertura o tra i più letti di un grande sito, se un articolo aperto riporta numeri di visualizzazioni o polemiche sui social
-   - Sport (calcio / NBA / NFL) e area geografica
+   - Sport (calcio / basket / NFL) e area (Europa / Nord America / Mondo)
 5. Non scrivere contenuti, non proporre opinioni, non inventare numeri: se un dato ha una sola fonte, scrivi "1 fonte" accanto e non arrotondare.
 
 ## 3. Scelta delle 4 notizie
@@ -39,15 +39,18 @@ Dai referti scegli 3 notizie per i caroselli, idealmente una MONEY, una POWER, u
 
 **FOTO PRIMA (decisione di GG, 18 nov 2026).** I contenuti si scelgono in base alle foto che abbiamo, non il contrario: senza una faccia che parla in video, i reel e i caroselli vivono di foto, grafici e suono. Prima di scegliere, leggi `indice-foto.md` nella cartella "Appunti del giorno" (`search_files` con `parentId = '{APPUNTI_DEL_GIORNO}' and title = 'indice-foto.md'`, poi `read_file_content`): è l'elenco di chi e cosa ha una foto in archivio. A parità di forza vince SEMPRE la notizia il cui protagonista (persona, club con il suo stadio, arena) è nell'indice. Una notizia senza foto passa solo se è oro colato (la più forte della giornata di gran lunga): in quel caso scrivi negli appunti `⚠️ senza foto, scelta perché <motivo in una riga>`. Negli appunti, alla riga "Foto suggerita", scrivi il NOME ESATTO come compare nell'indice (es. `Goodell`, `SoFi Stadium`), o `nessuna`.
 
-SPORT E VARIETÀ:
-- Sport ammessi: calcio, NBA, NFL. Nient'altro.
-- Il calcio può avere 1, 2 o anche 3 notizie, se sono le più forti.
-- Quando c'è una storia forte su NBA o NFL, almeno 1 delle 3 è NBA o NFL. Se oggi non c'è una storia NBA/NFL forte e recente, prendi una notizia NBA/NFL più piccola ma sempre delle ultime 36 ore, purché porti a una lezione che non scade (GG, 10 nov 2026). Le 36 ore non cambiano: niente notizie vecchie ripescate.
+SPORT E VARIETÀ (decisione di GG, 18 nov 2026: radici europee, sguardo internazionale):
+- Sport ammessi: calcio e basket (NBA, NBA Europe, EuroLeague, campionati europei, FIBA). La NFL solo per le storie di business enormi (sotto). Nient'altro.
+- **Quote della settimana** (28 contenuti: 21 caroselli + 7 reel). Calcio europeo 14-16 (circa 55%); basket 5-6 (circa 20%), di cui almeno 2 europei; calcio fuori dall'Europa (FIFA, Golfo, Sudamerica, MLS) 3-4; NFL da 0 a 2. Per area: Europa almeno il 60%, Nord America al massimo il 20%. Prima di scegliere conta le righe degli ultimi 7 giorni nella scheda `Antiripetizione` (colonna sport) e correggi verso le quote.
+- **Ogni giorno:** almeno 2 dei 4 contenuti sono di calcio europeo; al massimo 1 storia "solo americana" (NBA o NFL senza nessun aggancio europeo); al massimo 1 contenuto italiano (e 4 a settimana).
+- **Nessuno sport si forza.** Non esiste più la regola "almeno 1 NBA o NFL" (tolta il 18 nov 2026: metteva ogni giorno una storia americana anche quando era debole). Se oggi manca un basket forte, si fa calcio.
+- **NFL, quando entra:** solo per business enorme. Cioè una cifra da almeno 1 miliardo (diritti TV, vendita di una squadra, uno stadio), una regola della lega che cambia (fondi nella proprietà, calendario internazionale) o la NFL in Europa (partite a Londra, Berlino, Madrid). E la lezione deve valere anche per il calcio europeo. Contratti di giocatori, multe e arbitri NON passano. Mai due giorni di fila, al massimo un reel NFL ogni due settimane.
+- Il calcio può avere 1, 2 o anche 3 notizie su 3, se sono le più forti. Le 36 ore non cambiano: niente notizie vecchie ripescate.
 - Mai 2 notizie sulla stessa istituzione, lega, club o persona, e mai lo stesso tema due volte (due notizie di diritti TV = vietato).
 - Varia anche rispetto ai giorni precedenti (dalla scheda `Antiripetizione`): evita lo stesso tema generale due giorni di fila, anche con soggetti diversi. E non ripetere una lezione che la scheda `Lezioni` dà come già insegnata di recente.
-- Se le notizie nuove forti sono poche, fai rilanciare un sotto-agente su altre aree (Spagna, Inghilterra, Germania, Francia, Arabia Saudita, MLS): non ripescare mai notizie già usate per riempire.
+- Se le notizie nuove forti sono poche, fai rilanciare un sotto-agente su altre aree europee (Spagna, Inghilterra, Germania, Francia, Olanda, Portogallo, Scozia, Turchia, Grecia) e solo dopo sul resto del mondo: non ripescare mai notizie già usate per riempire.
 
-**LA QUARTA, QUELLA DEL REEL** (calcio, NBA o NFL, diversa dalle 3): il reel esce DOMANI, quindi scegli una notizia che regge 24 ore, con una lezione che non scade. Scarta trattative in corso, risultati che cambiano in giornata, voci di mercato, eventi con un seguito già fissato per oggi o domani. Tra quelle che reggono prendi quella che ha fatto più rumore online, misurato SOLO con i segnali che i sotto-agenti hanno aperto davvero (GG, 10 nov 2026): testate distinte, apertura o "più letti" di un grande sito, un articolo che riporta numeri social. Ne servono almeno 2, ognuno con un link. Mai citare tendenze social non lette in un articolo.
+**LA QUARTA, QUELLA DEL REEL** (calcio o basket, diversa dalle 3; NFL solo con il filtro sopra e al massimo una volta ogni due settimane): il reel esce DOMANI, quindi scegli una notizia che regge 24 ore, con una lezione che non scade. Scarta trattative in corso, risultati che cambiano in giornata, voci di mercato, eventi con un seguito già fissato per oggi o domani. Tra quelle che reggono prendi quella che ha fatto più rumore online, misurato SOLO con i segnali che i sotto-agenti hanno aperto davvero (GG, 10 nov 2026): testate distinte, apertura o "più letti" di un grande sito, un articolo che riporta numeri social. Ne servono almeno 2, ognuno con un link. Mai citare tendenze social non lette in un articolo.
 
 ## 4. Verifica (un quarto sotto-agente)
 Lancia un sotto-agente `general-purpose` con l'elenco di TUTTI i fatti che hai scelto di usare (numeri, date, nomi, citazioni, "per la prima volta", "il più grande") e i link indicati dai primi tre. Istruzioni per lui: riapri le fonti con WebFetch e per ogni fatto rispondi "CONFERMATO (2 testate distinte: link, link)", "1 SOLA FONTE (link)" oppure "SMENTITO / DIVERSO (il dato giusto è X, link)". Deve anche dire se le due fonti sono copie della stessa agenzia. Non deve riscrivere nulla.
@@ -64,7 +67,7 @@ Crea su Drive il file `appunti-GG.MM.md` nella cartella "Appunti del giorno" (`{
 
 ```
 # Appunti GG.MM.AAAA
-## Carosello 1 — <titolo> [Money|Power|Culture] [calcio|NBA|NFL]
+## Carosello 1 — <titolo> [Money|Power|Culture] [calcio|basket|NFL] [Europa|Nord America|Mondo]
 Lezione: <una riga>
 Fatti verificati: <un elenco, ognuno con i 2 link>
 Contesto per la caption: <precedenti, casi simili, cifre di confronto, chi vince/chi perde, cosa succede dopo>
@@ -95,5 +98,6 @@ Le righe dell'Archivio Sport Management le scrivono gli agenti che producono i c
 Tu sei l'unico dei tre a non consegnare materiale a GG, quindi il tuo messaggio è il più corto di tutti: 4-6 righe in italiano, senza introduzioni e senza riepilogo dei passaggi.
 - Le 4 notizie scelte: solo il titolo, una riga ciascuna, con il formato a cui sono destinate.
 - Il format del reel di turno, una riga.
+- Il mix degli ultimi 7 giorni compresi i 4 di oggi, una riga: `Mix 7 gg: calcio EU N · basket N (EU N) · calcio mondo N · NFL N · Italia N`. Se una quota è fuori, aggiungi perché in poche parole.
 - Se qualcosa è andato storto (foglio non leggibile, un sotto-agente a vuoto, fonti rifiutate, un fatto importante con una sola fonte): una riga per ognuno. Se non è andato storto niente, non scrivere nulla in più.
 Non mettere la lezione, l'opinione, le fonti o i segnali di rumore: sono negli appunti, e GG non li deve leggere la mattina.

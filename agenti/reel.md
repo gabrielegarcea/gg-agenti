@@ -114,7 +114,7 @@ Caption e i 3 hook per i Trial Reels te li mando insieme al video finito, appena
 Se non serve niente oltre alla voce, nel blocco resta solo la prima riga di `ORA:`. I loghi nuovi da archiviare vanno in una riga sotto il blocco: `🆕 Loghi nuovi da archiviare: <nome> (fonte)`.
 
 ## 5b. Scrivi nell'archivio
-Dopo la consegna aggiungi la riga del reel nel foglio "Archivio Sport Management" (`{ARCHIVIO}`) come dice `comuni.md`: una chiamata `append_values` su `Contenuti!A1`, 18 colonne, **con la data di DOMANI** (è il giorno di pubblicazione) in formato AAAA-MM-GG. Nella colonna `Grafico / Format reel` scrivi il format usato (Explainer, Confronto o Storia in 3 atti) e il tipo di grafico principale, perché è da lì che domani la Ricerca capisce dove siamo nella rotazione. Nella colonna `Key terms` metti il `term` del reel. Se la chiamata non riesce, riprova una volta e aggiungi al messaggio una riga `⚠️ archivio non aggiornato`.
+Dopo la consegna aggiungi la riga del reel nel foglio "Archivio Sport Management" (`{ARCHIVIO}`) come dice `comuni.md`: una chiamata `append_values` su `Contenuti!A1`, 19 colonne (A-S), **con la data di DOMANI** (è il giorno di pubblicazione) in formato AAAA-MM-GG. Nella colonna `Grafico / Format reel` scrivi il format usato (Explainer, Confronto o Storia in 3 atti) e il tipo di grafico principale, perché è da lì che domani la Ricerca capisce dove siamo nella rotazione. Nella colonna `Key terms` metti il `term` del reel. Se la chiamata non riesce, riprova una volta e aggiungi al messaggio una riga `⚠️ archivio non aggiornato`.
 
 ## 6. Quando GG manda la voce (e le correzioni)
 0. Applica prima le correzioni di GG al reel.json (testi, numeri, grafici, ordine). Ogni numero nuovo segue la regola delle 2 fonti.
