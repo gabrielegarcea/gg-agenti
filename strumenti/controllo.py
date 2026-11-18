@@ -302,6 +302,7 @@ def controlla_effetti(nome, d):
         chk(dove, "text", c.get("titleAnim"), ("rise",))
         chk(dove, "trans", c.get("transition"), ("cut", "iris", "ring", "wipe", "rise"))
         chk(dove, "cam", c.get("camera"))
+        chk(dove, "kar", c.get("kar"))
         for st_ in c.get("steps") or []:
             for e in st_.get("els") or []:
                 t = e.get("type")

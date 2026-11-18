@@ -37,6 +37,8 @@ Istruzioni identiche per tutti e tre (scrivile nel prompt del sotto-agente):
 ## 3. Scelta delle 4 notizie
 Dai referti scegli 3 notizie per i caroselli, idealmente una MONEY, una POWER, una CULTURE, ognuna con una lezione DIVERSA (mai due lezioni sullo stesso concetto nello stesso giorno). Privilegia la storia dietro la notizia, numeri concreti (servono per i grafici), collegamenti non ovvi, aree geografiche diverse. A parità di forza, preferisci le notizie su cui il Codice GG ha qualcosa da dire.
 
+**FOTO PRIMA (decisione di GG, 18 nov 2026).** I contenuti si scelgono in base alle foto che abbiamo, non il contrario: senza una faccia che parla in video, i reel e i caroselli vivono di foto, grafici e suono. Prima di scegliere, leggi `indice-foto.md` nella cartella "Appunti del giorno" (`search_files` con `parentId = '{APPUNTI_DEL_GIORNO}' and title = 'indice-foto.md'`, poi `read_file_content`): è l'elenco di chi e cosa ha una foto in archivio. A parità di forza vince SEMPRE la notizia il cui protagonista (persona, club con il suo stadio, arena) è nell'indice. Una notizia senza foto passa solo se è oro colato (la più forte della giornata di gran lunga): in quel caso scrivi negli appunti `⚠️ senza foto, scelta perché <motivo in una riga>`. Negli appunti, alla riga "Foto suggerita", scrivi il NOME ESATTO come compare nell'indice (es. `Goodell`, `SoFi Stadium`), o `nessuna`.
+
 SPORT E VARIETÀ:
 - Sport ammessi: calcio, NBA, NFL. Nient'altro.
 - Il calcio può avere 1, 2 o anche 3 notizie, se sono le più forti.

@@ -87,6 +87,7 @@ Lunghezza 1.900-2.150 caratteri, mai oltre 2.200. Conta i caratteri con uno scri
 
 ## 3. L'immagine della copertina
 **Una sola ricerca in archivio, poi si va avanti.** Cerca nell'archivio Drive il soggetto suggerito negli appunti (la persona al centro della notizia, oppure lo stadio) seguendo `comuni.md`.
+- **Foto anche dentro il carosello (GG, 18 nov 2026):** se il soggetto è in archivio, oltre alla copertina metti la foto anche sullo sfondo di UNA slide interna (di solito "What happened": campo `image` + `focus` sulla slide, il motore aggiunge l'ombra per il testo), usando una foto diversa da quella di copertina se ce n'è più di una.
 - **Se c'è:** scarica, guarda con Read, scegli la migliore (foto normale, non `_cut`, soggetto grande e ben visibile, meglio verticale) e imposta `image` e `focus` così che il soggetto stia nella **metà alta** (il testo è in basso). Non usare la stessa foto per due contenuti dello stesso giorno.
 - **Se non c'è:** non cercare altrove e non chiedere niente a GG. Metti `logos` con gli stemmi dei soggetti della notizia, presi con `logo.py`, e la copertina è fatta. L'archivio ne ha 401: club di tutte le grandi leghe, Championship, MLS, NBA, NFL, federazioni, broadcaster.
 - **Perché (GG, 16 nov 2026):** le notizie di sport management hanno per protagonista un'istituzione, non una faccia. I loghi sono l'asset giusto per questo brand; le facce in archivio sono 46 e non copriranno mai le storie che facciamo.

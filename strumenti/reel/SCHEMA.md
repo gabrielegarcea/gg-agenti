@@ -67,3 +67,5 @@ Il motore carica `strumenti/reel/effetti/*.js`: 277 effetti presi come idee da R
 | `els` | `type` nuovo | 60 elementi nuovi (gauge, waffle, rank, waterfall, versus, quote, stamp, arrow...) |
 
 `controllo.py` dà ERRORE se un nome di effetto o di elemento non esiste, e conta gli elementi nuovi marcati GRAFICO nella regola "un grafico per tipo". Per provare un effetto: `python3 strumenti/reel/effetti/prova.py spec.json foglio.png`.
+
+**Stile del giorno (GG, 18 nov 2026):** il primo mese gli effetti ruotano tutti, uno stile per reel, scelto da `effetti/stile.py <data>` (escluse `strobe`, per il lampeggio, e le animazioni che hanno bisogno di parole scritte apposta). Ogni famiglia ripassa un effetto solo dopo averli fatti girare tutti. La riga `Stile: ...` va nell'archivio: a fine mese l'Analista incrocia stile e numeri. I capitoli possono anche avere `kar` (sottotitoli diversi solo lì).

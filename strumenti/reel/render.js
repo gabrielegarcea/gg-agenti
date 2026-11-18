@@ -16,9 +16,9 @@ const rel = p => (path.isAbsolute(p) ? p : path.join(base, p));
 // effetti (strumenti/reel/effetti/*.js): base.js prima, poi gli altri in ordine alfabetico
 const FX_JS = (() => { for (const d of [path.join(__dirname, 'effetti'), path.join(require('os').homedir(), 'gg-agenti', 'strumenti', 'reel', 'effetti')]) {
   if (!fs.existsSync(path.join(d, 'base.js'))) continue;
-  const fl = fs.readdirSync(d).filter(f => f.endsWith('.js')).sort((a, b) => (a === 'base.js' ? -1 : b === 'base.js' ? 1 : a.localeCompare(b)));
-  return fl.map(f => '/* ' + f + ' */\n' + fs.readFileSync(path.join(d, f), 'utf8')).join('\n;\n'); }
-  return ''; })();
+  const fl = fs.readdirSync(d).filter(f => f.endsWith('.js') && f !== 'catalogo.js').sort((a, b) => (a === 'base.js' ? -1 : b === 'base.js' ? 1 : a.localeCompare(b)));
+  return fl.map(f => ({ f, src: '/* ' + f + ' */\n' + fs.readFileSync(path.join(d, f), 'utf8') })); }
+  return []; })();
 
 // font: prima quelli nel repository (strumenti/fonts, nessuna installazione), poi node_modules
 const FONT_DIRS = [path.join(__dirname, 'fonts'), path.join(__dirname, '..', 'fonts'), path.join(require('os').homedir(), 'gg-agenti', 'strumenti', 'fonts')];
@@ -378,7 +378,7 @@ function drawKar(t) {
   const key = s.start + ':' + ch[0].start;
   if (key !== lastKey) { kar.innerHTML = ch.map(w => '<span class="' + (w.hi ? 'hi' : '') + '">' + esc(w.w) + '</span>').join(' '); lastKey = key; }
   [...kar.children].forEach((sp, i) => sp.classList.toggle('on', t >= ch[i].start));
-  const FK = FX.kar[ST.kar]; if (FK) FK.draw(kar, ch, t);
+  const FK = FX.kar[(s.kind === 'step' && (cfg.chapters[s.ci] || {}).kar) || ST.kar]; if (FK) FK.draw(kar, ch, t);
 }
 
 
@@ -476,12 +476,15 @@ window.draw = function (t) {
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
+  const pageErr = []; page.on('pageerror', e => { pageErr.push(e.message); console.error('ERRORE nella pagina: ' + e.message); });
   await page.setContent(`<html><head><style>${CSS}</style></head><body></body></html>`);
   await page.evaluate(async () => { for (const f of ['500 20px Inter', '700 20px Inter', '800 20px Inter', '900 20px Inter', '400 20px Mono', '700 20px Mono', '700 20px Hand', '400 20px Anton']) await document.fonts.load(f, 'Aa0€'); });
   await page.evaluate(([c, t, l]) => { window.CFG = c; window.TL = t; window.LOGO = l; }, [cfg, tl, LOGO_SVG]);
-  if (FX_JS) await page.addScriptTag({ content: FX_JS });
-  else await page.evaluate(() => { window.FX = { text: {}, num: {}, trans: {}, bg: {}, cam: {}, els: {}, enter: {}, kar: {}, emph: {}, u: {} }; });
+  // un file di effetti alla volta: se uno e' rotto gli altri funzionano lo stesso (e lo si dice)
+  for (const x of FX_JS) { const n0 = pageErr.length; await page.addScriptTag({ content: x.src }); if (pageErr.length > n0) { console.error('ATTENZIONE: effetti/' + x.f + ' ha un errore ed e\' stato saltato'); pageErr.length = n0; } }
+  await page.evaluate(() => { window.FX = window.FX || {}; ['text', 'num', 'trans', 'bg', 'cam', 'els', 'enter', 'kar', 'emph'].forEach(k => { FX[k] = FX[k] || {}; }); FX.u = FX.u || {}; });
   await page.addScriptTag({ content: page_js });
+  if (pageErr.length) { console.error('ERRORE: il motore non si e\' avviato (vedi sopra), render interrotto'); await browser.close(); process.exit(1); }
   await page.evaluate(() => document.fonts.ready);
   if (flag === '--preview') {
     const ts = flagVal.split(',').map(Number);
