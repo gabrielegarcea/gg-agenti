@@ -13,6 +13,12 @@ const NST = cfg.style || {};
 const FPS = cfg.fps || (NST.fps60 ? 60 : 30);
 const LOGO_SVG = (() => { for (const f of [path.join(__dirname, 'brand', 'gg-simbolo.svg'), path.join(__dirname, '..', '..', 'brand', 'gg-simbolo.svg')]) { try { return fs.readFileSync(f, 'utf8').replace(/ width="\d+" height="\d+"/, ''); } catch (e) {} } console.error('ATTENZIONE: logo gg-simbolo.svg non trovato'); return ''; })();
 const rel = p => (path.isAbsolute(p) ? p : path.join(base, p));
+// effetti (strumenti/reel/effetti/*.js): base.js prima, poi gli altri in ordine alfabetico
+const FX_JS = (() => { for (const d of [path.join(__dirname, 'effetti'), path.join(require('os').homedir(), 'gg-agenti', 'strumenti', 'reel', 'effetti')]) {
+  if (!fs.existsSync(path.join(d, 'base.js'))) continue;
+  const fl = fs.readdirSync(d).filter(f => f.endsWith('.js')).sort((a, b) => (a === 'base.js' ? -1 : b === 'base.js' ? 1 : a.localeCompare(b)));
+  return fl.map(f => '/* ' + f + ' */\n' + fs.readFileSync(path.join(d, f), 'utf8')).join('\n;\n'); }
+  return ''; })();
 
 // font: prima quelli nel repository (strumenti/fonts, nessuna installazione), poi node_modules
 const FONT_DIRS = [path.join(__dirname, 'fonts'), path.join(__dirname, '..', 'fonts'), path.join(require('os').homedir(), 'gg-agenti', 'strumenti', 'fonts')];
@@ -213,7 +219,11 @@ const builders = {
   bignum(e) { const n = $('<div class="el"><div class="big"></div>' + (e.label ? '<div class="big-l">' + md(e.label) + '</div>' : '') + (e.note ? '<div class="lab">' + esc(e.note) + '</div>' : '') + '</div>');
     if (e.color) n.querySelector('.big').style.color = 'var(--' + e.color + ')';
     let fitted = false;
-    return { n, upd(lt) { const bg = n.querySelector('.big'); if (!fitted) { bg.textContent = (e.prefix || '') + fmtN(e.to || 0, e.decimals) + (e.suffix || ''); const w = bg.scrollWidth; if (w > bg.clientWidth) bg.style.fontSize = Math.floor(300 * bg.clientWidth / w) + 'px'; fitted = true; }
+    const FN = e.anim && FX.num[e.anim];
+    return { n, upd(lt) { const bg = n.querySelector('.big'); if (FN) { if (!fitted) { bg.textContent = (e.prefix || '') + fmtN(e.to || 0, e.decimals) + (e.suffix || ''); const w = bg.scrollWidth; if (w > bg.clientWidth) bg.style.fontSize = Math.floor(300 * bg.clientWidth / w) + 'px'; if (FN.prep) FN.prep(bg, e); fitted = true; }
+        if (e.punch) { const q = ease(lt / 0.55); bg.style.transform = 'scale(' + (1.6 - 0.6 * q) + ')'; bg.style.transformOrigin = 'left center'; }
+        FN.draw(bg, lt, e); return; }
+      if (!fitted) { bg.textContent = (e.prefix || '') + fmtN(e.to || 0, e.decimals) + (e.suffix || ''); const w = bg.scrollWidth; if (w > bg.clientWidth) bg.style.fontSize = Math.floor(300 * bg.clientWidth / w) + 'px'; fitted = true; }
       if (e.punch) { const q = ease(lt / 0.55); bg.style.transform = 'scale(' + (1.6 - 0.6 * q) + ')'; bg.style.transformOrigin = 'left center'; }
       const v = (e.from || 0) + ((e.to || 0) - (e.from || 0)) * ease(lt / (e.dur || 0.9)); n.querySelector('.big').textContent = (e.prefix || '') + fmtN(v, e.decimals) + (e.suffix || ''); } }; },
   dots(e) { const N = e.n || 100, cols = e.cols || 20, W = 715, gap = 10, rows = Math.ceil(N / cols); const sz = Math.min(Math.floor((W - gap * (cols - 1)) / cols), Math.floor(((e.h || 460) - gap * (rows - 1)) / rows));
@@ -237,7 +247,11 @@ const builders = {
       const v = it.value * ease((t - s) / 0.8); c.querySelector('.n').textContent = (it.prefix || '') + (typeof it.value === 'number' ? fmtN(v, it.decimals) : it.value) + (it.suffix || ''); }); } }; },
   text(e) { const n = $('<div class="el txt"></div>'); const ls = e.lines.map(l => { const d = $('<div class="ln">' + md(l).replace(/^(×|x)\\s/, '<span class="x">×</span> ') + '</div>'); n.appendChild(d); return d; });
     if (e.size) ls.forEach(d => d.style.fontSize = e.size + 'px');
-    return { n, upd(lt, t, t0) { ls.forEach((d, k) => { const at = (e.at || [])[k]; const s = T(at, t0 + k * 0.6); const p = ease((t - s) / 0.35); d.style.opacity = p; d.style.transform = 'translateY(' + (1 - p) * 24 + 'px)'; }); } }; },
+    const FA = e.anim && FX.text[e.anim];
+    if (FA && FA.prep) ls.forEach(d => FA.prep(d, e));
+    return { n, upd(lt, t, t0) { ls.forEach((d, k) => { const at = (e.at || [])[k]; const s = T(at, t0 + k * 0.6);
+      if (FA) { FA.draw(d, t - s, e); return; }
+      const p = ease((t - s) / 0.35); d.style.opacity = p; d.style.transform = 'translateY(' + (1 - p) * 24 + 'px)'; }); } }; },
   line(e) { const W = 715, H = e.h || 520, pts = e.points, mn = e.min ?? Math.min(...pts), mx = e.max ?? Math.max(...pts);
     const X = i => i / (pts.length - 1) * W, Y = v => H - (v - mn) / (mx - mn || 1) * H;
     const d = pts.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
@@ -297,7 +311,7 @@ const chapters = (cfg.chapters || []).map((ch, ci) => {
   const area = $('<div class="area"></div>'); col.appendChild(area);
   if (ch.justify) area.style.justifyContent = ch.justify;
   const els = [];
-  ch.steps.forEach((st, si) => (st.els || []).forEach(e => { const b = builders[e.type](e); area.appendChild(b.n); els.push({ e, b, t0: T(e.id, stepStart(ci, si) + (e.delay || 0)) }); }));
+  ch.steps.forEach((st, si) => (st.els || []).forEach(e => { const bf = builders[e.type] || (FX.els[e.type] && (FX.els[e.type].build || FX.els[e.type])); if (!bf) throw new Error('elemento sconosciuto: ' + e.type); const b = bf(e); area.appendChild(b.n); els.push({ e, b, t0: T(e.id, stepStart(ci, si) + (e.delay || 0)) }); }));
   v.insertAdjacentHTML('beforeend', footer());
   root.appendChild(v);
   const cs = segs.filter(s => s.kind === 'step' && s.ci === ci); const a = cs[0].start, z = cs[cs.length - 1].vend;
@@ -325,12 +339,18 @@ root.appendChild(kar);
 const trov = $('<div class="trov"></div>'); root.appendChild(trov);
 const TR = ST.transition || 'cut';
 if (TR === 'iris') trov.innerHTML = '<div class="ir"></div>'; else if (TR === 'ring') trov.innerHTML = '<div class="rg"></div>'; else if (TR === 'wipe') trov.innerHTML = '<div class="pn2"></div>'; else if (TR === 'rise') trov.innerHTML = '<div class="pn"></div>';
-const switches = [];
-chapters.forEach(c => switches.push(c.a));
+const switches = [], swName = {};
+chapters.forEach(c => { switches.push(c.a); swName[c.a] = c.ch.transition || TR; });
+const FXT = {}; Object.keys(FX.trans).forEach(k => { const d = document.createElement('div'); d.className = 'fxtr'; d.style.cssText = 'position:absolute;inset:0;z-index:50;pointer-events:none;display:none'; d.innerHTML = FX.trans[k].html || ''; root.appendChild(d); FXT[k] = d; });
+const fxbg = (() => { const B = FX.bg[ST.bg]; if (!B) return null; const d = document.createElement('div'); d.className = 'fxbg'; d.style.cssText = 'position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden'; d.innerHTML = B.html || ''; root.insertBefore(d, root.firstChild); if (B.prep) B.prep(d, cfg); return d; })();
 { const ou = segs.find(s => s.kind === 'outro'); if (cfg.outro && ou) switches.push(ou.start); }
 const LOOP_T = ST.loop ? tl.duration - 0.45 : null;
 if (LOOP_T != null) switches.push(LOOP_T);
-function drawTrans(t) {
+function drawTrans(t, view) {
+  Object.values(FXT).forEach(d => d.style.display = 'none');
+  { const near = switches.find(x => t >= x - 0.8 && t < x + 0.8); const nm = near != null ? (swName[near] || TR) : TR; const F = FX.trans[nm];
+    if (F) { trov.style.display = 'none'; const D = F.dur || 0.3; const s0 = switches.find(x => t >= x - D && t < x + D); if (s0 == null) return;
+      const el = FXT[nm]; el.style.display = 'block'; if (t < s0) F.draw(el, easeIO((t - (s0 - D)) / D), 'in', view, t); else F.draw(el, easeIO((t - s0) / D), 'out', view, t); return; } }
   if (TR === 'cut') { trov.style.display = 'none'; return; }
   const D = 0.28; const s0 = switches.find(x => t >= x - D && t < x + D);
   if (s0 == null) { trov.style.display = 'none'; return; }
@@ -358,6 +378,7 @@ function drawKar(t) {
   const key = s.start + ':' + ch[0].start;
   if (key !== lastKey) { kar.innerHTML = ch.map(w => '<span class="' + (w.hi ? 'hi' : '') + '">' + esc(w.w) + '</span>').join(' '); lastKey = key; }
   [...kar.children].forEach((sp, i) => sp.classList.toggle('on', t >= ch[i].start));
+  const FK = FX.kar[ST.kar]; if (FK) FK.draw(kar, ch, t);
 }
 
 
@@ -385,6 +406,8 @@ window.EVENTS = function () {
       else if (e.type === 'h2h') e.rows.forEach((r, k) => add(T(r.at, t0 + 0.3 + k * 0.6), 'fill'));
       else if (e.type === 'timeline') e.events.forEach((v, k) => add(T(v.at, t0 + k * 0.9), 'pop', { g: 0.7 }));
       else if (e.type === 'logos') (e.logos || []).forEach((v, k) => add(T((e.at || [])[k], t0 + k * 0.3), 'pop', { g: 0.6 }));
+      else if (FX.els[e.type] && FX.els[e.type].sfx) FX.els[e.type].sfx(e, t0, T, add);
+      else if (Array.isArray(e.items)) e.items.forEach((it, k) => add(T(it && it.at, t0 + k * 0.5), 'pop', { g: 0.6 }));
       else add(t0, 'pop', { g: 0.6 });
     });
   });
@@ -405,10 +428,12 @@ window.draw = function (t) {
   if (outro && ouSeg && t >= ouSeg.start) active = outro;
   if (!active) active = cover || chapters[0].v;
   const looping = LOOP_T != null && cover && t >= LOOP_T; if (looping) { active = cover; }
-  [cover, outro, ...chapters.map(c => c.v)].forEach(v => { if (v) v.style.display = v === active ? 'block' : 'none'; });
+  [cover, outro, ...chapters.map(c => c.v)].forEach(v => { if (v) { v.style.display = v === active ? 'block' : 'none'; v.style.transform = ''; v.style.filter = ''; v.style.clipPath = ''; v.style.opacity = ''; } });
 
   if (active === cover) { const c = cfg.cover, a = looping ? -10 : (cvSeg ? cvSeg.start : 0);
-    const ls = cover.querySelectorAll('.cv-t .l'); ls.forEach((l, i) => { const p = ease((t - a - i * 0.35) / 0.4); l.style.opacity = p; l.style.transform = 'translateY(' + (1 - p) * 40 + 'px)'; });
+    const ls = cover.querySelectorAll('.cv-t .l'); const FCV = c.anim && FX.text[c.anim];
+    ls.forEach((l, i) => { if (FCV) { const sp = l.firstChild; if (!sp._fxp) { if (FCV.prep) FCV.prep(sp, c); sp._fxp = 1; } l.style.opacity = t - a - i * 0.35 >= 0 ? 1 : 0; FCV.draw(sp, t - a - i * 0.35, c); return; }
+      const p = ease((t - a - i * 0.35) / 0.4); l.style.opacity = p; l.style.transform = 'translateY(' + (1 - p) * 40 + 'px)'; });
     const tt = cover.querySelector('.cv-t'); const sub = cover.querySelector('.cv-s'); sub.style.top = (270 + tt.offsetHeight + 26) + 'px'; sub.style.opacity = ease((t - a - 0.8) / 0.4);
     const ph = cover.querySelector('.cv-ph'); if (ph) { const top = sub.offsetTop + sub.offsetHeight + 24; ph.style.top = top + 'px'; ph.style.height = Math.max(200, 1200 - top) + 'px'; const bg = ph.querySelector('.bigc'); if (bg) { const bl = ph.querySelector('.bigl'), H = Math.max(200, 1200 - top), lh = bl ? bl.offsetHeight + 22 : 0;
       let fsz = Math.round((H - lh) * 0.95); bg.style.fontSize = fsz + 'px'; const maxW = 1080 - 120 - 130; if (bg.scrollWidth > maxW) { fsz = Math.floor(fsz * maxW / bg.scrollWidth); bg.style.fontSize = fsz + 'px'; }
@@ -418,13 +443,16 @@ window.draw = function (t) {
   }
   chapters.forEach((c, ci) => { if (c.v !== active) return;
     const full = c.ch.title; const k = clamp((t - c.a) / Math.max(0.35, full.length * 0.025)); if (ST.titles === 'rise') c.ttl.querySelectorAll('.wm>span').forEach((w, i) => { const q = ease((t - c.a - i * 0.09) / 0.6); w.style.transform = 'translateY(' + (1 - q) * 110 + '%)'; });
+    else if (FX.text[c.ch.titleAnim || ST.titles]) { const FA = FX.text[c.ch.titleAnim || ST.titles]; if (!c._fxp) { c.ttl.textContent = full; if (FA.prep) FA.prep(c.ttl, c.ch); c._fxp = 1; } FA.draw(c.ttl, t - c.a, c.ch); }
     else c.ttl.textContent = full.slice(0, Math.round(full.length * k));
     c.sub.style.opacity = ease((t - c.a - 0.3) / 0.4);
-    c.els.forEach(x => { const lt = t - x.t0; const p = ease(lt / 0.35); x.b.n.style.opacity = x.e.type === 'bars' || x.e.type === 'cards' || x.e.type === 'text' ? (lt >= 0 ? 1 : 0) : p;
-      if (!['bars','cards','text','note'].includes(x.e.type)) x.b.n.style.transform = 'translateY(' + (1 - p) * 26 + 'px)';
+    c.els.forEach(x => { const lt = t - x.t0; const p = ease(lt / 0.35); const FE = x.e.enter && FX.enter[x.e.enter];
+      if (FE) FE.draw(x.b.n, lt, x.e); else { x.b.n.style.opacity = x.e.type === 'bars' || x.e.type === 'cards' || x.e.type === 'text' ? (lt >= 0 ? 1 : 0) : p;
+      if (!['bars','cards','text','note'].includes(x.e.type)) x.b.n.style.transform = 'translateY(' + (1 - p) * 26 + 'px)'; }
       if (lt >= -0.01) x.b.upd(Math.max(lt, 0), t, x.t0); });
     { const area = c.v.querySelector('.area'); c.els.forEach(x => { if (x.e.type === 'bignum' && t < x.t0) x.b.upd(0, t, x.t0); }); if (c.fit == null) { let h = 0; [...area.children].forEach(x => h += x.offsetHeight); h += 34 * Math.max(0, area.children.length - 1); c.fit = Math.min(0.96, area.clientHeight / Math.max(1, h * 1.05)); }
       const dr = ST.drift ? 1 + 0.035 * clamp((t - c.a) / Math.max(1, c.z - c.a)) : 1; area.style.transform = 'scale(' + (c.fit * dr) + ')'; }
+    { const FC = FX.cam[c.ch.camera || ST.camera]; if (FC) FC.draw(c.v.querySelector('.col'), t - c.a, c.z - c.a, c); }
   });
   if (active === outro) { const a = ouSeg.start, P = outro._p;
     P.tt.style.opacity = ease((t - a) / 0.4);
@@ -440,7 +468,8 @@ window.draw = function (t) {
   }
   drawKar(t);
   kar.style.visibility = looping ? 'hidden' : 'visible';
-  drawTrans(t);
+  drawTrans(t, active);
+  if (fxbg) FX.bg[ST.bg].draw(fxbg, t, { active, cover, outro });
 };
 `;
 
@@ -450,6 +479,8 @@ window.draw = function (t) {
   await page.setContent(`<html><head><style>${CSS}</style></head><body></body></html>`);
   await page.evaluate(async () => { for (const f of ['500 20px Inter', '700 20px Inter', '800 20px Inter', '900 20px Inter', '400 20px Mono', '700 20px Mono', '700 20px Hand', '400 20px Anton']) await document.fonts.load(f, 'Aa0€'); });
   await page.evaluate(([c, t, l]) => { window.CFG = c; window.TL = t; window.LOGO = l; }, [cfg, tl, LOGO_SVG]);
+  if (FX_JS) await page.addScriptTag({ content: FX_JS });
+  else await page.evaluate(() => { window.FX = { text: {}, num: {}, trans: {}, bg: {}, cam: {}, els: {}, enter: {}, kar: {}, emph: {}, u: {} }; });
   await page.addScriptTag({ content: page_js });
   await page.evaluate(() => document.fonts.ready);
   if (flag === '--preview') {

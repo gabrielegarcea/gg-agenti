@@ -52,3 +52,18 @@ Nessun `at` e nessun `{marker}`: li mette `marker.py`. Fra parentesi lo slot che
 
 Gli elementi "con lo step" sono un solo evento per il controllo del ritmo: se la frase dura più di ~3 secondi, nello stesso step metti anche un `text` a 2-3 righe, o il controllo trova un buco sopra i 4 secondi.
 Nello stesso reel ogni grafico (`timeline`, `cards`, `bars`, `h2h`, `split`, `bignum`, `donut`, `line`, `dots`) si usa una volta sola; `text`, `logos`, `term`, `ledger`, `note` si possono ripetere.
+
+## Effetti facoltativi (18 nov 2026)
+Il motore carica `strumenti/reel/effetti/*.js`: 277 effetti presi come idee da Remocn (MIT) e riscritti in JavaScript semplice, senza installare niente. L'elenco completo con le opzioni è in `effetti/EFFETTI.md` (generato da `effetti/catalogo.js`). **Senza questi campi il reel è identico a prima** (verificato pixel per pixel).
+
+| dove | campo | tipo di effetto |
+|---|---|---|
+| `style` | `titles`, `transition`, `camera`, `bg` (+ `bgOpts`), `kar` | titoli, transizioni, camera, sfondo, sottotitoli per tutto il reel |
+| capitolo | `titleAnim`, `transition`, `camera` | lo stesso, solo per quel capitolo |
+| `cover` | `anim` | comparsa delle righe del titolo |
+| elemento `text` | `anim` (+ `fx`) | comparsa di ogni riga |
+| elemento `bignum` | `anim` | animazione del numero |
+| qualsiasi elemento | `enter` | entrata dell'elemento (per `logos`, logo per logo) |
+| `els` | `type` nuovo | 60 elementi nuovi (gauge, waffle, rank, waterfall, versus, quote, stamp, arrow...) |
+
+`controllo.py` dà ERRORE se un nome di effetto o di elemento non esiste, e conta gli elementi nuovi marcati GRAFICO nella regola "un grafico per tipo". Per provare un effetto: `python3 strumenti/reel/effetti/prova.py spec.json foglio.png`.

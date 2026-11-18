@@ -40,6 +40,10 @@ if modo == "reel":
     for f in ("render.js", "timing.py", "sfx.py", "marker.py", "zone.py"): cp(os.path.join(R, f), os.path.join(W, f))
     for f in ("voce_guida.py", "align.py", "controllo.py"): cp(os.path.join(S, f), os.path.join(W, f))
     cp(os.path.join(os.path.dirname(S), "brand", "gg-simbolo.svg"), os.path.join(W, "brand", "gg-simbolo.svg"))
+    E = os.path.join(R, "effetti")   # effetti facoltativi (EFFETTI.md): base.js e gli altri .js, piu' catalogo.json
+    if os.path.isdir(E):
+        for f in os.listdir(E):
+            if f.endswith((".js", ".json")) and f != "catalogo.js": cp(os.path.join(E, f), os.path.join(W, "effetti", f))
     os.makedirs(os.path.join(W, "lavoro"), exist_ok=True)
     os.makedirs(os.path.join(HOME, "gg", "reel"), exist_ok=True); os.makedirs(os.path.join(HOME, "gg", "foto"), exist_ok=True)
 elif modo == "caroselli":

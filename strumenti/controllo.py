@@ -19,6 +19,7 @@ e su quello che questo script segnala con un AVVISO.
 """
 
 import json
+import os
 import re
 import sys
 
@@ -164,6 +165,8 @@ def controlla_grafico(dove, s):
             err(dove, "'%s' = %r: %d caratteri, il massimo e' 9" % (chiave, v, len(v)))
     for gruppo in ("items", "points", "parts"):
         for i, it in enumerate(s.get(gruppo) or []):
+            if not isinstance(it, dict):
+                continue
             d = it.get("display")
             if isinstance(d, str) and len(d) > 9:
                 err("%s voce %d" % (dove, i + 1),
@@ -264,8 +267,56 @@ def controlla_carosello(path, d):
 
 
 # ---------------------------------------------------------------- reel
+def catalogo_effetti():
+    """Nomi degli effetti (strumenti/reel/effetti/catalogo.json, generato da catalogo.js)."""
+    import json as _j
+    for c in (os.path.join(os.path.dirname(os.path.abspath(__file__)), "reel", "effetti", "catalogo.json"),
+              os.path.join(os.path.dirname(os.path.abspath(__file__)), "effetti", "catalogo.json"),
+              os.path.expanduser("~/gg-agenti/strumenti/reel/effetti/catalogo.json")):
+        if os.path.exists(c):
+            return _j.load(open(c, encoding="utf-8"))
+    return None
+
+
+ELEMENTI_MOTORE = {"bignum", "bars", "h2h", "split", "donut", "line", "timeline", "dots", "cards",
+                   "text", "note", "logos", "term", "ledger", "photo"}
+
+
+def controlla_effetti(nome, d):
+    """Ogni nome di effetto deve esistere: un nome sbagliato non da' errore nel motore, torna muto allo standard."""
+    cat = catalogo_effetti()
+    if cat is None:
+        return
+    def chk(dove, kind, val, extra=()):
+        if val and val not in cat.get(kind, {}) and val not in extra:
+            err(dove, "%s '%s' non esiste (vedi strumenti/reel/effetti/EFFETTI.md)" % (kind, val))
+    st = d.get("style") or {}
+    chk(nome + " style.titles", "text", st.get("titles"), ("rise",))
+    chk(nome + " style.transition", "trans", st.get("transition"), ("cut", "iris", "ring", "wipe", "rise"))
+    chk(nome + " style.camera", "cam", st.get("camera"))
+    chk(nome + " style.bg", "bg", st.get("bg"))
+    chk(nome + " style.kar", "kar", st.get("kar"))
+    chk(nome + " cover.anim", "text", (d.get("cover") or {}).get("anim"))
+    for i, c in enumerate(d.get("chapters") or []):
+        dove = "%s cap.%d" % (nome, i + 1)
+        chk(dove, "text", c.get("titleAnim"), ("rise",))
+        chk(dove, "trans", c.get("transition"), ("cut", "iris", "ring", "wipe", "rise"))
+        chk(dove, "cam", c.get("camera"))
+        for st_ in c.get("steps") or []:
+            for e in st_.get("els") or []:
+                t = e.get("type")
+                if t not in ELEMENTI_MOTORE and t not in cat.get("els", {}):
+                    err(dove, "elemento '%s' sconosciuto" % t)
+                chk(dove, "enter", e.get("enter"))
+                if t == "text": chk(dove, "text", e.get("anim"))
+                if t == "bignum": chk(dove, "num", e.get("anim"))
+
+
 def controlla_reel(path, d):
     nome = path.split("/")[-1]
+    controlla_effetti(nome, d)
+    _cat = catalogo_effetti() or {}
+    GRAFICI_R = GRAFICI | {k for k, v in _cat.get("els", {}).items() if v.get("grafico")}
     if d.get("lang") != "en":
         err(nome, "manca \"lang\": \"en\" (ora: %r)" % d.get("lang"))
 
@@ -334,7 +385,7 @@ def controlla_reel(path, d):
                         if parole(v.get("text")) > 6:
                             err(dove, "ledger '%s': voce di %d parole, il massimo e' 6"
                                 % (col, parole(v.get("text"))))
-            elif t in GRAFICI:
+            elif t in GRAFICI_R:
                 tipi.append(t)
                 controlla_grafico(dove, e)
 
@@ -471,6 +522,8 @@ def controlla_ritmo(nome, d, tl):
                     voci, passo = e.get("rows") or [], 0.6
                 elif tipo == "ledger":
                     voci, passo = (e.get("wins") or []) + (e.get("loses") or []), 0.5
+                elif isinstance(e.get("items"), list):
+                    voci, passo = [v for v in e["items"] if isinstance(v, dict)], 0.5
                 if tipo == "text":
                     ats = e.get("at") or []
                     for k, _ in enumerate(e.get("lines") or []):

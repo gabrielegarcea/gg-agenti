@@ -70,6 +70,8 @@ Regole del motore:
 
 Salva la bozza in `~/gg/reel/reel.json`, **senza marker e senza `at`**.
 
+**Effetti (18 nov 2026).** Il motore ha 277 effetti facoltativi (titoli, transizioni, sfondi, sottotitoli, numeri, 60 elementi nuovi: `strumenti/reel/effetti/EFFETTI.md`). **Finché GG non sceglie uno stile di casa, non usarli e non leggere EFFETTI.md** (40 KB): il reel resta quello di sempre. Le scelte di stile le decide GG.
+
 **3b. I marker, con lo script (obbligatorio, prima di ogni altra cosa):**
 `cp ~/gg-agenti/strumenti/reel/marker.py ~/gg/ && cd ~/gg && python3 marker.py reel/reel.json`
 Mette i `{id}` nei `say` e gli `at` sugli elementi, da solo. Se dice ERRORE non ha scritto niente: vuol dire che uno step ha piu' cose da far comparire che parole per dirle — spezza lo step in due o togli una voce al grafico, e rilancia. Lo script e' idempotente: se rilanciato lascia stare gli step che hanno gia' i marker.

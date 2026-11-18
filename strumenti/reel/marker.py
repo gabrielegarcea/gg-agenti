@@ -75,6 +75,12 @@ def slot_elemento(el):
         # un solo momento: quando si accendono i pallini evidenziati
         slot.append((lambda: el.get("hiAt"), lambda x: el.__setitem__("hiAt", x)))
 
+    elif isinstance(el.get("items"), list):
+        # elementi nuovi (strumenti/reel/effetti): se hanno "items", una voce per marker
+        for v in el["items"]:
+            if isinstance(v, dict):
+                slot.append((lambda v=v: v.get("at"), lambda x, v=v: v.__setitem__("at", x)))
+
     # line, donut, term, note, photo, bignum: compaiono con lo step, nessuno slot
     return slot
 
