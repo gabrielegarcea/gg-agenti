@@ -16,14 +16,14 @@ Prepara la lista dei temi e soggetti vietati: la passi ai sotto-agenti.
 
 **Controllo di ieri (19 nov 2026).** Nella scheda `Contenuti` (colonne A-B, ultime righe) controlla che ci siano le 3 righe dei caroselli di IERI e la riga del reel con data di OGGI (il reel di oggi l'ha montato ieri l'agente Reel con la voce di GG). Se manca qualcosa, nel messaggio finale una riga: `⚠️ Ieri: mancano <caroselli ② ③ / il reel di oggi>`. È l'unico modo in cui GG si accorge che un turno non ha consegnato.
 
-**I quattro file che restano (19 nov 2026).** Nella cartella Appunti del giorno leggi anche (`search_files` con `parentId = '{APPUNTI_DEL_GIORNO}' and title = '<nome>'`, poi `read_file_content`):
-- `coda-idee.md`: storie e eventi messi da parte nei giorni scorsi, ognuno con la data in cui riprenderlo. Quelli con data di oggi o di ieri entrano tra le candidate (con le stesse regole: serve un fatto delle ultime 36 ore, oppure l'evento è oggi).
-- `scorta.md`: caroselli senza scadenza, già verificati. Servono solo se mancano notizie forti (sezione 3).
-- `fonti-web.md`: quali siti si aprono e quali no. Lo passi intero ai sotto-agenti.
-- `temi-scoperti.md`: lo aggiorni alla fine (sezione 6).
+**Le quattro schede che restano (19 nov 2026).** Dall'archivio leggi anche, con `get_values`:
+- `Coda idee!A:I`: storie e eventi messi da parte nei giorni scorsi, con la data in cui riprenderli (colonna B) e lo stato (colonna I). Quelle `aperta` con data di oggi o di ieri entrano tra le candidate, con le stesse regole: serve un fatto delle ultime 36 ore, oppure l'evento è oggi.
+- `Scorta!A:H` (senza la colonna I, lunga): caroselli senza scadenza. Solo quelli con stato `pronto` si possono usare, e solo se mancano notizie forti (sezione 3). La colonna I con gli appunti completi la leggi solo per la riga che usi.
+- `Fonti web!A:D`: quali siti si aprono e quali no. La passi intera ai sotto-agenti.
+- `Temi scoperti`: la aggiorni alla fine (sezione 6).
 
 ## 2. Tre sotto-agenti di ricerca (in parallelo, una sola chiamata)
-Lancia tre sotto-agenti (`general-purpose`) nello stesso blocco, uno per ambito. A ognuno passi: la lista dei temi/soggetti vietati, la data di oggi, il contenuto di `fonti-web.md` (quali siti si aprono e quali no), le idee in coda del suo ambito, e il referto che devi ricevere.
+Lancia tre sotto-agenti (`general-purpose`) nello stesso blocco, uno per ambito. A ognuno passi: la lista dei temi/soggetti vietati, la data di oggi, la scheda `Fonti web` (quali siti si aprono e quali no), le idee in coda del suo ambito, e il referto che devi ricevere.
 
 - **A — Calcio europeo:** diritti TV, proprietà e fondi nei club (compresi i proprietari americani e del Golfo), stadi, sponsor, bilanci, governance (UEFA, Unione europea e Corte di giustizia, Premier League, LaLiga, Bundesliga, Ligue 1, Serie A, Eredivisie, Liga Portugal, Scozia), cultura e identità dei tifosi.
 - **B — Basket:** EuroLeague, NBA Europe, FIBA, campionati europei (ACB, LBA, BBL, Grecia, Turchia), e il business della NBA (proprietà, diritti TV, arene, salary cap, espansione). Fonti utili da provare: Eurohoops, Basketnews, Sportando.
@@ -41,7 +41,7 @@ Istruzioni identiche per tutti e tre (scrivile nel prompt del sotto-agente):
    - Segnali di rumore online trovati, con link: quante testate distinte ne parlano, se è in apertura o tra i più letti di un grande sito, se un articolo aperto riporta numeri di visualizzazioni o polemiche sui social
    - Sport (calcio / basket / NFL) e area (Europa / Nord America / Mondo)
 5. Non scrivere contenuti, non proporre opinioni, non inventare numeri: se un dato ha una sola fonte, scrivi "1 fonte" accanto e non arrotondare.
-6. In fondo, una riga: i siti che si sono aperti e quelli che hanno rifiutato (servono per aggiornare `fonti-web.md`). E, se le trovi, le storie forti ma fuori dalle 36 ore o con un evento in arrivo (con la data e 2 link): vanno in `coda-idee.md`.
+6. In fondo, una riga: i siti che si sono aperti e quelli che hanno rifiutato (servono per aggiornare la scheda `Fonti web`). E, se le trovi, le storie forti ma fuori dalle 36 ore o con un evento in arrivo (con la data e 2 link): vanno nella scheda `Coda idee`.
 
 ## 3. Scelta delle 4 notizie
 Dai referti scegli 3 notizie per i caroselli, idealmente una MONEY, una POWER, una CULTURE, ognuna con una lezione DIVERSA (mai due lezioni sullo stesso concetto nello stesso giorno). Privilegia la storia dietro la notizia, numeri concreti (servono per i grafici), collegamenti non ovvi, aree geografiche diverse. A parità di forza, preferisci le notizie su cui il Codice GG ha qualcosa da dire.
@@ -58,8 +58,8 @@ SPORT E VARIETÀ (decisione di GG, 18 nov 2026: radici europee, sguardo internaz
 - Mai 2 notizie sulla stessa istituzione, lega, club o persona, e mai lo stesso tema due volte (due notizie di diritti TV = vietato).
 - Varia anche rispetto ai giorni precedenti (dalla scheda `Antiripetizione`): evita lo stesso tema generale due giorni di fila, anche con soggetti diversi. E non ripetere una lezione che la scheda `Lezioni` dà come già insegnata di recente.
 - Se le notizie nuove forti sono poche, fai rilanciare un sotto-agente su altre aree europee (Spagna, Inghilterra, Germania, Francia, Olanda, Portogallo, Scozia, Turchia, Grecia) e solo dopo sul resto del mondo: non ripescare mai notizie già usate per riempire.
-- **FONTE UNICA (GG, 19 nov 2026):** una notizia si sceglie solo se il fatto principale (cosa è successo) e i numeri del grafico hanno 2 fonti. Una storia che si regge su fatti a fonte unica (come Lokomotiv Plovdiv il 19 nov) non passa, anche se è bella: va in `coda-idee.md` in attesa di una seconda fonte. I fatti a fonte unica possono stare negli appunti SOLO nel "Contesto per la caption", marcati `1 fonte: <testata>`, perché in caption entrano solo attribuiti.
-- **SCORTA (GG, 19 nov 2026): i caroselli sono sempre 3.** Se dopo il rilancio restano meno di 3 notizie forti, prendi da `scorta.md` il primo carosello "pronto" che non ripete un tema degli ultimi 14 giorni, copialo negli appunti con il tag `[Scorta]` nel titolo, e nel file `scorta.md` spostalo in "Usati" con la data. Mai più di 2 caroselli di scorta in un giorno. Se la scorta ne ha meno di 5 pronti, scrivilo nel messaggio finale.
+- **FONTE UNICA (GG, 19 nov 2026):** una notizia si sceglie solo se il fatto principale (cosa è successo) e i numeri del grafico hanno 2 fonti. Una storia che si regge su fatti a fonte unica (come Lokomotiv Plovdiv il 19 nov) non passa, anche se è bella: va nella scheda `Coda idee` in attesa di una seconda fonte. I fatti a fonte unica possono stare negli appunti SOLO nel "Contesto per la caption", marcati `1 fonte: <testata>`, perché in caption entrano solo attribuiti.
+- **SCORTA (GG, 19 nov 2026): i caroselli sono sempre 3.** Se dopo il rilancio restano meno di 3 notizie forti, prendi dalla scheda `Scorta` il primo carosello con stato `pronto` che non ripete un tema degli ultimi 14 giorni, copia i suoi appunti (colonna I) negli appunti di oggi con il tag `[Scorta]` nel titolo, e nella scheda scrivi `usato GG.MM` nella colonna G e la data nella H (`update_values`). Mai più di 2 caroselli di scorta in un giorno. Se la scorta ne ha meno di 5 pronti, scrivilo nel messaggio finale.
 
 **LA QUARTA, QUELLA DEL REEL** (calcio o basket, diversa dalle 3; NFL solo con il filtro sopra e al massimo una volta ogni due settimane): il reel esce DOMANI, quindi scegli una notizia che regge 24 ore, con una lezione che non scade. Scarta trattative in corso, risultati che cambiano in giornata, voci di mercato, eventi con un seguito già fissato per oggi o domani. Tra quelle che reggono prendi quella che ha fatto più rumore online, misurato SOLO con i segnali che i sotto-agenti hanno aperto davvero (GG, 10 nov 2026): testate distinte, apertura o "più letti" di un grande sito, un articolo che riporta numeri social. Ne servono almeno 2, ognuno con un link. Mai citare tendenze social non lette in un articolo.
 
@@ -73,7 +73,7 @@ Guarda nella scheda `Antiripetizione` (colonna `Formato` e, nella scheda `Conten
 ## 6. Opinione dal Codice (solo articoli, GG 19 nov 2026)
 Leggi il Codice GG (`comuni.md`: con `read_file_content`, non con `read_doc`) e per ognuna delle 4 notizie:
 - se un ARTICOLO la copre, scrivi negli appunti l'opinione di GG in 2-3 righe, con `Art. N`;
-- se nessun articolo la copre, NON dedurre un'opinione dai principi. Scrivi `Opinione GG: nessun articolo → Your call` e, sotto, le due posizioni vere (chi dice cosa, ognuna con le sue 2 fonti). Poi aggiungi una riga in `temi-scoperti.md`: `GG.MM.AAAA | <tema in poche parole> | <notizia>`.
+- se nessun articolo la copre, NON dedurre un'opinione dai principi. Scrivi `Opinione GG: nessun articolo → Your call` e, sotto, le due posizioni vere (chi dice cosa, ognuna con le sue 2 fonti). Poi aggiungi una riga alla scheda `Temi scoperti` (`append_values` su `Temi scoperti!A1`): data AAAA-MM-GG, tema in poche parole, notizia.
 A parità di forza, preferisci le notizie su cui un articolo del Codice ha qualcosa da dire.
 
 ## 7. Scrivi gli Appunti del giorno
@@ -105,12 +105,12 @@ Segnali di rumore: <almeno 2, con link>
 
 Non mettere negli appunti testi già scritti per le slide o per il reel: quelli li scrivono gli agenti dopo. Gli appunti sono materia prima, non bozze.
 
-## 7b. Aggiorna i quattro file che restano
-Prima del messaggio finale, con `update_file` (riscrivi il file intero: tutto il vecchio che serve ancora + il nuovo):
-- `coda-idee.md`: aggiungi le storie forti scartate solo per le 36 ore o per la fonte unica, e gli eventi in arrivo, ognuno con `riprendere il: GG.MM`, la lezione possibile e i link. Togli quelle usate oggi e quelle scadute (più di 30 giorni o evento passato senza seguito).
-- `fonti-web.md`: aggiungi i siti che oggi hanno rifiutato o si sono aperti, con la data. Se un sito cambia stato, aggiorna la riga invece di aggiungerne un'altra.
-- `scorta.md`: se hai usato un carosello di scorta, spostalo in "Usati" con la data.
-- `temi-scoperti.md`: le righe della sezione 6.
+## 7b. Aggiorna le quattro schede che restano
+Prima del messaggio finale. Non cancellare righe: aggiungi (`append_values`) o cambia lo stato (`update_values`).
+- `Coda idee`: una riga per ogni storia forte scartata solo per le 36 ore o per la fonte unica e per ogni evento in arrivo: aggiunta (oggi), riprendere il (AAAA-MM-GG, oppure "con seconda fonte" / "con un fatto nuovo"), titolo, area, sport, lezione possibile, cosa serve ancora, 2 link, `aperta`. A quelle usate oggi scrivi `usata GG.MM` nella colonna I; a quelle scadute (più di 30 giorni, o evento passato senza seguito) `scaduta`.
+- `Fonti web`: i siti nuovi in una riga ciascuno (sito, stato, nota, data); se un sito già in elenco cambia stato, aggiorna la sua riga invece di aggiungerne un'altra.
+- `Scorta`: lo stato del carosello usato (sezione 3).
+- `Temi scoperti`: le righe della sezione 6.
 
 ## 8. L'archivio non lo scrivi tu
 Le righe dell'Archivio Sport Management le scrivono gli agenti che producono i contenuti (Caroselli e Reel), alla fine dei loro turni: così l'archivio registra quello che è stato davvero prodotto. Tu non scrivi niente nel foglio. Negli appunti, però, metti per ogni notizia tutto quello che servirà a riempire la riga (lezione, meccanismo, numeri, opinione, articolo del Codice, tema, soggetti, fonti): se manca negli appunti, finisce che manca nell'archivio.

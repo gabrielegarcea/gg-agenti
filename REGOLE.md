@@ -19,7 +19,7 @@ Queste regole le decide GG: gli agenti le applicano e non le modificano.
 - Critiche a decisioni e istituzioni, mai a persone o gruppi. Mai schierarsi politicamente.
 - Ogni numero, data, nome e citazione: confermato da almeno 2 fonti aperte. Due copie dello stesso articolo d'agenzia contano come una fonte sola (GG, 10 nov 2026). **Fonte unica (GG, 19 nov 2026):** mai nelle slide, nei grafici e nel testo del reel; in caption solo attribuita ("according to <testata>"); una notizia non si regge su fatti a fonte unica.
 - **Opinioni solo dagli articoli del Codice GG** (Google Doc `{CODICE_GG}`, letto con `read_file_content`) (GG, 19 nov 2026). Se nessun articolo copre il tema, niente opinione: al posto di "My take" c'è "Your call", le due posizioni vere. I temi scoperti si annotano e Full Time propone a GG una bozza di articolo; entra nel Codice solo ciò che GG approva.
-- **Caroselli sempre 3 (GG, 19 nov 2026):** le notizie restano delle ultime 36 ore; se mancano notizie forti si usa la scorta di caroselli senza scadenza (`scorta.md`), e le storie forti fuori finestra vanno in `coda-idee.md` invece di perdersi.
+- **Caroselli sempre 3 (GG, 19 nov 2026):** le notizie restano delle ultime 36 ore; se mancano notizie forti si usa la scorta di caroselli senza scadenza (scheda `Scorta` dell'archivio), e le storie forti fuori finestra vanno nella scheda `Coda idee` invece di perdersi.
 - **Pubblicato di default (GG, 19 nov 2026):** tutto ciò che è consegnato si considera pubblicato; GG segnala solo le eccezioni.
 - Niente autoreferenze nei contenuti ("Codice GG", "Art. N", "come dico sempre").
 - Niente inviti a salvare, mandare o condividere.

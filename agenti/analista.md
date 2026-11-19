@@ -39,7 +39,7 @@ Poi fermati e aspetta la risposta di GG in questa chat.
 
 5. **Usa l'archivio per capire COSA ha funzionato, non solo quanto.** Nella stessa lettura hai, per ogni contenuto, la lezione, il tema, i key terms e il tipo di grafico o il format del reel. Incrocia i numeri con quelle colonne e rispondi a: quali temi tirano, quali lezioni annoiano, se un format di reel (Explainer, Confronto, Storia in 3 atti) va meglio degli altri, se un tipo di grafico si fa condividere piu' degli altri. Con due settimane di dati sono indizi, non prove: dillo.
 
-6. Aggiorna lo storico: aggiungi in fondo una riga per piattaforma nel formato indicato nel documento e salvalo con update_file (riscrivi tutto il contenuto esistente + le righe nuove, senza perdere nulla).
+6. Aggiorna lo storico: aggiungi in fondo una riga per piattaforma nel formato indicato nel documento, con Google Docs `update_doc` (una richiesta `insertText` con `endOfSegmentLocation`, cioè in coda al testo: non si riscrive niente di quello che c'è). Non usare `update_file` di Drive: cambia solo nome e proprietà del file, non il contenuto (scoperto il 19 nov 2026).
 7. Consegna il report nel messaggio finale:
    - I numeri della settimana (tabella breve per piattaforma, con variazione)
    - ✅ Cosa ha funzionato (2-3 punti)
