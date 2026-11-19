@@ -1,4 +1,6 @@
-// GG on Sport — motore caroselli 1080x1350 (v5: grafici compare, bars, line, donut, h2h, timeline, split, dots, stat + loghi)
+// GG on Sport — motore caroselli 1080x1350 (v6: grafici compare, bars, line, donut, h2h, timeline, split, dots, stat + schemi flow, versus, facts, roster + testo a punti + loghi)
+// v6 (GG, 19 nov 2026): i caroselli erano troppo scritti. Gli schemi sostituiscono i paragrafi: flow = come funziona a passi,
+// versus = due posizioni a confronto, facts = i numeri chiave in griglia, roster = i soggetti coi loghi, `points` sulle slide text = punti invece del paragrafo.
 // Uso: node render.js slides.json cartella_output
 // Rubriche con copertina propria: Explained (arancione), Case Study (foto/blu), Power Play (chiara), Deep Dive (blu)
 const fs = require('fs');
@@ -138,14 +140,62 @@ h1 em{font-style:normal;color:var(--acc)}
 .lgo{width:var(--lg,92px);height:var(--lg,92px);border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:0 0 0 4px color-mix(in srgb,var(--fg) 15%,transparent)}
 .lgo img{width:80%;height:80%;object-fit:contain}
 .lgo.sm{--lg:58px}
-.lgo.big{--lg:300px;box-shadow:0 0 0 8px color-mix(in srgb,var(--fg) 12%,transparent)}
+.lgo.big{box-shadow:0 0 0 8px color-mix(in srgb,var(--fg) 12%,transparent)}
 .lgs-big{display:flex;gap:44px;align-items:center;flex-wrap:wrap;height:100%;padding-top:70px;align-content:flex-start}
-.lgs-big .lgo:nth-child(n+3),.lgs-big .lgo:nth-child(2):nth-last-child(1){--lg:220px}
 .lb .nmw{display:flex;align-items:center;gap:16px}
 .hh .nm .side{display:flex;align-items:center;gap:16px}
 .hh .nm .side.b{flex-direction:row-reverse}
 .cmp .lgo{margin-bottom:18px}
 .tl .ev .lgo{position:absolute;right:0;top:0}
+
+/* v6: schemi */
+.flow h1,.versus h1,.facts h1,.roster h1{font-size:var(--h,72px);margin-bottom:44px}
+.fl .st{display:flex;gap:34px;position:relative;padding-bottom:48px;align-items:flex-start}
+.fl .st:last-child{padding-bottom:0}
+.fl .st:not(:last-child):before{content:'';position:absolute;left:37px;top:80px;bottom:0;width:6px;background:color-mix(in srgb,var(--fg) 25%,transparent)}
+.fl .nb{flex:0 0 80px;height:80px;border-radius:50%;border:6px solid var(--fg);display:flex;align-items:center;justify-content:center;font-family:Anton;font-size:40px;background:var(--bg);position:relative}
+.fl .st.hi .nb{background:var(--acc);border-color:var(--acc);color:var(--bg)}
+.fl .sc{flex:1;min-width:0;padding-top:4px}
+.fl .hd{font-family:Anton;font-size:var(--m,60px);text-transform:uppercase;line-height:1.02}
+.fl .st.hi .hd{color:var(--acc)}
+.fl .tx2{font-size:var(--b,36px);font-weight:600;line-height:1.3;margin-top:8px;opacity:.9}
+.fl .tx2 b{color:var(--acc);font-weight:800}
+.fl .st > .lgo{--lg:84px}
+.vs{display:flex;gap:64px;align-items:stretch;position:relative}
+.vs .cd{flex:1;min-width:0;padding:40px 32px 48px;border:4px solid color-mix(in srgb,var(--fg) 28%,transparent);display:flex;flex-direction:column;gap:20px}
+.vs .cd.b{border-color:var(--acc)}
+.vs .who{display:flex;align-items:center;gap:14px;font-family:Anton;font-size:var(--m,42px);text-transform:uppercase;line-height:1}
+.vs .cd.b .who{color:var(--acc)}
+.vs .cl2{font-size:22px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.65}
+.vs .vt{font-size:var(--b,36px);font-weight:600;line-height:1.32}
+.vs .vt b{color:var(--acc);font-weight:800}
+.vs .vsx{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;background:var(--acc);color:var(--bg);font-family:Anton;font-size:34px;display:flex;align-items:center;justify-content:center}
+.fx{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.fx.n3 .fc:first-child,.fx.n1 .fc{grid-column:span 2}
+.fx .fc{padding:40px 36px 44px;background:color-mix(in srgb,var(--fg) 7%,transparent);border-top:8px solid color-mix(in srgb,var(--fg) 35%,transparent);min-width:0}
+.fx .fc.hi{border-top-color:var(--acc)}
+.fx .ft{display:flex;align-items:center;gap:16px}
+.fx .fv{font-family:Anton;font-size:var(--m,124px);line-height:1;white-space:nowrap}
+.fx .fc.hi .fv{color:var(--acc)}
+.fx .fl3{font-size:var(--b,34px);font-weight:600;line-height:1.3;margin-top:14px}
+.fx .fl3 b{color:var(--acc);font-weight:800}
+.ro{display:grid;grid-template-columns:repeat(var(--c,3),1fr);gap:40px 24px}
+.ro .it{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;min-width:0}
+.ro .lgo{--lg:var(--rl,150px)}
+.ro .it.hi .lgo{box-shadow:0 0 0 8px var(--acc)}
+.ro .ini{width:var(--rl,150px);height:var(--rl,150px);border-radius:50%;border:5px solid color-mix(in srgb,var(--fg) 35%,transparent);display:flex;align-items:center;justify-content:center;font-family:Anton;font-size:56px}
+.ro .rn{font-family:Anton;font-size:40px;text-transform:uppercase;line-height:1.05}
+.ro .it.hi .rn{color:var(--acc)}
+.ro .rx{font-size:var(--b,28px);font-weight:600;opacity:.8;line-height:1.25}
+.pts{display:flex;flex-direction:column;gap:34px;max-width:900px}
+.pts .pt2{display:flex;gap:26px;align-items:flex-start;font-size:var(--b,44px);font-weight:600;line-height:1.25}
+.pts .pt2:before{content:'';flex:0 0 24px;height:24px;background:var(--acc);margin-top:.42em}
+.pts .pt2 b{color:var(--acc);font-weight:800}
+/* fix copertina coi loghi: i loghi non coprono piu' il tag (19 nov 2026) */
+.s.cover .grow{min-height:auto}
+.lgs-big{height:auto;padding-top:30px}
+.lgo.big{--lg:var(--lgb,300px)}
+.lgs-big .lgo:nth-child(n+3),.lgs-big .lgo:nth-child(2):nth-last-child(1){--lg:calc(var(--lgb,300px) * .73)}
 `;
 
 const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -243,10 +293,35 @@ function slide(s, i, total) {
       const g = Array.from({ length: n }, (_, k) => `<i class="${k < (s.hi || 0) ? 'on' : ''}" style="width:${sz}px;height:${sz}px"></i>`).join('');
       inner = `<div class="grow"></div><div class="fit">${tag}${s.title ? `<h1>${fmtH(s.title)}</h1>` : ''}<div class="dg"><div class="grid" style="grid-template-columns:repeat(${cols},${sz}px)">${g}</div><div><div class="dd">${esc(s.display ?? s.hi)}</div><div class="dl2">${fmt(s.label)}</div></div></div>${s.body ? `<div class="note">${fmt(s.body)}</div>` : ''}${src}</div><div class="grow"></div>`; break;
     }
+    case 'flow': {
+      // steps: [{head (max 4 parole), text (max 14 parole), logo}], highlight: indice (default ultimo). E' lo schema di "How it works".
+      const hi = s.highlight ?? s.steps.length - 1;
+      const st = s.steps.map((x, k) => `<div class="st${k === hi ? ' hi' : ''}"><div class="nb">${k + 1}</div><div class="sc"><div class="hd">${fmtH(x.head)}</div>${x.text ? `<div class="tx2">${fmt(x.text)}</div>` : ''}</div>${LG(x.logo)}</div>`).join('');
+      inner = `<div class="grow"></div><div class="fit">${tag}${s.title ? `<h1>${fmtH(s.title)}</h1>` : ''}<div class="fl">${st}</div>${s.body ? `<div class="note">${fmt(s.body)}</div>` : ''}${src}</div><div class="grow"></div>`; break;
+    }
+    case 'versus': {
+      // a, b: {name, label (facoltativa, es. "says"), text (max 20 parole), logo}; b e' il lato evidenziato
+      const cd = (x, c) => `<div class="cd ${c}"><div class="who">${LG(x.logo, 'sm')}<span>${esc(x.name)}</span></div>${x.label ? `<div class="cl2">${esc(x.label)}</div>` : ''}<div class="vt">${fmt(x.text)}</div></div>`;
+      inner = `<div class="grow"></div><div class="fit">${tag}${s.title ? `<h1>${fmtH(s.title)}</h1>` : ''}<div class="vs">${cd(s.a, 'a')}${cd(s.b, 'b')}<div class="vsx">VS</div></div>${s.body ? `<div class="note">${fmt(s.body)}</div>` : ''}${src}</div><div class="grow"></div>`; break;
+    }
+    case 'facts': {
+      // items: [{value (testo, max 9 caratteri), label (max 8 parole), logo}] da 2 a 4; highlight: indice (default 0)
+      const hi = s.highlight ?? 0, n = s.items.length;
+      const fc = s.items.map((x, k) => `<div class="fc${k === hi ? ' hi' : ''}"><div class="ft">${LG(x.logo, 'sm')}<div class="fv">${esc(x.value)}</div></div><div class="fl3">${fmt(x.label)}</div></div>`).join('');
+      inner = `<div class="grow"></div><div class="fit">${tag}${s.title ? `<h1>${fmtH(s.title)}</h1>` : ''}<div class="fx n${n}">${fc}</div>${s.body ? `<div class="note">${fmt(s.body)}</div>` : ''}${src}</div><div class="grow"></div>`; break;
+    }
+    case 'roster': {
+      // items: [{name (max 3 parole), note (max 6 parole), logo}] da 2 a 6; highlight: indice o -1
+      const n = s.items.length, c = n <= 2 ? 2 : (n === 4 ? 2 : 3), hi = s.highlight ?? -1;
+      const it = s.items.map((x, k) => `<div class="it${k === hi ? ' hi' : ''}">${x.logo ? LG(x.logo) : `<div class="ini">${esc(String(x.name || '?').trim()[0])}</div>`}<div class="rn">${esc(x.name)}</div>${x.note ? `<div class="rx">${fmt(x.note)}</div>` : ''}</div>`).join('');
+      inner = `<div class="grow"></div><div class="fit">${tag}${s.title ? `<h1>${fmtH(s.title)}</h1>` : ''}<div class="ro" style="--c:${c};--rl:${n <= 4 ? 170 : 140}px">${it}</div>${s.body ? `<div class="note">${fmt(s.body)}</div>` : ''}${src}</div><div class="grow"></div>`; break;
+    }
     case 'end':
       inner = `<div class="grow"></div><div class="fit"><div class="bar"></div><h1>${fmtH(s.title)}</h1><div class="cta">${fmt(s.body)}</div></div><div class="grow"></div>`; break;
     default:
-      inner = `<div class="grow"></div><div class="fit">${tag}${s.title ? `<h1>${fmtH(s.title)}</h1>` : ''}<div class="body">${fmt(s.body)}</div>${src}</div><div class="grow"></div>`;
+      // `points` (2-4 righe corte) al posto del paragrafo: si legge in un colpo d'occhio (GG, 19 nov 2026)
+      const corpo = Array.isArray(s.points) && s.points.length ? `<div class="pts">${s.points.map(p => `<div class="pt2"><span>${fmt(p)}</span></div>`).join('')}</div>` : `<div class="body">${fmt(s.body)}</div>`;
+      inner = `<div class="grow"></div><div class="fit">${tag}${s.title ? `<h1>${fmtH(s.title)}</h1>` : ''}${corpo}${src}</div><div class="grow"></div>`;
   }
   return `<div class="s ${s.type || 'text'} ${theme}">${bg}<div class="z">${top}${inner}${foot}</div></div>`;
 }
@@ -259,19 +334,26 @@ async function fit(page) {
     // 1) numeri del confronto: rimpiccioliscili finché stanno nella colonna
     let n = 110, steps = 0;
     while (wide('.cmp .val') && n > 50) { n *= 0.95; s.style.setProperty('--n', n + 'px'); steps++; }
+    // 1b) numeri e nomi degli schemi (facts, versus, flow): partono dalla loro misura e scendono
+    const m0 = s.querySelector('.fx .fv,.vs .who,.fl .hd');
+    let m = m0 ? parseFloat(getComputedStyle(m0).fontSize) : 0;
+    while (m0 && wide('.fx .fv,.vs .who,.fl .hd') && m > 28) { m *= 0.95; s.style.setProperty('--m', m + 'px'); steps++; }
     // 2) spazio verticale e parole troppo larghe: rimpicciolisci titolo e testo
     const h = s.querySelector('h1,.num'), b = s.querySelector('.body,.sub,.lab,.cta,.note,.lb,.tx,.dl,.dl2');
     const top = s.querySelector('.top').getBoundingClientRect(), ft = s.querySelector('.foot').getBoundingClientRect();
     const over = () => { const f = s.querySelector('.fit').getBoundingClientRect();
-      return f.top < top.bottom + 24 || f.bottom > ft.top - 24 || wide('h1,.num,.lb'); };
+      const lb = s.querySelector('.lgs-big'), lgOver = lb && lb.lastElementChild && lb.getBoundingClientRect().bottom > f.top - 10;
+      return f.top < top.bottom + 24 || f.bottom > ft.top - 24 || lgOver || wide('h1,.num,.lb'); };
+    let lgb = 300;
     let hs = h ? parseFloat(getComputedStyle(h).fontSize) : 0, bs = b ? parseFloat(getComputedStyle(b).fontSize) : 0;
     let k = 0;
     while (over() && k < 40) {
       if (h && hs > 60) { hs *= 0.94; s.style.setProperty('--h', hs + 'px'); }
-      if (b && bs > 28 && k % 2) { bs *= 0.96; s.style.setProperty('--b', bs + 'px'); }
+      if (b && bs > 24 && k % 2) { bs *= 0.96; s.style.setProperty('--b', bs + 'px'); }
+      if (s.querySelector('.lgs-big') && lgb > 170) { lgb *= 0.93; s.style.setProperty('--lgb', lgb + 'px'); }
       k++;
     }
-    return { ok: !over() && !wide('.cmp .val'), steps: steps + k };
+    return { ok: !over() && !wide('.cmp .val,.fx .fv'), steps: steps + k };
   });
 }
 

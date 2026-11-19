@@ -185,6 +185,45 @@ def controlla_grafico(dove, s):
         avv(dove, "frase di lettura di %d parole, consigliate max 20" % parole(s["body"]))
 
 
+SCHEMI = {"flow", "versus", "facts", "roster"}  # solo caroselli (GG, 19 nov 2026)
+
+
+def controlla_schema(dove, s):
+    t = s.get("type")
+    if t == "flow":
+        st = s.get("steps") or []
+        if not 2 <= len(st) <= 4:
+            err(dove, "flow: servono 2-4 passi (ora: %d)" % len(st))
+        for i, x in enumerate(st):
+            if parole(x.get("head")) > 4:
+                err("%s passo %d" % (dove, i + 1), "head di %d parole, max 4" % parole(x.get("head")))
+            if parole(x.get("text")) > 14:
+                err("%s passo %d" % (dove, i + 1), "text di %d parole, max 14" % parole(x.get("text")))
+    if t == "versus":
+        for lato in ("a", "b"):
+            x = s.get(lato) or {}
+            if not (x.get("name") and x.get("text")):
+                err(dove, "versus: al lato '%s' servono name e text" % lato)
+            if parole(x.get("text")) > 20:
+                err(dove, "versus lato %s: %d parole, max 20" % (lato, parole(x.get("text"))))
+    if t == "facts":
+        it = s.get("items") or []
+        if not 2 <= len(it) <= 4:
+            err(dove, "facts: servono 2-4 numeri (ora: %d)" % len(it))
+        for i, x in enumerate(it):
+            if len(str(x.get("value", ""))) > 9:
+                err("%s numero %d" % (dove, i + 1), "'value' %r oltre 9 caratteri" % x.get("value"))
+            if parole(x.get("label")) > 8:
+                err("%s numero %d" % (dove, i + 1), "label di %d parole, max 8" % parole(x.get("label")))
+    if t == "roster":
+        it = s.get("items") or []
+        if not 2 <= len(it) <= 6:
+            err(dove, "roster: servono 2-6 voci (ora: %d)" % len(it))
+        for i, x in enumerate(it):
+            if parole(x.get("note")) > 6:
+                err("%s voce %d" % (dove, i + 1), "note di %d parole, max 6" % parole(x.get("note")))
+
+
 # ---------------------------------------------------------------- carosello
 def controlla_carosello(path, d):
     nome = path.split("/")[-1]
@@ -239,11 +278,19 @@ def controlla_carosello(path, d):
                     % s.get("tag"))
             if not s.get("image") and not s.get("logos"):
                 avv(dove, "copertina senza foto: mettici i loghi dei soggetti (GG, 16 nov 2026). La foto si usa solo se il soggetto e' gia' in archivio")
-        if t == "text" and parole(s.get("body")) > 35:
-            err(dove, "corpo di %d parole, il massimo e' 35" % parole(s.get("body")))
+        mytake = str(s.get("tag", "")).lower() == "my take"
+        if t == "text" and parole(s.get("body")) > (30 if mytake else 25):
+            err(dove, "corpo di %d parole, il massimo e' %d (GG, 19 nov 2026: troppo testo; "
+                "usa 'points' o uno schema)" % (parole(s.get("body")), 30 if mytake else 25))
+        if t == "text":
+            for k, p in enumerate(s.get("points") or []):
+                if parole(p) > 12:
+                    err(dove, "punto %d di %d parole, max 12" % (k + 1, parole(p)))
         if t in GRAFICI:
             controlla_grafico(dove, s)
-        if (t not in ("cover", "end") and t in {"text", "stat"} | GRAFICI
+        if t in SCHEMI:
+            controlla_schema(dove, s)
+        if (t not in ("cover", "end") and t in {"text", "stat"} | GRAFICI | SCHEMI
                 and str(s.get("tag", "")).lower() != "my take"):
             if not s.get("source"):
                 avv(dove, "manca 'source'")
@@ -262,6 +309,18 @@ def controlla_carosello(path, d):
 
     if con_loghi < 2:
         err(nome, "solo %d slide con loghi: ne servono almeno 2-3" % con_loghi)
+
+    # piu' schemi, meno testo (GG, 19 nov 2026)
+    visive = sum(1 for s in slides if s.get("type") in GRAFICI | SCHEMI)
+    if visive < 3:
+        err(nome, "solo %d slide visive (grafici o schemi): ne servono almeno 3" % visive)
+    paragrafi = sum(1 for s in slides if s.get("type") == "text" and s.get("body")
+                    and not s.get("points") and str(s.get("tag", "")).lower() != "my take")
+    if paragrafi > 1:
+        err(nome, "%d slide di solo paragrafo oltre a My take: max 1. Usa 'points' o uno schema"
+            % paragrafi)
+    if not any(s.get("type") == "flow" for s in slides):
+        avv(nome, "'How it works' non e' un flow: la lezione si spiega a passi, non a paragrafi")
 
     return tipi_grafico
 

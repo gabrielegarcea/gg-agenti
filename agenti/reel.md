@@ -2,7 +2,11 @@
 
 Leggi prima `agenti/comuni.md`, poi questo file. Non leggere `ricerca.md` né `caroselli.md`.
 
-Il tuo lavoro: dalla quarta notizia degli Appunti del giorno al reel montato **senza voce**, consegnato a GG con il testo da leggere. Il reel esce DOMANI: GG registra la voce oggi e tu rimonti con i sottotitoli precisi quando ti manda l'audio.
+Il tuo lavoro: dalla quarta notizia degli Appunti del giorno al reel di DOMANI, in **due tempi** (decisione di GG, 19 nov 2026):
+1. **Prima il testo, niente video.** Scrivi il reel, lo controlli (marker, JSON, ritmo sulla voce guida) e mandi a GG SOLO il testo da leggere. Nessun render, nessuna anteprima, nessun file.
+2. **Poi un solo render, con la voce vera.** Quando GG manda l'audio in questa chat, monti il reel con la sua voce e i sottotitoli precisi e lo mandi. È l'unico video della giornata.
+
+**Perché:** fino al 18 nov il reel si renderizzava due volte (bozza muta + versione con la voce). La bozza muta GG non la usava: costava render, anteprime e controlli visivi per un video da buttare. Un render solo = meno token e contenuti pronti prima.
 
 ## 0. Prendi gli appunti
 Cerca su Drive il file `appunti-GG.MM.md` di oggi nella cartella `{APPUNTI_DEL_GIORNO}` e leggi la sezione "Reel di domani". **Non rifare le ricerche:** i fatti sono verificati e il format di turno è già scelto. Se ti serve un dato che non c'è, fai cercare SOLO quel dato a un sotto-agente `general-purpose` (risposta: il dato e i 2 link). Se il file non c'è: aspetta 10 minuti e riprova due volte, poi scegli tu la notizia seguendo `ricerca.md` punto 3b e scrivilo nel messaggio finale.
@@ -31,7 +35,7 @@ Target: 60-85 secondi (è il format che può permettersi di essere il più lungo
 Regola: una persona sola al centro. Se nella storia ci sono tre protagonisti, scegline uno e gli altri diventano contesto.
 
 ## 1b. Le due regole che GG non deve più ripetere (10 nov 2026)
-**1. Le zone morte.** La zona utile del reel NON è il riquadro 1080x1920. Sono via 250 px in alto, 320 in basso, 120 per lato, e in basso a DESTRA la colonna dei pulsanti di Instagram, alta 768 px (da x=835 in poi, sotto y=1152). La parte bassa a SINISTRA si usa: lì stanno i sottotitoli. Il motore è impostato così (contenuto allineato a sinistra al titolo, largo 715 px, sottotitoli a y=1470): non spostare niente a mano e non centrare niente. Prima del render si controlla con `zone.py` (punto 4.6): se un testo, un numero o un grafico tocca il rosso, si corregge.
+**1. Le zone morte.** La zona utile del reel NON è il riquadro 1080x1920. Sono via 250 px in alto, 320 in basso, 120 per lato, e in basso a DESTRA la colonna dei pulsanti di Instagram, alta 768 px (da x=835 in poi, sotto y=1152). La parte bassa a SINISTRA si usa: lì stanno i sottotitoli. Il motore è impostato così (contenuto allineato a sinistra al titolo, largo 715 px, sottotitoli a y=1470): non spostare niente a mano e non centrare niente. Prima del render si controlla con `zone.py` (punto 6.5, con la voce vera): se un testo, un numero o un grafico tocca il rosso, si corregge.
 
 **2. Mai lo schermo vuoto.** Ogni 4 secondi al massimo deve comparire qualcosa di NUOVO e di vero sullo schermo: una riga di testo, una voce di un grafico, un numero, una tappa della timeline. Uno stemma o una nota scritta a mano da soli NON contano: con uno stemma sullo schermo per dieci secondi lo spettatore scorre via. In pratica:
 - il primo elemento di ogni capitolo compare sulla PRIMA parola della prima frase e una frase lunga ha almeno due cose che compaiono: **questo non lo scrivi tu, lo fa `marker.py`** (punto 3b). Tu scrivi le frasi e gli elementi;
@@ -79,20 +83,16 @@ Mette i `{id}` nei `say` e gli `at` sugli elementi, da solo. Se dice ERRORE non 
 
 **3c. Poi il controllo del JSON:** `cp ~/gg-agenti/strumenti/controllo.py ~/gg/ && cd ~/gg && python3 controllo.py reel/reel.json` (elementi fissi presenti, parole italiane, lunghezze, coerenza donut, `lang`, marker doppi). Correggi ogni `ERRORE` e rilancialo.
 
-## 4. Reel montato senza voce
-GG vuole il reel completo, con i sottotitoli del testo proposto, ma **senza nessuna voce**: la voce la mette lui dopo. Nessuna voce sintetica deve sentirsi nel video.
-1. **Prepara la cartella, senza installare niente:** `python3 ~/gg-agenti/strumenti/prepara.py reel`. Copia in `~/ggm` motore, `timing.py`, `sfx.py`, `marker.py`, `zone.py`, `voce_guida.py`, `align.py`, `controllo.py` e il simbolo, verifica font, ffmpeg e Chromium e chiude con `PRONTO` o `NON PRONTO: <cosa>`. **Non lanciare mai `npm`, `pip` o `apt-get`** (17 nov 2026: nelle attività pianificate i registri dei pacchetti rispondono 403 e il Reel si è fermato lì): i font stanno in `strumenti/fonts`, la voce guida si fa anche senza espeak-ng, i loghi SVG senza cairosvg. Se dice `NON PRONTO`, fermati con il messaggio di una riga riportando quella riga.
-2. `voce_guida.py` serve SOLO a calcolare i tempi dei sottotitoli e non deve mai sentirsi nel video. Senza espeak-ng genera una traccia "a blocchi" (un suono per parola, 0,7 s fra le frasi): i tempi per frase sono giusti, quelli per parola una stima che `align.py`/`timing.py` sistemano con la voce vera.
+## 4. Prima consegna: il testo bloccato (NIENTE render)
+Il testo che GG legge deve essere quello definitivo: dopo che ha registrato non si cambia più. Per questo prima di mandarlo controlli il RITMO sulla voce guida, che non costa render.
+1. **Prepara la cartella, senza installare niente:** `python3 ~/gg-agenti/strumenti/prepara.py reel`. Copia in `~/ggm` motore, `timing.py`, `sfx.py`, `marker.py`, `zone.py`, `voce_guida.py`, `align.py`, `controllo.py` e il simbolo, verifica font, ffmpeg e Chromium e chiude con `PRONTO` o `NON PRONTO: <cosa>`. **Non lanciare mai `npm`, `pip` o `apt-get`** (17 nov 2026: nelle attività pianificate i registri dei pacchetti rispondono 403): i font stanno in `strumenti/fonts`, la voce guida si fa anche senza espeak-ng, i loghi SVG senza cairosvg. Se dice `NON PRONTO`, fermati con il messaggio di una riga riportando quella riga.
+2. `voce_guida.py` serve SOLO a calcolare i tempi e non si sente mai. Senza espeak-ng genera una traccia "a blocchi" (un suono per parola, 0,7 s fra le frasi): basta per misurare il ritmo.
 3. `mkdir -p ~/ggm/lavoro && cp ~/gg/reel/reel.json ~/ggm/lavoro/ && cd ~/ggm && python3 voce_guida.py lavoro/reel.json lavoro/voce-guida.wav && python3 timing.py lavoro/reel.json lavoro/timeline.json` (con `"audio":"voce-guida.wav"` nel reel.json di lavoro).
-3b. **CONTROLLO DEL RITMO, obbligatorio:** `cp ~/gg-agenti/strumenti/controllo.py ~/ggm/ && python3 controllo.py lavoro/reel.json --timeline lavoro/timeline.json`. Misura sui tempi veri i buchi sullo schermo (regola 2 del punto 1b). Se dà un ERRORE, correggi il reel.json (sposta un marker all'inizio della frase, aggiungi una riga o una voce al grafico), rilancia `timing.py` e poi di nuovo il controllo. Si va avanti solo con zero errori.
-4. Traccia muta della stessa durata: `ffmpeg -y -f lavfi -i anullsrc=r=44100:cl=mono -t $(ffprobe -v error -show_entries format=duration -of csv=p=0 lavoro/voce-guida.wav) lavoro/muto.wav`; poi nel reel.json di lavoro metti `"audio":"muto.wav"` (i tempi restano quelli di timeline.json), i loghi e, se c'è, `photo` nella cover (preferisci una `_cut.png` dall'archivio, altrimenti una foto normale con `"cutout": false`).
-5. Render del video: `cd ~/ggm && node render.js lavoro/reel.json lavoro/timeline.json lavoro/reel-bozza.mp4` (circa 2 minuti per 70 secondi di reel).
-6. **CONTROLLO VISIVO CON LE ZONE MORTE (economico):** prima del video genera un'anteprima per capitolo, scelta verso la FINE di ogni capitolo (quando lo schermo è più pieno), più la cover e l'outro: `node render.js lavoro/reel.json lavoro/timeline.json lavoro/p --preview <istanti>`. Poi `python3 ~/gg-agenti/strumenti/reel/zone.py lavoro/p_*.png --out lavoro/zone.png` e guarda con Read SOLO quel foglio: le zone morte sono in rosso. Niente deve toccarle; niente deve stare al centro con il vuoto attorno; nessun capitolo deve avere metà schermo vuota sotto il contenuto. Dopo il video, 2 fotogrammi passati anch'essi da `zone.py`. Verifica che non si senta nessuna voce (solo gli effetti) e che i sottotitoli si leggano. Nella bozza i tempi dei sottotitoli possono essere imprecisi verso la fine (`timing.py` lavora sulla voce guida): non perderci tempo, li sistema `align.py` con la voce vera.
+4. **CONTROLLO DEL RITMO, obbligatorio:** `python3 controllo.py lavoro/reel.json --timeline lavoro/timeline.json`. Misura i buchi sullo schermo (regola 2 del punto 1b). Se dà un ERRORE, correggi il reel.json (spezza lo step, aggiungi una riga o una voce al grafico), rilancia `timing.py` e il controllo. Si va avanti solo con zero errori: se il ritmo si sistema DOPO la registrazione, GG deve rileggere.
+5. **STOP: niente `render.js`, niente `--preview`, niente `zone.py`, niente `muto.wav`.** Si fanno una volta sola, con la voce vera (punto 6). Copia il reel.json di lavoro definitivo in `~/gg/reel/reel.json` e la durata stimata dalla timeline: ti servono dopo.
 
-## 5. Consegna
-Manda `reel-bozza.mp4` con `SendUserFile` (status "proactive", display "render"), caption `Reel di domani – titolo (montato senza voce, da rifare con la tua voce)`.
-
-Poi il messaggio finale. Vale la regola di `comuni.md`: **solo materiale e azioni.** Niente lezione, niente opinione, niente articolo del Codice, niente fonti, niente segnali di rumore, niente prova di comprensione, niente stile degli effetti: sono negli appunti e nell'archivio. Struttura esatta:
+## 5. Consegna del testo
+Nessun `SendUserFile`: in questa fase non c'è nessun file da mandare. Solo il messaggio. Vale la regola di `comuni.md`: **solo materiale e azioni.** Niente lezione, niente opinione, niente articolo del Codice, niente fonti, niente segnali di rumore, niente prova di comprensione, niente stile degli effetti: sono negli appunti e nell'archivio. Struttura esatta:
 
 ```
 🎙️ REEL DI DOMANI — <titolo corto in italiano> (circa 68 secondi)
@@ -107,22 +107,24 @@ ORA:
 • se vuoi, allegami un PNG scontornato di <protagonista> per la copertina
 • mandami il logo <nome> (manca nel capitolo <N>)
 
-DOMANI alle 20:00 pubblichi questo reel su Instagram e TikTok.
-Caption e i 3 hook per i Trial Reels te li mando insieme al video finito, appena ricevo la voce.
+Appena ricevo la voce ti mando il reel finito, con caption e i 3 hook per i Trial Reels.
+DOMANI alle 20:00 lo pubblichi su Instagram e TikTok.
 ```
 
 Se non serve niente oltre alla voce, nel blocco resta solo la prima riga di `ORA:`. I loghi nuovi da archiviare vanno in una riga sotto il blocco: `🆕 Loghi nuovi da archiviare: <nome> (fonte)`.
 
 ## 5b. Scrivi nell'archivio
-Dopo la consegna aggiungi la riga del reel nel foglio "Archivio Sport Management" (`{ARCHIVIO}`) come dice `comuni.md`: una chiamata `append_values` su `Contenuti!A1`, 19 colonne (A-S), **con la data di DOMANI** (è il giorno di pubblicazione) in formato AAAA-MM-GG. Nella colonna `Grafico / Format reel` scrivi il format usato (Explainer, Confronto o Storia in 3 atti) e il tipo di grafico principale, perché è da lì che domani la Ricerca capisce dove siamo nella rotazione. Nella colonna `Key terms` metti il `term` del reel. Se la chiamata non riesce, riprova una volta e aggiungi al messaggio una riga `⚠️ archivio non aggiornato`.
+**Solo dopo aver mandato il video finito** (punto 6.6), mai dopo il solo testo (regola di `comuni.md`: la riga si scrive quando il contenuto esiste) aggiungi la riga del reel nel foglio "Archivio Sport Management" (`{ARCHIVIO}`) come dice `comuni.md`: una chiamata `append_values` su `Contenuti!A1`, 19 colonne (A-S), **con la data di DOMANI** (è il giorno di pubblicazione) in formato AAAA-MM-GG. Nella colonna `Grafico / Format reel` scrivi il format usato (Explainer, Confronto o Storia in 3 atti) e il tipo di grafico principale, perché è da lì che domani la Ricerca capisce dove siamo nella rotazione. Nella colonna `Key terms` metti il `term` del reel. Se la chiamata non riesce, riprova una volta e aggiungi al messaggio una riga `⚠️ archivio non aggiornato`.
 
-## 6. Quando GG manda la voce (e le correzioni)
+## 6. Quando GG manda la voce: l'unico render
 0. Applica prima le correzioni di GG al reel.json (testi, numeri, grafici, ordine). Ogni numero nuovo segue la regola delle 2 fonti.
-1. Se `~/ggm` non c'è più, ricostruiscila con `prepara.py reel` (punto 4.1). Copia l'audio (e l'eventuale PNG scontornato e i loghi) in `~/ggm/lavoro/`, usa il reel.json corretto e metti `audio` = il file di GG (e `photo` nella cover: quella nuova se l'ha mandata, altrimenti quella dell'archivio).
-2. SOTTOTITOLI PRECISI: al posto di `timing.py` usa `align.py`, che allinea parola per parola sulla voce vera. Niente da installare: `cd ~/ggm && python3 align.py lavoro/reel.json lavoro/timeline.json`. Se nella sessione mancano librosa o espeak-ng, `align.py` lo dice in una riga e passa da solo a `timing.py` (tempi dalle pause della voce vera): va bene così, non provare a installarli.
+1. Se `~/ggm` non c'è più, ricostruiscila con `prepara.py reel` (punto 4.1). Copia l'audio (e l'eventuale PNG scontornato e i loghi) in `~/ggm/lavoro/`, parti da `~/gg/reel/reel.json` (quello con i marker) e metti `audio` = il file di GG, i loghi e `photo` nella cover (quella nuova se l'ha mandata, altrimenti quella dell'archivio, meglio una `_cut.png`; foto normale con `"cutout": false`).
+2. SOTTOTITOLI PRECISI: `cd ~/ggm && python3 align.py lavoro/reel.json lavoro/timeline.json`, che allinea parola per parola sulla voce vera. Se nella sessione mancano librosa o espeak-ng, `align.py` lo dice in una riga e passa da solo a `timing.py` (tempi dalle pause della voce vera): va bene così, non provare a installarli.
 3. I `say` devono contenere esattamente le parole che GG ha detto: se ha cambiato qualche parola leggendo (te lo dice, o lo vedi dai tempi stampati: una frase troppo lunga o troppo corta rispetto alle altre), correggi i `say` e rilancia `align.py`.
-4. Controlla i sottotitoli: genera le anteprime (`--preview`) in 6-8 istanti a metà di frasi diverse, mettile in un foglio di miniature e verifica con Read che la parola evidenziata sia quella che GG sta dicendo in quel momento (confronta con i tempi stampati). Poi genera il video, controlla 2-3 fotogrammi e manda `reel.mp4` con `SendUserFile`.
-5. Il messaggio che accompagna il video finito è quello che GG userà domani per pubblicare, quindi contiene solo questo:
+4. Ritmo sui tempi veri: `python3 controllo.py lavoro/reel.json --timeline lavoro/timeline.json`. Zero errori prima di andare avanti (stessa regola del punto 4.4, senza cambiare le parole: si sposta un marker o si aggiunge una voce al grafico).
+5. **CONTROLLO VISIVO PRIMA DEL RENDER (economico, un giro solo):** anteprime alla FINE di ogni capitolo (schermo più pieno), più la cover, l'outro e 3-4 istanti a metà di frasi diverse per i sottotitoli: `node render.js lavoro/reel.json lavoro/timeline.json lavoro/p --preview <istanti>`. Poi `python3 zone.py lavoro/p_*.png --out lavoro/zone.png` e guarda con Read SOLO quel foglio: le zone morte sono in rosso, niente deve toccarle; niente al centro col vuoto attorno; la parola evidenziata nei sottotitoli è quella che GG sta dicendo in quell'istante (confronta con i tempi stampati). Correggi e rifai le anteprime solo dei capitoli toccati.
+6. **Il render, una volta sola:** `node render.js lavoro/reel.json lavoro/timeline.json lavoro/reel.mp4` (circa 2 minuti per 70 secondi). Controlla 2 fotogrammi passati da `zone.py` e che l'audio sia la voce di GG. Manda `reel.mp4` con `SendUserFile` (status "proactive", display "render"), caption `Reel di domani – <titolo> (pronto)`. Se il render fallisce due volte, fermati con il messaggio di una riga.
+7. Il messaggio che accompagna il video finito è quello che GG userà domani per pubblicare, quindi contiene solo questo:
 ```
 🎙️ <titolo corto> — pronto (<durata> secondi)
 
@@ -139,4 +141,4 @@ Dopo la consegna aggiungi la riga del reel nel foglio "Archivio Sport Management
 DOMANI alle 20:00: pubblica questo reel su Instagram e TikTok con la caption qui sopra.
 Per i Trial Reels usa un hook diverso per ogni prova.
 ```
-Se hai corretto testi o numeri su indicazione di GG, aggiorna anche la riga dell'archivio con `update_values`.
+Poi scrivi la riga nell'archivio (punto 5b). Se GG non manda la voce in giornata, la riga non si scrive.

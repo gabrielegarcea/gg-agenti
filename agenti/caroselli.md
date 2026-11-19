@@ -23,13 +23,21 @@ Se dice ERRORE non ha scritto niente, e il messaggio dice cosa fare (`"My take: 
 
 Il formato della voce e' documentato in cima a `strumenti/costruisci.py`. **Se una notizia vuole una forma che la voce non prevede, scrivi `nN.json` a mano** con lo schema qui sotto: lo script e' una scorciatoia, non una gabbia.
 
-LUNGHEZZA LIBERA: da 6 a 10 slide, decise dalla notizia. Una notizia piccola ne ha 6; una importante, con tanti dati, 8-10. Non tagliare mai informazioni utili per stare corto. Ordine:
+**PIÙ SCHEMI, MENO TESTO (decisione di GG, 19 nov 2026).** "I caroselli sono ancora troppo scritti e poco schematici: servono grafici, schemi, infografiche." Chi scorre Instagram non legge un paragrafo di 40 parole: guarda una figura e legge 3 righe. Quindi:
+- **"What happened" è una lista di 2-4 punti** da max 12 parole (`successo` è una lista), mai un paragrafo.
+- **"How it works" è SEMPRE uno schema `flow`**: il meccanismo in 2-4 passi numerati (`head` max 4 parole + `text` max 14). Se serve un secondo blocco, è un altro schema o un grafico (`facts`, `versus`, `split`...), non un paragrafo.
+- **Almeno 3 slide visive** (grafici + schemi) per carosello, di solito 4: flow + grafico principale + 1-2 extra.
+- **Al massimo UNA slide di solo paragrafo** (max 25 parole) oltre a "My take" (max 30). Tutto il resto o è a punti o è una figura.
+- **Ogni volta che stai per scrivere un paragrafo, chiediti che figura è:** due posizioni opposte → `versus`; 2-4 numeri sparsi → `facts`; una lista di club/proprietari/soggetti → `roster`; una sequenza → `timeline` o `flow`; una cifra prima/dopo → `compare`. Il 19 nov "Both sides tell it differently" era un paragrafo e doveva essere un `versus`; "How it works, cont." di Porto (+0.15, +0.10, max 0.25, 0.75) erano quattro numeri in una frase e dovevano essere `facts`; "A Portuguese habit" (Porto 70, Benfica 65, Porto 2021 64.8) era un `bars` scritto a parole.
+`costruisci.py` e `controllo.py` bloccano i caroselli che non rispettano queste regole.
+
+LUNGHEZZA LIBERA: da 6 a 10 slide, decise dalla notizia. Una notizia piccola ne ha 6; una importante, con tanti dati, 8-10. Non tagliare mai informazioni utili per stare corto: trasformale in figure. Ordine:
 1. **cover** — tag Money/Power/Culture, titolo max 10 parole con `*una parte evidenziata*`, sottotitolo max 18 parole. Niente grafici in copertina. **L'immagine della copertina (decisione di GG, 16 nov 2026):** se il soggetto della notizia è già nell'archivio foto di Drive, usa la foto (`image` e `focus`); **altrimenti metti `logos` con gli stemmi dei soggetti** (club, lega, federazione, broadcaster, azienda) e il motore costruisce la copertina con i loghi grandi. Il primo logo è il soggetto principale ed esce più grande, gli altri (massimo 3 in tutto) fanno da contesto. **La copertina non si chiede mai a GG**: in archivio ci sono 401 loghi, una copertina si fa sempre.
-2. **text "What happened"** — solo fatti, max 35 parole, con `source`, con `logos` dei soggetti coinvolti.
-3. **text "How it works"** (SEMPRE, 1-2 slide) — è la LEZIONE del carosello: il meccanismo dietro la notizia spiegato semplice e concreto (come si vendono i diritti TV, cosa prevede la regola, come guadagna quel tipo di proprietario), con nomi, cifre e date precise. È la slide che insegna.
+2. **text "What happened"** — 2-4 punti (`points`), solo fatti, con `source` e `logos` dei soggetti coinvolti.
+3. **flow "How it works"** (SEMPRE) — è la LEZIONE del carosello: il meccanismo dietro la notizia in 2-4 passi numerati (come si vendono i diritti TV, cosa prevede la regola, come guadagna quel tipo di proprietario), con nomi, cifre e date precise. L'ultimo passo è evidenziato: è quello che spiega la notizia. Facoltativo un secondo blocco "How it works, cont." come schema o grafico.
 4. **GRAFICO** — obbligatorio in ogni carosello (tipi e schema sotto).
-5. **text theme "paper"** — dettaglio, reazione o secondo grafico se aiuta. Max 35 parole. Nelle notizie lunghe puoi aggiungere 1-2 slide fra queste: un secondo o terzo grafico, "Who wins, who loses", "Precedents" (casi simili in altre leghe o paesi), "What happens next" (date, voti, scadenze), "Why it matters if you work in sport".
-6. **text tag "My take"** (penultima) — l'opinione di GG dagli appunti: tesi chiara in prima persona, titolo forte, max 35 parole.
+5. **extra** — 1-2 slide in più, di preferenza figure: un secondo grafico, `versus` ("Both sides", "Who wins, who loses"), `facts` (i numeri chiave), `roster` (i club coinvolti, i precedenti), `timeline` ("What happens next"). Se proprio serve testo: `punti` (tema "paper"); un solo paragrafo ammesso.
+6. **text tag "My take"** (penultima) — l'opinione di GG dagli appunti: tesi chiara in prima persona, titolo forte, max 30 parole.
 7. **end** (ultima) — solo una domanda per i commenti, collegata all'opinione.
 
 `date` = giorno e mese di oggi, formato GG.MM (es. 29.10).
@@ -45,6 +53,12 @@ LUNGHEZZA LIBERA: da 6 a 10 slide, decise dalla notizia. Una notizia piccola ne 
 - `dots`: griglia di pallini, alcuni colorati (max 100)
 - `stat`: un solo numero gigante (ultima scelta)
 
+### Schemi (v6, 19 nov 2026): non contano come "grafico principale", ma sostituiscono i paragrafi
+- `flow`: i passi di un meccanismo, numerati e collegati (OBBLIGATORIO in "How it works")
+- `versus`: due posizioni o due soggetti a confronto, con logo e 1 frase ciascuno
+- `facts`: 2-4 numeri chiave in griglia, ognuno con la sua etichetta
+- `roster`: 2-6 soggetti con logo, nome e una nota (club coinvolti, proprietà di un gruppo, precedenti)
+
 REGOLE: i 3 caroselli del giorno usano 3 TIPI DIVERSI, possibilmente non la stessa combinazione del giorno prima. Scegli il tipo che racconta meglio il dato (tempo → line; parte di un tutto → donut o split; due soggetti → h2h; più soggetti → bars; prima/dopo → compare; sequenza → timeline; quanti su quanti → dots). STESSO LIVELLO (GG, 10 nov 2026): nello stesso grafico solo entità dello stesso livello (es. le 6 confederazioni, oppure le sotto-unioni di una sola, mai UEFA accanto ai Caraibi), con l'unità scritta nel titolo o nella frase di lettura.
 
 ### Schema delle slide
@@ -52,7 +66,11 @@ E' quello che `costruisci.py` produce. Serve per leggerlo e per i casi scritti a
 ```json
 {"rubrica":"Explained","date":"29.10","slides":[
  {"type":"cover","tag":"Money","title":"...","sub":"...","image":"foto/1.jpg","focus":"center"},
- {"type":"text","title":"What happened","body":"...","source":"Outlet, outlet (dd/mm/yyyy)","logos":["foto/logo_x.png"]},
+ {"type":"text","title":"What happened","points":["...","...","..."],"source":"Outlet, outlet (dd/mm/yyyy)","logos":["foto/logo_x.png"]},
+ {"type":"flow","title":"How it works","steps":[{"head":"Fans lend money","text":"Minimum ticket €2,500, sold to savers not banks","logo":"foto/a.png"},{"head":"The coupon moves","text":"..."}],"source":"..."},
+ {"type":"versus","title":"Both sides","a":{"name":"Real Madrid","label":"says","text":"...","logo":"foto/a.png"},"b":{"name":"LaLiga","label":"says","text":"..."},"source":"..."},
+ {"type":"facts","title":"...","items":[{"value":"+0.15","label":"points per Champions League phase"},{"value":"0.75","label":"maximum rise in total"}],"highlight":0,"source":"..."},
+ {"type":"roster","title":"...","items":[{"name":"Southampton","note":"England, Championship","logo":"foto/a.png"}],"highlight":0,"source":"..."},
  {"type":"compare","title":"The *doubling*","a":{"label":"Today","value":250,"display":"€250m"},"b":{"label":"Target","value":500,"display":"€500m"},"body":"frase di lettura (max 20 parole)","source":"..."},
  {"type":"bars","title":"...","items":[{"label":"Item A","value":20,"display":"20","logo":"foto/a.png"},{"label":"Item B","value":14,"display":"14"}],"highlight":1,"body":"...","source":"..."},
  {"type":"line","title":"...","points":[{"label":"2019","value":1.2,"display":"1.2bn"},{"label":"2025","value":3.9,"display":"3.9bn"}],"highlight":1,"body":"...","source":"..."},
@@ -62,11 +80,11 @@ E' quello che `costruisci.py` produce. Serve per leggerlo e per i casi scritti a
  {"type":"split","title":"...","parts":[{"label":"TV rights","value":45,"display":"45%"},{"label":"Sponsors","value":30,"display":"30%"},{"label":"Other","value":25,"display":"25%"}],"highlight":0,"body":"...","source":"..."},
  {"type":"dots","title":"...","n":20,"hi":7,"cols":5,"display":"7 of 20","label":"clubs with *US owners*","body":"...","source":"..."},
  {"type":"stat","stat":"+54%","body":"...","source":"..."},
- {"type":"text","theme":"paper","title":"...","body":"..."},
+ {"type":"text","theme":"paper","title":"...","points":["...","..."]},
  {"type":"text","tag":"My take","title":"...","body":"..."},
  {"type":"end","title":"Final *question?*","body":"..."}]}
 ```
-`value` è un numero (stessa unità per tutte le voci: le lunghezze sono proporzionali), `display` (o `da`/`db` nell'h2h) è il testo mostrato, max 9 caratteri. Nel `compare` la colonna b è evidenziata; nell'`h2h` il lato b è arancione. In `bars` e `split` `highlight` è l'indice (da 0) della voce evidenziata; le fette dello `split` sommano il totale. Nel `line` i punti sono in ordine di tempo. Nella `timeline` `text` max 10 parole. Nel `donut` `value` è la percentuale 0-100. Nei `dots` `n` è il totale, `hi` quanti colorati. Etichette max 5 parole, `label` max 8.
+`value` è un numero (stessa unità per tutte le voci: le lunghezze sono proporzionali), `display` (o `da`/`db` nell'h2h) è il testo mostrato, max 9 caratteri. Nel `compare` la colonna b è evidenziata; nell'`h2h` il lato b è arancione. In `bars` e `split` `highlight` è l'indice (da 0) della voce evidenziata; le fette dello `split` sommano il totale. Nel `line` i punti sono in ordine di tempo. Nella `timeline` `text` max 10 parole. Nel `donut` `value` è la percentuale 0-100. Nei `dots` `n` è il totale, `hi` quanti colorati. Etichette max 5 parole, `label` max 8. Nel `flow` `head` max 4 parole e `text` max 14; nel `versus` `text` max 20; nei `facts` `value` max 9 caratteri e `label` max 8 parole; nel `roster` `name` max 3 parole e `note` max 6. Nella voce di `costruisci.py`, dentro schemi e grafici, `"soggetto": "Nome"` diventa il logo da solo.
 
 ### Loghi nelle slide (in copertina sì, MAI nell'ultima)
 - `logos`: `["foto/logo_x.png", ...]` su una slide text/stat/grafico mostra una fila di 1-4 loghi tondi sopra il titolo.
@@ -98,7 +116,7 @@ b) (fatto da `prepara.py`)
 c) **CONTROLLO AUTOMATICO prima di renderizzare:** `cd ~/gg && python3 controllo.py n1.json n2.json n3.json`. Lo script controlla le lunghezze dei testi, le slide obbligatorie, i 3 tipi di grafico diversi, i loghi dove si nominano soggetti, la coerenza tra `value` e `display`, le parole italiane rimaste e i limiti delle caption. Correggi tutto quello che segnala (`ERRORE` = da correggere sempre; `AVVISO` = guardalo e decidi) e rilancialo finché è pulito.
 d) `node render.js n1.json out1` (poi n2/out2, n3/out3). Se una riga dice "ATTENZIONE: testo troppo lungo", accorcia quel testo e rigenera.
 e) **CONTROLLO VISIVO (economico, collaudo del 10 nov 2026):** guarda con Read a grandezza piena **solo le 3 copertine** (soggetto visibile e non coperto dal testo, titolo leggibile) e **solo le slide che `controllo.py` ha segnalato con un AVVISO**. Per tutte le altre monta un foglio di miniature per carosello (`python3 -c` con Pillow, 3 colonne) e guarda quello: se in una miniatura qualcosa non torna (testo che sembra tagliato, logo sbagliato, grafico strano), apri quella singola slide a grandezza piena. Non guardare mai tutti i PNG a grandezza piena uno per uno: costa circa 1.900 token per immagine e il controllo automatico prende già i refusi di lunghezza.
-f) Controlla che ogni carosello abbia la sua lezione e passi il test dei sei mesi, che ogni slide "My take" contenga davvero un'opinione (non un riassunto) e che niente sia generico: se una slide è generica, riscrivila con un dato o un dettaglio specifico.
+f) **Prova dello sguardo (GG, 19 nov 2026):** nel foglio di miniature, ogni slide interna deve far capire il suo punto in 3 secondi senza leggere il corpo. Se una slide è un blocco di testo, trasformala in una figura. Poi controlla che ogni carosello abbia la sua lezione e passi il test dei sei mesi, che ogni slide "My take" contenga davvero un'opinione (non un riassunto) e che niente sia generico: se una slide è generica, riscrivila con un dato o un dettaglio specifico.
 
 ## 5. Consegna
 Per ogni carosello chiama `SendUserFile` con **tutti i PNG dalla 01** (status "proactive", display "attach"). Il carosello è sempre completo: la copertina c'è sempre, con la foto o con i loghi.
