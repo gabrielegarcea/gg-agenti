@@ -249,10 +249,14 @@ def controlla_carosello(path, d):
         err(nome, "manca la slide 'What happened'")
     if not any("how it works" in t for t in titoli):
         err(nome, "manca la slide 'How it works' (e' la lezione, obbligatoria)")
-    if not any(str(s.get("tag", "")).lower() == "my take" for s in slides):
-        err(nome, "manca la slide con tag 'My take' (l'opinione, obbligatoria)")
-    if len(slides) >= 2 and str(slides[-2].get("tag", "")).lower() != "my take":
-        avv(nome, "'My take' dovrebbe essere la penultima slide")
+    # (GG, 19 nov 2026) opinioni solo dal Codice: se nessun articolo copre il tema, al posto
+    # di "My take" c'e' "Your call", le due posizioni in un versus, senza opinione di GG
+    finali = ("my take", "your call")
+    if not any(str(s.get("tag", "")).lower() in finali for s in slides):
+        err(nome, "manca la slide 'My take' (opinione da un articolo del Codice) o 'Your call' "
+            "(le due posizioni, quando nessun articolo copre il tema)")
+    if len(slides) >= 2 and str(slides[-2].get("tag", "")).lower() not in finali:
+        avv(nome, "'My take' / 'Your call' dovrebbe essere la penultima slide")
 
     tipi_grafico = [s.get("type") for s in slides if s.get("type") in GRAFICI]
     if not tipi_grafico:
@@ -325,6 +329,39 @@ def controlla_carosello(path, d):
     return tipi_grafico
 
 
+# ---------------------------------------------------------------- numeri verificati
+# (GG, 19 nov 2026) Ogni numero nelle slide deve venire dagli appunti verificati.
+# L'agente copia in numeri.txt le righe "Numeri per il grafico" e "Fatti verificati"
+# che usa, e lo passa con --numeri numeri.txt: un numero che non c'e' blocca il render.
+def chiavi_numero(tok):
+    """'1,994' '1.994' '1994' -> '1994'; '5,25%' e '5.25' -> '525'; '€70m' -> '70'."""
+    return re.sub(r"[^\d]", "", tok).lstrip("0") or "0"
+
+
+def numeri_in(testo):
+    return {chiavi_numero(t) for t in re.findall(r"\d+(?:[.,]\d+)*", testo or "")}
+
+
+def controlla_numeri(nome, d, permessi):
+    slides = d.get("slides") or []
+    for i, sl in enumerate(slides):
+        dove = "%s sl.%02d" % (nome, i + 1)
+        testo = testo_slide({k: v for k, v in sl.items() if k not in ("value", "n", "hi", "highlight", "cols", "a", "b", "rows", "items", "points", "parts", "events", "steps")})
+        # nelle voci dei grafici contano i testi mostrati (display, da, db, label, text), non i "value"
+        for gruppo in ("items", "points", "parts", "events", "steps", "rows"):
+            for x in sl.get(gruppo) or []:
+                if isinstance(x, dict):
+                    testo += " " + " ".join(str(x.get(k, "")) for k in ("display", "da", "db", "label", "text", "head", "value" if sl.get("type") == "facts" else "_", "date", "note", "name"))
+        for lato in ("a", "b"):
+            x = sl.get(lato)
+            if isinstance(x, dict):
+                testo += " " + " ".join(str(x.get(k, "")) for k in ("display", "label", "text", "name"))
+        fuori = sorted(n for n in numeri_in(testo) if len(n) >= 2 and n not in permessi)
+        if fuori:
+            err(dove, "numeri che non sono in --numeri (non verificati o arrotondati): %s. "
+                "Toglili o usa il numero esatto degli appunti" % ", ".join(fuori))
+
+
 # ---------------------------------------------------------------- reel
 def catalogo_effetti():
     """Nomi degli effetti (strumenti/reel/effetti/catalogo.json, generato da catalogo.js)."""
@@ -375,6 +412,7 @@ def controlla_effetti(nome, d):
 def controlla_reel(path, d):
     nome = path.split("/")[-1]
     controlla_effetti(nome, d)
+    controlla_loghi_reel(nome, d)
     _cat = catalogo_effetti() or {}
     GRAFICI_R = GRAFICI | {k for k, v in _cat.get("els", {}).items() if v.get("grafico")}
     if d.get("lang") != "en":
@@ -539,8 +577,31 @@ def controlla_step_deboli(nome, d):
                     % "/".join(sorted({e.get("type") for e in els})))
 
 
+def controlla_loghi_reel(nome, d):
+    """Loghi obbligatori in 2-3 capitoli quando si nominano soggetti (reel.md)."""
+    def ha_logo(x):
+        if isinstance(x, dict):
+            if x.get("type") == "logos" or x.get("logo") or x.get("logos"):
+                return True
+            return any(ha_logo(v) for v in x.values())
+        if isinstance(x, list):
+            return any(ha_logo(v) for v in x)
+        return False
+    caps = d.get("chapters") or []
+    con = sum(1 for c in caps if ha_logo(c))
+    if caps and con < 2:
+        avv(nome, "loghi in %d capitoli: se il reel nomina club, leghe o aziende ne servono "
+            "in 2-3 (reel.md). Se non ne nomina, ignora" % con)
+
+
+DURATA_MIN, DURATA_MAX = 45, 90   # i format vanno da 50-70 a 60-85 secondi (reel.md)
+
+
 def controlla_ritmo(nome, d, tl):
     """Misura, sui tempi veri, quanto resta lo schermo senza niente di nuovo."""
+    dur = tl.get("duration")
+    if isinstance(dur, (int, float)) and not DURATA_MIN <= dur <= DURATA_MAX:
+        avv(nome, "durata %.0f secondi: i format vanno da 50 a 85. Controlla che sia voluto" % dur)
     segs = tl.get("segments") or []
     mark = {}
     for s in segs:
@@ -639,8 +700,14 @@ def controlla_caption(path, testo):
     if len(prima) > 125:
         err(nome, "prima riga di %d caratteri: oltre 125 non si vede prima di \"altro\"" % len(prima))
     cerca_inviti(nome, testo)
+    cerca_italiano(nome, testo)
     if testo.count("📖") == 0:
         avv(nome, "non trovo la sezione 📖 Key terms")
+    if "Sources:" not in testo:
+        err(nome, "manca la riga 'Sources: testata, testata'")
+    h = len(re.findall(r"(?<!\w)#\w+", testo))
+    if not 4 <= h <= 6:
+        avv(nome, "%d hashtag: la caption ne vuole 4-6" % h)
 
 
 # ---------------------------------------------------------------- main
@@ -653,6 +720,17 @@ def main(paths):
         k = paths.index("--timeline")
         timeline = paths[k + 1] if k + 1 < len(paths) else None
         paths = paths[:k] + paths[k + 2:]
+    permessi = None
+    if "--numeri" in paths:
+        k = paths.index("--numeri")
+        f_num = paths[k + 1] if k + 1 < len(paths) else ""
+        paths = paths[:k] + paths[k + 2:]
+        try:
+            with open(f_num, encoding="utf-8") as f:
+                permessi = numeri_in(f.read())
+        except FileNotFoundError:
+            err(f_num or "--numeri", "file dei numeri verificati non trovato")
+    captions = [p for p in paths if p.endswith(".txt")]
 
     grafici_caroselli = {}
     for p in paths:
@@ -680,6 +758,8 @@ def main(paths):
                     err(timeline, "timeline non leggibile: %s" % e)
         elif "slides" in d:
             grafici_caroselli[p] = controlla_carosello(p, d)
+            if permessi is not None:
+                controlla_numeri(p.split("/")[-1], d, permessi)
         else:
             err(p, "non riconosciuto: manca 'slides' (carosello) o 'chapters' (reel)")
 
@@ -691,6 +771,13 @@ def main(paths):
     elif grafici_caroselli and len(grafici_caroselli) < 3:
         avv("i 3 caroselli", "controllati solo %d caroselli: la regola dei 3 tipi "
             "diversi si verifica passandoli tutti e tre insieme" % len(grafici_caroselli))
+
+    if grafici_caroselli and permessi is None:
+        err("numeri", "manca --numeri numeri.txt: i numeri delle slide non sono stati confrontati "
+            "con quelli verificati negli appunti (caroselli.md, punto 4c)")
+    if grafici_caroselli and len(captions) < len(grafici_caroselli):
+        err("caption", "controllate %d caption per %d caroselli: passale tutte (caption1.txt ...)"
+            % (len(captions), len(grafici_caroselli)))
 
     for r in ERRORI:
         print(r)

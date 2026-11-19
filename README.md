@@ -11,11 +11,13 @@ Istruzioni e strumenti degli agenti automatici di GG on Sport (@ggonsport).
   - `full-time.md` — newsletter del sabato
   - `analista.md` — report della domenica
   - `mini-tesi.md` — approfondimenti, in chat
-- `strumenti/` — script per caroselli (`prepara.py reel|caroselli` prepara la cartella di lavoro senza installare niente; i font sono in `strumenti/fonts`, licenza OFL; lo schema del reel.json è in `strumenti/reel/SCHEMA.md`), loghi, sottotitoli e reel, più `controllo.py` (controllo automatico dei JSON prima del render; con `--timeline` misura i buchi sullo schermo del reel) e `reel/zone.py` (zone morte di Instagram disegnate sulle anteprime)
+- `strumenti/` — script per caroselli (`prepara.py reel|caroselli` prepara la cartella di lavoro senza installare niente e copia anche `costruisci.py` e `logo.py`; i font sono in `strumenti/fonts`, licenza OFL; lo schema del reel.json è in `strumenti/reel/SCHEMA.md`), loghi, sottotitoli e reel, più `controllo.py` (controllo automatico dei JSON prima del render; con `--timeline` misura i buchi sullo schermo del reel) e `reel/zone.py` (zone morte di Instagram disegnate sulle anteprime)
 - `loghi/` — archivio loghi
 
 Gli agenti clonano questo repository e lo usano in sola lettura.
 
 **Identità dei contenuti (18 nov 2026):** radici europee, sguardo internazionale. Calcio europeo al centro, poi il basket (europeo e NBA); la NFL solo per le storie di business enormi. Le regole sono in `REGOLE.md`, le quote per sport e area in `agenti/ricerca.md` (sezione 3).
+
+**Memoria fra un giorno e l'altro (19 nov 2026):** nella cartella Drive "Appunti del giorno", oltre agli appunti, ci sono `coda-idee.md`, `scorta.md`, `fonti-web.md` e `temi-scoperti.md`. Li aggiorna la Ricerca: quello che si scopre una mattina non si perde.
 
 **La giornata è spezzata in tre turni** (10 nov 2026) perché una sessione unica ri-paga tutto il contesto accumulato a ogni chiamata: tre sessioni pulite che si passano un file di appunti su Drive consumano molto meno. Ogni turno legge `comuni.md` + il proprio file, non gli altri. Le ricerche e i controlli pesanti si fanno fare a dei sotto-agenti, così articoli e immagini non entrano nel contesto principale.

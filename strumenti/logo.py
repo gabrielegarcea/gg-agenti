@@ -112,7 +112,12 @@ def svg_png(slug, dst):
     svg = open(p).read().replace("<svg ", f'<svg fill="#{hexc}" ', 1)
     svg2png(svg, dst)
 
-ARCH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "loghi")
+# L'archivio di GG sta accanto a strumenti/ nel repository. Se questo file è stato copiato altrove
+# (es. ~/gg, come fa prepara.py), si cerca nel clone standard ~/gg-agenti: fino al 19 nov 2026 da una
+# copia in ~/gg l'archivio non si trovava mai e i loghi arrivavano solo dagli archivi pubblici.
+ARCH = next((p for p in (os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "loghi"),
+                         os.path.expanduser("~/gg-agenti/loghi")) if os.path.isdir(p)),
+            os.path.expanduser("~/gg-agenti/loghi"))
 
 def archive(name):
     # cerca nell'archivio GG (loghi/): nome file senza "_logo" e senza estensione, confronto normalizzato

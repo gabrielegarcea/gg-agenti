@@ -23,7 +23,9 @@ La voce (tutti i campi obbligatori tranne quelli segnati "facoltativo"):
       "tag": "Money",                        Money | Power | Culture
       "titolo": "Juventus wants *money*",    max 10 parole, una parte fra *asterischi*
       "sottotitolo": "...",                  max 18 parole
-      "soggetti": ["Juventus", "Serie A"],   i protagonisti: diventano i loghi
+      "soggetti": ["Juventus|club", "Serie A|lega"],   i protagonisti: diventano i loghi.
+                                             "|club", "|lega", "|tv", "|marchio" = il --tipo di logo.py
+                                             (per club e leghe mettilo sempre: evita i canali TV omonimi)
       "foto": "foto/x.jpg",                  facoltativo: se c'e', copertina con foto
       "focus": "center",                     facoltativo: con la foto
       "fonti": "Reuters, BBC (16/11/2026)",
@@ -32,7 +34,12 @@ La voce (tutti i campi obbligatori tranne quelli segnati "facoltativo"):
                     {...facoltativo: un secondo schema o grafico...} ],
       "grafico": {"tipo": "compare", "titolo": "...", "lettura": "...", ...dati...},
       "extra": [...],                        facoltativo, vedi sotto
-      "la_mia": {"titolo": "...", "testo": "..."},     testo max 30 parole
+      "la_mia": {"titolo": "...", "testo": "...", "articolo": "Art. 3"},   testo max 30 parole
+                                             SOLO se un articolo del Codice copre il tema (GG, 19 nov 2026).
+                                             Altrimenti, al posto di "la_mia":
+      "aperta": {"titolo": "Two ways to read it",
+                 "a": {"name": "...", "label": "says", "text": "...", "soggetto": "..."},
+                 "b": {...}},                le due posizioni vere (fatti verificati), slide "Your call"
       "domanda": "Would you buy in?"
     }
 
@@ -88,34 +95,63 @@ def lung(testo, massimo, dove):
 
 # ---------------------------------------------------------------- loghi
 
+TIPI_LOGO = ("club", "lega", "tv", "marchio")
+
+
+def nome_tipo(s):
+    """'Benfica|club' -> ('Benfica', 'club'); 'NBA' -> ('NBA', None)."""
+    nome, _, tipo = str(s).partition("|")
+    tipo = tipo.strip().lower() or None
+    return nome.strip(), (tipo if tipo in TIPI_LOGO else None)
+
+
+def file_logo(nome):
+    return "foto/" + re.sub(r"[^a-z0-9]+", "-", nome.lower()).strip("-") + ".png"
+
+
+def carica_logo_py():
+    """logo.py sta accanto a questo file nel repository; se questo file e' stato copiato
+    in ~/gg (come dicono le istruzioni) si prende dal clone ~/gg-agenti. Fino al 19 nov 2026
+    qui c'era solo il primo percorso, e da ~/gg lo script si fermava con ModuleNotFoundError."""
+    for d in (os.path.dirname(os.path.abspath(__file__)),
+              os.path.expanduser("~/gg-agenti/strumenti")):
+        if os.path.exists(os.path.join(d, "logo.py")):
+            sys.path.insert(0, d)
+            import logo
+            return logo
+    raise SystemExit("ERRORE  logo.py non trovato ne' qui ne' in ~/gg-agenti/strumenti: "
+                     "rilancia prepara.py caroselli")
+
+
 def risolvi_loghi(soggetti, scarica):
-    """Da ['Juventus', 'Serie A'] ai percorsi dei file. Torna (percorsi, mancanti)."""
+    """Da ['Juventus|club', 'Serie A|lega'] ai percorsi dei file. Torna (percorsi, mancanti)."""
     percorsi, mancanti = [], []
     if not scarica:
         # senza --loghi si assume che i file siano gia' in foto/ col nome normalizzato
         for s in soggetti:
-            p = "foto/" + re.sub(r"[^a-z0-9]+", "-", str(s).lower()).strip("-") + ".png"
-            (percorsi if os.path.exists(p) else mancanti).append(p if os.path.exists(p) else s)
+            nome, _ = nome_tipo(s)
+            p = file_logo(nome)
+            (percorsi if os.path.exists(p) else mancanti).append(p if os.path.exists(p) else nome)
         return percorsi, mancanti
 
-    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    import logo as LOGO
+    LOGO = carica_logo_py()
     os.makedirs("foto", exist_ok=True)
     for s in soggetti:
-        dst = "foto/" + re.sub(r"[^a-z0-9]+", "-", str(s).lower()).strip("-") + ".png"
+        nome, tipo = nome_tipo(s)
+        dst = file_logo(nome)
         if os.path.exists(dst):
             percorsi.append(dst)
             continue
         try:
-            esito = LOGO.get(str(s), dst)
+            esito = LOGO.get(nome, dst, tipo)
         except Exception as e:
             esito = "NON TROVATO (%s)" % e
         if os.path.exists(dst):
             percorsi.append(dst)
             if "ATTENZIONE" in str(esito):
-                print("  ATTENZIONE  %s: nome non identico, guardalo prima di pubblicare" % s)
+                print("  ATTENZIONE  %s: nome non identico, guardalo prima di pubblicare" % nome)
         else:
-            mancanti.append(str(s))
+            mancanti.append(nome)
     return percorsi, mancanti
 
 
@@ -314,12 +350,24 @@ def costruisci(voce, data, loghi, mancanti):
             slides.append({"type": "text", "theme": "paper", "title": e.get("titolo"),
                            "body": e.get("testo"), "source": voce.get("fonti")})
 
-    # --- My take
-    m = voce.get("la_mia") or {}
-    dico(m.get("titolo") and m.get("testo"),
-         "manca 'la_mia': l'opinione di GG dal Codice, con titolo e testo")
-    lung(m.get("testo"), 30, "My take")
-    slides.append({"type": "text", "tag": "My take", "title": m.get("titolo"), "body": m.get("testo")})
+    # --- My take (solo da un articolo del Codice) oppure Your call (GG, 19 nov 2026)
+    m, ap = voce.get("la_mia"), voce.get("aperta")
+    dico(bool(m) != bool(ap), "serve 'la_mia' (un articolo del Codice copre il tema) OPPURE "
+                              "'aperta' (nessun articolo: le due posizioni). Non tutti e due, non nessuno")
+    if m:
+        dico(m.get("titolo") and m.get("testo"), "'la_mia' vuole titolo e testo")
+        dico(str(m.get("articolo", "")).lower().startswith("art"),
+             "'la_mia' vuole \"articolo\": \"Art. N\". Se nessun articolo copre il tema usa 'aperta': "
+             "le opinioni dedotte dai principi non si pubblicano piu'")
+        lung(m.get("testo"), 30, "My take")
+        slides.append({"type": "text", "tag": "My take", "title": m.get("titolo"), "body": m.get("testo")})
+    elif ap:
+        b = dict(ap, tipo="versus")
+        b.setdefault("titolo", "Two ways to read it")
+        sl = slide_grafico(b, voce.get("fonti"), "Your call")
+        if sl:
+            sl["tag"] = "Your call"
+            slides.append(sl)
 
     # --- la domanda. Mai loghi qui: il motore li rifiuta sull'ultima slide.
     dico(voce.get("domanda"), "manca 'domanda': l'ultima slide e' una domanda per i commenti")

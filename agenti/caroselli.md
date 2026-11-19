@@ -10,12 +10,17 @@ Se il file non c'è: aspetta 10 minuti e riprova, due volte. Se dopo mezz'ora no
 
 ## 1. Testo dei caroselli
 
+**Prima di tutto prepara la cartella:** `python3 ~/gg-agenti/strumenti/prepara.py caroselli` (punto 4a: copia in `~/gg` anche `costruisci.py` e `logo.py`; fino al 19 nov 2026 `costruisci.py` copiato da solo si fermava con `ModuleNotFoundError: logo`).
+
 **Non scrivi il JSON delle slide: scrivi una "voce" (GG, 16 nov 2026).** Per ogni notizia scrivi `~/gg/voceN.json` (N = 1, 2, 3) con il solo CONTENUTO — cosa e' successo, come funziona, il grafico, l'opinione, la domanda — e poi:
 
 ```
-cp ~/gg-agenti/strumenti/costruisci.py ~/gg/ && cd ~/gg
-python3 costruisci.py voce1.json n1.json --loghi
+cd ~/gg && python3 costruisci.py voce1.json n1.json --loghi
 ```
+
+Nei `soggetti` (e nei `"soggetto"` dentro schemi e grafici) scrivi il tipo di logo dopo una sbarra: `"Benfica|club"`, `"Liga Portugal|lega"`, `"DAZN|tv"`, `"Aperol|marchio"`. Per club e leghe mettilo sempre: senza, un nome di città può diventare il logo di un canale TV.
+
+**L'opinione (GG, 19 nov 2026): solo da un articolo del Codice.** Se negli appunti c'è `Art. N`, la voce ha `"la_mia": {"titolo", "testo", "articolo": "Art. N"}`. Se c'è `nessun articolo → Your call`, la voce NON ha `la_mia` ma `"aperta"`: le due posizioni degli appunti in un `versus` (`a` e `b` con `name`, `label` tipo "says"/"argues", `text` max 20 parole, `soggetto`), che il motore mette al posto di "My take" con il tag "Your call". `costruisci.py` rifiuta una `la_mia` senza articolo.
 
 Lo script costruisce le slide: ordine, tipi, `theme`, la `source` su ogni slide con dei fatti, i `logos` sulle slide giuste, la copertina (foto se c'e', loghi se no), la slide finale senza loghi. Scarica anche i loghi dei soggetti con `logo.py` e ti dice quali non ha trovato: quelli vanno nell'elenco "🏷️ Loghi mancanti" per GG.
 
@@ -37,7 +42,7 @@ LUNGHEZZA LIBERA: da 6 a 10 slide, decise dalla notizia. Una notizia piccola ne 
 3. **flow "How it works"** (SEMPRE) — è la LEZIONE del carosello: il meccanismo dietro la notizia in 2-4 passi numerati (come si vendono i diritti TV, cosa prevede la regola, come guadagna quel tipo di proprietario), con nomi, cifre e date precise. L'ultimo passo è evidenziato: è quello che spiega la notizia. Facoltativo un secondo blocco "How it works, cont." come schema o grafico.
 4. **GRAFICO** — obbligatorio in ogni carosello (tipi e schema sotto).
 5. **extra** — 1-2 slide in più, di preferenza figure: un secondo grafico, `versus` ("Both sides", "Who wins, who loses"), `facts` (i numeri chiave), `roster` (i club coinvolti, i precedenti), `timeline` ("What happens next"). Se proprio serve testo: `punti` (tema "paper"); un solo paragrafo ammesso.
-6. **text tag "My take"** (penultima) — l'opinione di GG dagli appunti: tesi chiara in prima persona, titolo forte, max 30 parole.
+6. **text tag "My take"** (penultima) — l'opinione di GG da un articolo del Codice: tesi chiara in prima persona, titolo forte, max 30 parole. **Oppure "Your call"** (versus con le due posizioni) se nessun articolo copre il tema.
 7. **end** (ultima) — solo una domanda per i commenti, collegata all'opinione.
 
 `date` = giorno e mese di oggi, formato GG.MM (es. 29.10).
@@ -96,12 +101,14 @@ In inglese. Chi ha letto le slide deve uscirne sapendo qualcosa in più: non rip
 1. Prima riga: hook forte, max 125 caratteri (è quello che si vede prima di "altro").
 2. 🧭 Context (4-6 frasi): da dove nasce la storia, i precedenti, un caso simile in un'altra lega o paese, cifre di confronto non presenti nelle slide.
 3. 🔎 The lesson (4-6 frasi): il concetto di sport management spiegato bene, poi chi ci guadagna, chi ci perde, quali rischi, cosa succede adesso e cosa guardare nei prossimi mesi (date, voti, scadenze).
-4. 🎯 My take (3-4 frasi): l'opinione di GG, in prima persona, più sviluppata della slide.
+4. 🎯 My take (3-4 frasi): l'opinione di GG da un articolo del Codice, in prima persona, più sviluppata della slide. **Se il carosello ha "Your call"**, questa sezione si chiama 🤔 Your call: le due posizioni in 3-4 frasi, attribuite a chi le sostiene, senza nessuna opinione di GG.
 5. 📖 Key terms: esattamente 3 termini economici o di business presenti nella storia (media rights, minority stake, valuation, EBITDA, private equity, sovereign fund, soft power, naming rights, salary cap, break-even...). Per ciascuno: nome, cosa significa in una frase semplice come a un amico, e cosa vuol dire concretamente in questa notizia. Varia i termini da un giorno all'altro: è un glossario che cresce.
 6. Domanda per i commenti ("where do you stand?").
 7. Riga `Sources: outlet, outlet` e 4-6 hashtag in inglese. Se la copertina usa una foto di stadio dall'archivio, metti prima degli hashtag la riga del credito.
 
-Lunghezza 1.900-2.150 caratteri, mai oltre 2.200. Conta i caratteri con uno script prima di consegnare.
+**Fatti a fonte unica (GG, 19 nov 2026):** in caption possono entrare solo quelli marcati `1 fonte` negli appunti, e solo attribuiti ("according to <testata>"). Mai nell'hook.
+
+Lunghezza 1.900-2.150 caratteri, mai oltre 2.200. Salva ogni caption in `~/gg/captionN.txt` (N = 1, 2, 3): le controlla `controllo.py` insieme alle slide (lunghezza, prima riga, Key terms, riga Sources, 4-6 hashtag, parole italiane, inviti vietati).
 
 ## 3. L'immagine della copertina
 **Una sola ricerca in archivio, poi si va avanti.** Cerca nell'archivio Drive il soggetto suggerito negli appunti (la persona al centro della notizia, oppure lo stadio) seguendo `comuni.md`.
@@ -111,9 +118,11 @@ Lunghezza 1.900-2.150 caratteri, mai oltre 2.200. Conta i caratteri con uno scri
 - **Perché (GG, 16 nov 2026):** le notizie di sport management hanno per protagonista un'istituzione, non una faccia. I loghi sono l'asset giusto per questo brand; le facce in archivio sono 46 e non copriranno mai le storie che facciamo.
 
 ## 4. Grafica
-a) **Prepara la cartella, senza installare niente:** `python3 ~/gg-agenti/strumenti/prepara.py caroselli`. Copia `render.js` e `controllo.py` in `~/gg`, verifica font, Chromium e Python e chiude con `PRONTO` o `NON PRONTO: <cosa>`. **Non lanciare mai `npm`, `pip` o `apt-get`** (17 nov 2026: nelle attività pianificate i registri dei pacchetti rispondono 403): i font stanno in `strumenti/fonts` e Playwright è già installato. Se dice `NON PRONTO`, fermati con il messaggio di una riga riportando quella riga.
+a) **Prepara la cartella, senza installare niente** (l'hai già fatto all'inizio del punto 1): `python3 ~/gg-agenti/strumenti/prepara.py caroselli`. Copia `render.js`, `controllo.py`, `costruisci.py` e `logo.py` in `~/gg`, verifica font, Chromium e Python e chiude con `PRONTO` o `NON PRONTO: <cosa>`. **Non lanciare mai `npm`, `pip` o `apt-get`** (17 nov 2026: nelle attività pianificate i registri dei pacchetti rispondono 403): i font stanno in `strumenti/fonts` e Playwright è già installato. Se dice `NON PRONTO`, fermati con il messaggio di una riga riportando quella riga.
 b) (fatto da `prepara.py`)
-c) **CONTROLLO AUTOMATICO prima di renderizzare:** `cd ~/gg && python3 controllo.py n1.json n2.json n3.json`. Lo script controlla le lunghezze dei testi, le slide obbligatorie, i 3 tipi di grafico diversi, i loghi dove si nominano soggetti, la coerenza tra `value` e `display`, le parole italiane rimaste e i limiti delle caption. Correggi tutto quello che segnala (`ERRORE` = da correggere sempre; `AVVISO` = guardalo e decidi) e rilancialo finché è pulito.
+c) **CONTROLLO AUTOMATICO prima di renderizzare.** Prima scrivi `~/gg/numeri.txt`: copia dagli appunti, così come sono, le righe "Numeri per il grafico" dei tre caroselli e i fatti verificati con numeri che usi nelle slide (date comprese). Poi:
+`cd ~/gg && python3 controllo.py n1.json n2.json n3.json caption1.txt caption2.txt caption3.txt --numeri numeri.txt`
+Un numero nelle slide che non sta in `numeri.txt` è un ERRORE (19 nov 2026): o non è verificato, o è arrotondato (es. €64.8m invece di 64,832 milioni). Non aggiungere a `numeri.txt` numeri che non sono negli appunti per far passare il controllo: è esattamente l'errore che deve fermare. Lo script controlla anche le lunghezze dei testi, le slide obbligatorie, i 3 tipi di grafico diversi, i loghi dove si nominano soggetti, la coerenza tra `value` e `display`, le parole italiane rimaste e i limiti delle caption. Correggi tutto quello che segnala (`ERRORE` = da correggere sempre; `AVVISO` = guardalo e decidi) e rilancialo finché è pulito.
 d) `node render.js n1.json out1` (poi n2/out2, n3/out3). Se una riga dice "ATTENZIONE: testo troppo lungo", accorcia quel testo e rigenera.
 e) **CONTROLLO VISIVO (economico, collaudo del 10 nov 2026):** guarda con Read a grandezza piena **solo le 3 copertine** (soggetto visibile e non coperto dal testo, titolo leggibile) e **solo le slide che `controllo.py` ha segnalato con un AVVISO**. Per tutte le altre monta un foglio di miniature per carosello (`python3 -c` con Pillow, 3 colonne) e guarda quello: se in una miniatura qualcosa non torna (testo che sembra tagliato, logo sbagliato, grafico strano), apri quella singola slide a grandezza piena. Non guardare mai tutti i PNG a grandezza piena uno per uno: costa circa 1.900 token per immagine e il controllo automatico prende già i refusi di lunghezza.
 f) **Prova dello sguardo (GG, 19 nov 2026):** nel foglio di miniature, ogni slide interna deve far capire il suo punto in 3 secondi senza leggere il corpo. Se una slide è un blocco di testo, trasformala in una figura. Poi controlla che ogni carosello abbia la sua lezione e passi il test dei sei mesi, che ogni slide "My take" contenga davvero un'opinione (non un riassunto) e che niente sia generico: se una slide è generica, riscrivila con un dato o un dettaglio specifico.
@@ -162,6 +171,8 @@ OGGI, pubblica (ora italiana):
 Dopo la consegna, aggiungi le 3 righe dei caroselli nel foglio "Archivio Sport Management" (`{ARCHIVIO}`) come dice `comuni.md`: una sola chiamata `append_values` su `Contenuti!A1` con le 3 righe, 19 colonne (A-S) ciascuna, data di oggi in formato AAAA-MM-GG. I contenuti delle colonne li prendi dagli appunti (lezione, meccanismo, numeri, opinione, Codice, tema, soggetti, fonti) e dal tuo lavoro (titolo EN, key terms della caption, tipo di grafico). Se la chiamata non riesce, riprova una volta e aggiungi una riga al messaggio: `⚠️ archivio non aggiornato`.
 
 ## 7. Quando GG manda foto o loghi (nella tua chat)
+**Se GG scrive che un carosello non l'ha pubblicato** ("il ② non l'ho messo"): scrivi `no` nella colonna Q (`Pubblicato`) di quella riga dell'archivio con `update_values` e rispondi con una riga. Vuoto = pubblicato (GG, 19 nov 2026).
+
 Gli allegati sono in `/mnt/user-data/uploads/`. Distingui: loghi (PNG/SVG/JPG di stemmi e marchi, o quelli che GG indica come loghi) → nelle slide dove mancavano; immagini → foto delle copertine. I file audio NON sono tuoi: sono la voce del reel, la gestisce l'agente Reel.
 - LOGHI: salva in `~/gg/foto/`, aggiungili alle slide e ai grafici dove servivano, rigenera i caroselli interessati, rimanda tutti i loro PNG. Elencali in "🆕 Loghi nuovi" (fonte: "mandato da GG").
 - FOTO: sono un miglioramento, non un completamento (i caroselli sono già pubblicabili con la copertina a loghi). Associale alle copertine che hanno i loghi, nell'ordine in cui GG le manda (1, 2, 3 saltando quelle che hanno già una foto), salvo indicazioni diverse. Copia in `~/gg/foto/N.<estensione>`, guarda con Read, scegli `focus` così che il soggetto stia nella metà alta, aggiungi `image` e `focus` alla cover e rigenera tutto il carosello. Ricontrolla la copertina con Read.

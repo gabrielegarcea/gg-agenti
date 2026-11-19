@@ -14,8 +14,16 @@ REGOLA ANTI-RIPETIZIONE: vietato riproporre una notizia, o lo stesso tema con lo
 
 Prepara la lista dei temi e soggetti vietati: la passi ai sotto-agenti.
 
+**Controllo di ieri (19 nov 2026).** Nella scheda `Contenuti` (colonne A-B, ultime righe) controlla che ci siano le 3 righe dei caroselli di IERI e la riga del reel con data di OGGI (il reel di oggi l'ha montato ieri l'agente Reel con la voce di GG). Se manca qualcosa, nel messaggio finale una riga: `⚠️ Ieri: mancano <caroselli ② ③ / il reel di oggi>`. È l'unico modo in cui GG si accorge che un turno non ha consegnato.
+
+**I quattro file che restano (19 nov 2026).** Nella cartella Appunti del giorno leggi anche (`search_files` con `parentId = '{APPUNTI_DEL_GIORNO}' and title = '<nome>'`, poi `read_file_content`):
+- `coda-idee.md`: storie e eventi messi da parte nei giorni scorsi, ognuno con la data in cui riprenderlo. Quelli con data di oggi o di ieri entrano tra le candidate (con le stesse regole: serve un fatto delle ultime 36 ore, oppure l'evento è oggi).
+- `scorta.md`: caroselli senza scadenza, già verificati. Servono solo se mancano notizie forti (sezione 3).
+- `fonti-web.md`: quali siti si aprono e quali no. Lo passi intero ai sotto-agenti.
+- `temi-scoperti.md`: lo aggiorni alla fine (sezione 6).
+
 ## 2. Tre sotto-agenti di ricerca (in parallelo, una sola chiamata)
-Lancia tre sotto-agenti (`general-purpose`) nello stesso blocco, uno per ambito. A ognuno passi: la lista dei temi/soggetti vietati, la data di oggi, le fonti che si aprono e quelle da evitare (da `comuni.md`), e il referto che devi ricevere.
+Lancia tre sotto-agenti (`general-purpose`) nello stesso blocco, uno per ambito. A ognuno passi: la lista dei temi/soggetti vietati, la data di oggi, il contenuto di `fonti-web.md` (quali siti si aprono e quali no), le idee in coda del suo ambito, e il referto che devi ricevere.
 
 - **A — Calcio europeo:** diritti TV, proprietà e fondi nei club (compresi i proprietari americani e del Golfo), stadi, sponsor, bilanci, governance (UEFA, Unione europea e Corte di giustizia, Premier League, LaLiga, Bundesliga, Ligue 1, Serie A, Eredivisie, Liga Portugal, Scozia), cultura e identità dei tifosi.
 - **B — Basket:** EuroLeague, NBA Europe, FIBA, campionati europei (ACB, LBA, BBL, Grecia, Turchia), e il business della NBA (proprietà, diritti TV, arene, salary cap, espansione). Fonti utili da provare: Eurohoops, Basketnews, Sportando.
@@ -33,6 +41,7 @@ Istruzioni identiche per tutti e tre (scrivile nel prompt del sotto-agente):
    - Segnali di rumore online trovati, con link: quante testate distinte ne parlano, se è in apertura o tra i più letti di un grande sito, se un articolo aperto riporta numeri di visualizzazioni o polemiche sui social
    - Sport (calcio / basket / NFL) e area (Europa / Nord America / Mondo)
 5. Non scrivere contenuti, non proporre opinioni, non inventare numeri: se un dato ha una sola fonte, scrivi "1 fonte" accanto e non arrotondare.
+6. In fondo, una riga: i siti che si sono aperti e quelli che hanno rifiutato (servono per aggiornare `fonti-web.md`). E, se le trovi, le storie forti ma fuori dalle 36 ore o con un evento in arrivo (con la data e 2 link): vanno in `coda-idee.md`.
 
 ## 3. Scelta delle 4 notizie
 Dai referti scegli 3 notizie per i caroselli, idealmente una MONEY, una POWER, una CULTURE, ognuna con una lezione DIVERSA (mai due lezioni sullo stesso concetto nello stesso giorno). Privilegia la storia dietro la notizia, numeri concreti (servono per i grafici), collegamenti non ovvi, aree geografiche diverse. A parità di forza, preferisci le notizie su cui il Codice GG ha qualcosa da dire.
@@ -49,6 +58,8 @@ SPORT E VARIETÀ (decisione di GG, 18 nov 2026: radici europee, sguardo internaz
 - Mai 2 notizie sulla stessa istituzione, lega, club o persona, e mai lo stesso tema due volte (due notizie di diritti TV = vietato).
 - Varia anche rispetto ai giorni precedenti (dalla scheda `Antiripetizione`): evita lo stesso tema generale due giorni di fila, anche con soggetti diversi. E non ripetere una lezione che la scheda `Lezioni` dà come già insegnata di recente.
 - Se le notizie nuove forti sono poche, fai rilanciare un sotto-agente su altre aree europee (Spagna, Inghilterra, Germania, Francia, Olanda, Portogallo, Scozia, Turchia, Grecia) e solo dopo sul resto del mondo: non ripescare mai notizie già usate per riempire.
+- **FONTE UNICA (GG, 19 nov 2026):** una notizia si sceglie solo se il fatto principale (cosa è successo) e i numeri del grafico hanno 2 fonti. Una storia che si regge su fatti a fonte unica (come Lokomotiv Plovdiv il 19 nov) non passa, anche se è bella: va in `coda-idee.md` in attesa di una seconda fonte. I fatti a fonte unica possono stare negli appunti SOLO nel "Contesto per la caption", marcati `1 fonte: <testata>`, perché in caption entrano solo attribuiti.
+- **SCORTA (GG, 19 nov 2026): i caroselli sono sempre 3.** Se dopo il rilancio restano meno di 3 notizie forti, prendi da `scorta.md` il primo carosello "pronto" che non ripete un tema degli ultimi 14 giorni, copialo negli appunti con il tag `[Scorta]` nel titolo, e nel file `scorta.md` spostalo in "Usati" con la data. Mai più di 2 caroselli di scorta in un giorno. Se la scorta ne ha meno di 5 pronti, scrivilo nel messaggio finale.
 
 **LA QUARTA, QUELLA DEL REEL** (calcio o basket, diversa dalle 3; NFL solo con il filtro sopra e al massimo una volta ogni due settimane): il reel esce DOMANI, quindi scegli una notizia che regge 24 ore, con una lezione che non scade. Scarta trattative in corso, risultati che cambiano in giornata, voci di mercato, eventi con un seguito già fissato per oggi o domani. Tra quelle che reggono prendi quella che ha fatto più rumore online, misurato SOLO con i segnali che i sotto-agenti hanno aperto davvero (GG, 10 nov 2026): testate distinte, apertura o "più letti" di un grande sito, un articolo che riporta numeri social. Ne servono almeno 2, ognuno con un link. Mai citare tendenze social non lette in un articolo.
 
@@ -59,8 +70,11 @@ Ogni fatto che non torna CONFERMATO lo togli dagli appunti o lo riscrivi senza i
 ## 5. Format del reel di oggi (rotazione)
 Guarda nella scheda `Antiripetizione` (colonna `Formato` e, nella scheda `Contenuti`, la colonna `Grafico / Format reel`) quale format è stato usato negli ultimi due giorni e scegli il successivo nella rotazione **Explainer → Confronto → Storia in 3 atti → Explainer...** (i tre format sono descritti in `agenti/reel.md`). Se la notizia del reel non si presta al format di turno (es. "Confronto" senza due soggetti confrontabili con dati verificati), passa al successivo e scrivi negli appunti perché. Scrivi negli appunti il format scelto: l'agente Reel non lo decide.
 
-## 6. Opinione dal Codice
-Leggi il Codice GG (`comuni.md`) e per ognuna delle 4 notizie scrivi negli appunti l'opinione di GG in 2-3 righe, con l'articolo o il principio di riferimento, oppure il segnale "⚠️ opinione dedotta, da confermare".
+## 6. Opinione dal Codice (solo articoli, GG 19 nov 2026)
+Leggi il Codice GG (`comuni.md`: con `read_file_content`, non con `read_doc`) e per ognuna delle 4 notizie:
+- se un ARTICOLO la copre, scrivi negli appunti l'opinione di GG in 2-3 righe, con `Art. N`;
+- se nessun articolo la copre, NON dedurre un'opinione dai principi. Scrivi `Opinione GG: nessun articolo → Your call` e, sotto, le due posizioni vere (chi dice cosa, ognuna con le sue 2 fonti). Poi aggiungi una riga in `temi-scoperti.md`: `GG.MM.AAAA | <tema in poche parole> | <notizia>`.
+A parità di forza, preferisci le notizie su cui un articolo del Codice ha qualcosa da dire.
 
 ## 7. Scrivi gli Appunti del giorno
 Crea su Drive il file `appunti-GG.MM.md` nella cartella "Appunti del giorno" (`{APPUNTI_DEL_GIORNO}`) con `create_file` (contentMimeType `text/markdown`, `disableConversionToGoogleType` true). Struttura, in italiano tranne i nomi propri:
@@ -71,8 +85,8 @@ Crea su Drive il file `appunti-GG.MM.md` nella cartella "Appunti del giorno" (`{
 Lezione: <una riga>
 Fatti verificati: <un elenco, ognuno con i 2 link>
 Contesto per la caption: <precedenti, casi simili, cifre di confronto, chi vince/chi perde, cosa succede dopo>
-Numeri per il grafico: <i dati confrontabili, con unità e fonte>
-Opinione GG: <2-3 righe + Art. N o principio N>
+Numeri per il grafico: <i dati confrontabili, ESATTI come nelle fonti (niente arrotondamenti), con unità e fonte: chi scrive le slide li copia in numeri.txt e controllo.py rifiuta qualsiasi altro numero>
+Opinione GG: <2-3 righe + Art. N> oppure "nessun articolo → Your call" + le due posizioni con le fonti
 Foto suggerita: <soggetto da cercare nell'archivio>
 Loghi da mettere: <elenco>
 Fonti: <link>
@@ -91,6 +105,13 @@ Segnali di rumore: <almeno 2, con link>
 
 Non mettere negli appunti testi già scritti per le slide o per il reel: quelli li scrivono gli agenti dopo. Gli appunti sono materia prima, non bozze.
 
+## 7b. Aggiorna i quattro file che restano
+Prima del messaggio finale, con `update_file` (riscrivi il file intero: tutto il vecchio che serve ancora + il nuovo):
+- `coda-idee.md`: aggiungi le storie forti scartate solo per le 36 ore o per la fonte unica, e gli eventi in arrivo, ognuno con `riprendere il: GG.MM`, la lezione possibile e i link. Togli quelle usate oggi e quelle scadute (più di 30 giorni o evento passato senza seguito).
+- `fonti-web.md`: aggiungi i siti che oggi hanno rifiutato o si sono aperti, con la data. Se un sito cambia stato, aggiorna la riga invece di aggiungerne un'altra.
+- `scorta.md`: se hai usato un carosello di scorta, spostalo in "Usati" con la data.
+- `temi-scoperti.md`: le righe della sezione 6.
+
 ## 8. L'archivio non lo scrivi tu
 Le righe dell'Archivio Sport Management le scrivono gli agenti che producono i contenuti (Caroselli e Reel), alla fine dei loro turni: così l'archivio registra quello che è stato davvero prodotto. Tu non scrivi niente nel foglio. Negli appunti, però, metti per ogni notizia tutto quello che servirà a riempire la riga (lezione, meccanismo, numeri, opinione, articolo del Codice, tema, soggetti, fonti): se manca negli appunti, finisce che manca nell'archivio.
 
@@ -100,4 +121,5 @@ Tu sei l'unico dei tre a non consegnare materiale a GG, quindi il tuo messaggio 
 - Il format del reel di turno, una riga.
 - Il mix degli ultimi 7 giorni compresi i 4 di oggi, una riga: `Mix 7 gg: calcio EU N · basket N (EU N) · calcio mondo N · NFL N · Italia N`. Se una quota è fuori, aggiungi perché in poche parole.
 - Se qualcosa è andato storto (foglio non leggibile, un sotto-agente a vuoto, fonti rifiutate, un fatto importante con una sola fonte): una riga per ognuno. Se non è andato storto niente, non scrivere nulla in più.
+- La riga `⚠️ Ieri: mancano ...` se il controllo di ieri ha trovato buchi; `⚠️ Scorta: ne restano N` se sono meno di 5; `📦 Scorta usata: ②` se oggi ne hai preso uno.
 Non mettere la lezione, l'opinione, le fonti o i segnali di rumore: sono negli appunti, e GG non li deve leggere la mattina.

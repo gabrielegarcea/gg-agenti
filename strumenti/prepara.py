@@ -48,7 +48,8 @@ if modo == "reel":
     os.makedirs(os.path.join(HOME, "gg", "reel"), exist_ok=True); os.makedirs(os.path.join(HOME, "gg", "foto"), exist_ok=True)
 elif modo == "caroselli":
     W = os.path.join(HOME, "gg")
-    for f in ("render.js", "controllo.py"): cp(os.path.join(S, f), os.path.join(W, f))
+    # costruisci.py e logo.py insieme (19 nov 2026): copiato da solo, costruisci.py non trovava logo.py
+    for f in ("render.js", "controllo.py", "costruisci.py", "logo.py"): cp(os.path.join(S, f), os.path.join(W, f))
     os.makedirs(os.path.join(W, "foto"), exist_ok=True)
 else:
     sys.exit(__doc__)
