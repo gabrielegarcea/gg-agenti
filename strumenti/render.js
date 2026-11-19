@@ -337,7 +337,10 @@ async function fit(page) {
     // 1b) numeri e nomi degli schemi (facts, versus, flow): partono dalla loro misura e scendono
     const m0 = s.querySelector('.fx .fv,.vs .who,.fl .hd');
     let m = m0 ? parseFloat(getComputedStyle(m0).fontSize) : 0;
-    while (m0 && wide('.fx .fv,.vs .who,.fl .hd') && m > 28) { m *= 0.95; s.style.setProperty('--m', m + 'px'); steps++; }
+    // (19 nov 2026) si misura anche la casella (.ft/.fc): un numero lungo ("£1.675bn") allargava il proprio
+    // riquadro senza risultare "largo" e usciva dalla casella sopra quella accanto, senza nessun avviso
+    const W = '.fx .fv,.fx .ft,.fx .fc,.vs .who,.fl .hd';
+    while (m0 && wide(W) && m > 28) { m *= 0.95; s.style.setProperty('--m', m + 'px'); steps++; }
     // 2) spazio verticale e parole troppo larghe: rimpicciolisci titolo e testo
     const h = s.querySelector('h1,.num'), b = s.querySelector('.body,.sub,.lab,.cta,.note,.lb,.tx,.dl,.dl2');
     const top = s.querySelector('.top').getBoundingClientRect(), ft = s.querySelector('.foot').getBoundingClientRect();
@@ -353,7 +356,7 @@ async function fit(page) {
       if (s.querySelector('.lgs-big') && lgb > 170) { lgb *= 0.93; s.style.setProperty('--lgb', lgb + 'px'); }
       k++;
     }
-    return { ok: !over() && !wide('.cmp .val,.fx .fv'), steps: steps + k };
+    return { ok: !over() && !wide('.cmp .val,.fx .fv,.fx .ft,.fx .fc'), steps: steps + k };
   });
 }
 
