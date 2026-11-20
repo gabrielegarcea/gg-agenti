@@ -59,9 +59,9 @@ body{font-family:Inter;color:var(--ink)}
 .prog i b{position:absolute;left:0;top:0;bottom:0;background:var(--ink)}
 .prog i.cur b{background:var(--orange)}
 .col{position:absolute;left:120px;right:120px;top:262px;bottom:470px;display:flex;flex-direction:column}
-.chn{font:700 26px Mono;color:var(--orange);letter-spacing:.08em}
+.chn{font:800 26px Inter;color:var(--orange);letter-spacing:.10em;text-transform:uppercase}
 .ttl{margin-top:10px;margin-right:130px;font:400 88px/1.02 Anton;text-transform:uppercase;letter-spacing:.005em}
-.sub{margin-top:14px;font:400 25px Mono;color:#6E6A62}
+.sub{margin-top:14px;font:600 25px Inter;color:#6E6A62;letter-spacing:.02em}
 .area{flex:1;min-height:0;margin-top:40px;display:flex;flex-direction:column;justify-content:flex-start;gap:34px;max-width:715px;transform-origin:left top}
 .kar{position:absolute;left:120px;width:715px;top:1470px;text-align:left;font:700 44px/1.25 Inter;z-index:5}
 .kar span{color:var(--gray);padding:0 2px}
@@ -69,7 +69,7 @@ body{font-family:Inter;color:var(--ink)}
 .kar span.hi.on{background:linear-gradient(transparent 12%,var(--mark) 12%,var(--mark) 92%,transparent 92%)}
 .foot{position:absolute;right:120px;top:258px;width:112px;height:112px;z-index:6}.foot svg{width:100%;height:100%;display:block}
 .foot .gg{font:900 44px Inter;letter-spacing:-.02em}.foot .gg em{font-style:normal;color:var(--orange)}
-.foot .h{font:400 24px Mono;color:#6E6A62}
+.foot .h{font:600 24px Inter;color:#6E6A62}
 /* cover */
 .cv-t{position:absolute;left:120px;right:250px;top:270px;font:400 136px/0.98 Anton;text-transform:uppercase}
 .cv-t .l{display:block}
@@ -86,7 +86,7 @@ body{font-family:Inter;color:var(--ink)}
 .big-l{font:600 44px/1.3 Inter;margin-top:18px}
 .bigl{position:absolute;left:124px;right:250px;font:700 46px/1.2 Inter;color:var(--ink)}
 .bigl b{color:var(--orange)}
-.lab{font:400 24px Mono;color:#6E6A62;margin-top:14px}
+.lab{font:600 24px Inter;color:#6E6A62;margin-top:14px}
 .dots{display:grid;gap:10px;justify-content:start}
 .dots i{border-radius:50%;background:#C9C3B6;transform:scale(0)}
 .bars{display:flex;flex-direction:column;gap:30px}
@@ -99,13 +99,13 @@ body{font-family:Inter;color:var(--ink)}
 .cards{display:flex;gap:28px;flex-wrap:wrap}
 .card{padding:26px 34px 30px;color:#fff;background:var(--blue);min-width:300px;transform-origin:left bottom}
 .card.o{background:var(--orange)}.card.w{background:#fff;color:var(--blue);border:4px solid var(--blue)}
-.card .k{font:700 24px Mono;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.card .k{font:800 24px Inter;letter-spacing:.10em;text-transform:uppercase;opacity:.9}
 .card .n{font:400 110px/1 Anton;margin-top:10px}
 .txt .ln{font:800 80px/1.15 Inter;letter-spacing:-.02em;opacity:0}
 .txt .ln b{color:var(--blue)}.txt .ln .x{color:var(--orange)}
 .line svg{overflow:visible}
 .poll{margin:0 auto;width:760px;background:#fff;border:5px solid var(--ink);border-radius:26px;padding:34px 40px 44px;box-shadow:14px 14px 0 var(--ink);position:relative}
-.poll .k{font:700 24px Mono;text-align:center;letter-spacing:.1em;color:#6E6A62;margin-bottom:26px}
+.poll .k{font:800 24px Inter;text-align:center;letter-spacing:.12em;text-transform:uppercase;color:#6E6A62;margin-bottom:26px}
 .poll .op{font:800 36px Inter;text-align:center;border:4px solid var(--ink);border-radius:60px;padding:12px;margin-top:16px;text-transform:uppercase}
 .poll .op:nth-child(2){border-color:var(--blue);color:var(--blue)}.poll .op:nth-child(4){border-color:var(--orange);color:var(--orange)}
 .poll .op.sel{background:var(--blue);color:#fff;border-color:var(--blue)}
@@ -124,7 +124,7 @@ body{font-family:Inter;color:var(--ink)}
 .hh2 .nm{display:flex;justify-content:space-between;font:400 60px Anton;text-transform:uppercase;margin-bottom:24px}
 .hh2 .nm .b{color:var(--orange)}
 .hh2 .r{margin-bottom:30px;opacity:0}
-.hh2 .rl{text-align:center;font:700 24px Mono;letter-spacing:.08em;text-transform:uppercase;color:#6E6A62;margin-bottom:10px}
+.hh2 .rl{text-align:center;font:800 24px Inter;letter-spacing:.08em;text-transform:uppercase;color:#6E6A62;margin-bottom:10px}
 .hh2 .rb{display:flex;align-items:center;gap:8px}
 .hh2 .sd{flex:1;display:flex;align-items:center;gap:14px}
 .hh2 .sd.a{justify-content:flex-end}
@@ -158,7 +158,7 @@ body{font-family:Inter;color:var(--ink)}
 .trov .pn2{position:absolute;inset:0;background:var(--orange)}
 .trov .rg{position:absolute;left:50%;top:50%;width:900px;height:580px;margin:-290px 0 0 -450px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 46px var(--paper),0 0 0 64px var(--orange)}
 .term{background:#fff;border:4px solid var(--ink);padding:26px 34px 30px;box-shadow:12px 12px 0 var(--blue)}
-.term .k{font:700 24px Mono;letter-spacing:.12em;color:var(--orange)}
+.term .k{font:800 24px Inter;letter-spacing:.12em;text-transform:uppercase;color:var(--orange)}
 .term .tmw{font:400 92px/1.05 Anton;text-transform:uppercase;margin-top:8px}
 .term .tm{background:linear-gradient(var(--mark),var(--mark)) no-repeat left 88%/0% 22%;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .term .df{font:600 42px/1.3 Inter;margin-top:14px}
@@ -286,7 +286,7 @@ const builders = {
       ax.style.height = Math.max(0, reach - 16) + 'px'; } }; },
   logos(e) { const n = $('<div class="el lgr"></div>'); const ls = (e.logos || []).map(src => { const d = $(LGO(src, 'big')); n.appendChild(d); return d; });
     return { n, upd(lt, t, t0) { ls.forEach((d, k) => { const s = T((e.at || [])[k], t0 + k * 0.3); const q = ease((t - s) / 0.35); d.style.opacity = clamp((t - s) / 0.15); d.style.transform = 'scale(' + (0.6 + 0.4 * q) + ')'; }); } }; },
-  photo(e) { const n = $('<div class="el" style="position:relative;height:' + (e.h || 560) + 'px"><img src="' + e.src + '" style="position:absolute;left:50%;bottom:0;height:100%;transform:translateX(-50%);filter:drop-shadow(12px 8px 0 var(--blue))"></div>');
+  photo(e) { const n = $('<div class="el" style="flex:0 0 auto;position:relative;height:' + (e.h || 560) + 'px"><img src="' + e.src + '" style="position:absolute;left:50%;bottom:0;height:100%;transform:translateX(-50%);filter:drop-shadow(12px 8px 0 var(--blue))"></div>');
     return { n, upd() {} }; },
   term(e) { const n = $('<div class="el term"><div class="k">' + esc(e.kicker || 'KEY TERM') + '</div><div class="tmw"><span class="tm">' + esc(e.term) + '</span></div><div class="df">' + md(e.def) + '</div></div>');
     const tm = n.querySelector('.tm');

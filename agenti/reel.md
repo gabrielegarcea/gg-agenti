@@ -75,6 +75,12 @@ Regole del motore:
 - OUTRO: titolo al massimo 2 righe corte (~12 caratteri per riga), altrimenti copre il sondaggio. Controllalo nell'anteprima. Nello stesso reel non usare due volte lo stesso tipo di grafico.
 - LOGHI OBBLIGATORI quando un capitolo nomina club, leghe, federazioni, broadcaster o aziende: almeno in 2-3 capitoli.
 
+**UNO SCHEMA PER CAPITOLO (GG, 20 nov 2026).** Come nei caroselli: una slide, un'idea, uno schema. Ogni capitolo ha UN elemento grafico che si costruisce voce per voce mentre la voce lo nomina, più al massimo due righe di testo. Due schemi nello stesso capitolo non si usano: la colonna accumula gli elementi di tutti gli step e li rimpicciolisce finché non si leggono più. Se la notizia chiede due schemi, si spezza in due capitoli più corti: meglio otto capitoli da una o due frasi che cinque capitoli pieni di righe di testo.
+
+**Gli elementi che si costruiscono e quelli che arrivano tutti insieme.** `controllo.py --timeline` boccia il capitolo in cui non compare niente di nuovo per più di 4 secondi. Si costruiscono voce per voce (una voce per marker): `fact-table`, `index-list`, `stamp-list`, `steps`, `dim-list`, `cards`, `bars`, `h2h`, `versus`, `timeline`, `ledger`, `orbit`, `balance`, `waffle`, `rank`, `breakdown`. Arrivano tutti insieme e da soli lasciano un buco: `quote`, `stamp`, `walkout`, `fraction`, `bignum`, `donut`, `term`, `photo`. Questi si usano come colpo finale, sempre accanto a un elemento che si costruisce o a due righe di testo.
+
+**Lo schema si sceglie dal dato, non dal gusto**, e lo stesso tipo non torna due giorni di fila: un confronto chiede `h2h` o `versus`, una scomposizione di ricavi `breakdown` o `waterfall`, una crescita `growth`, una classifica che cambia `rank`, una quota `share-donut` o `waffle`, una regola uguale per tutti `balance`, una rete di rapporti `orbit`. L'elenco completo è in `effetti/EFFETTI.md`: leggere solo la riga che serve con `grep`, mai il file intero.
+
 Salva la bozza in `~/gg/reel/reel.json`, **senza marker e senza `at`**.
 
 **Effetti: lo stile del giorno (GG, 18 nov 2026).** Il primo mese ogni reel usa un abbinamento diverso di effetti, così a fine mese si vede con i dati quale funziona. Lo sceglie uno script, non tu: `python3 ~/gg-agenti/strumenti/reel/effetti/stile.py <data di DOMANI AAAA-MM-GG>`. Applicalo così: il blocco `style` va in `style` del reel.json; `cover.anim` in `cover.anim`; `text.anim` come `anim` su OGNI elemento `text`; `bignum.anim` come `anim` sul `bignum` (se c'è); `enter` come `enter` sugli elementi `logos`. La riga `Stile: ...` che stampa la copi nell'archivio, nella colonna `Grafico / Format reel` dopo il format. Non leggere `EFFETTI.md` intero (40 KB): se negli appunti c'è un dato che sta meglio in uno dei 60 elementi nuovi (gauge, waffle, rank, waterfall, versus, quote...), leggi solo la sua riga con `grep -n '<nome>' ~/gg-agenti/strumenti/reel/effetti/EFFETTI.md`. Se `controllo.py` segnala un effetto che non va, toglilo (torna lo standard) e scrivilo in una riga nel messaggio.
@@ -106,7 +112,14 @@ Nessun `SendUserFile`: in questa fase non c'è nessun file da mandare. Solo il m
 🔴 COSA DEVI FARE
 ━━━━━━━━━━━━━━━━━━
 ORA:
-• registra la voce leggendo il testo qui sopra, una piccola pausa tra una frase e l'altra, e mandami l'audio qui. Se cambi qualche parola, dimmelo.
+• registra il testo qui sopra con Memo Vocali (NON la nota vocale di WhatsApp: comprime
+  troppo e si sente). Impostazioni > Memo Vocali > Qualità audio > Senza perdita.
+• stanza silenziosa, telefono a un palmo dalla bocca, niente auto e niente altoparlante
+• una frase alla volta, con una pausa netta di circa un secondo fra una frase e l'altra:
+  è da lì che il motore capisce dove finisce ogni frase
+• se sbagli una frase fermati, aspetta un secondo e rileggila intera da capo: la falsa
+  partenza la tolgo io
+• mandami il file così com'è. Se cambi qualche parola, dimmelo.
 • se vuoi, allegami un PNG scontornato di <protagonista> per la copertina
 • mandami il logo <nome> (manca nel capitolo <N>)
 
@@ -114,7 +127,7 @@ Appena ricevo la voce ti mando il reel finito, con caption e i 3 hook per i Tria
 DOMANI alle 20:00 lo pubblichi su Instagram e TikTok.
 ```
 
-Se non serve niente oltre alla voce, nel blocco resta solo la prima riga di `ORA:`. I loghi nuovi da archiviare vanno in una riga sotto il blocco: `🆕 Loghi nuovi da archiviare: <nome> (fonte)`.
+Le cinque righe sulla registrazione ci sono SEMPRE, identiche ogni giorno (GG, 20 nov 2026: «fammelo ricordare ogni volta come fare l'audio, che sennò me lo scordo»). Se non serve niente oltre alla voce, nel blocco restano solo quelle. I loghi nuovi da archiviare vanno in una riga sotto il blocco: `🆕 Loghi nuovi da archiviare: <nome> (fonte)`.
 
 ## 5b. Scrivi nell'archivio
 **Solo dopo aver mandato il video finito** (punto 6.6), mai dopo il solo testo (regola di `comuni.md`: la riga si scrive quando il contenuto esiste) aggiungi la riga del reel nel foglio "Archivio Sport Management" (`{ARCHIVIO}`) come dice `comuni.md`: una chiamata `append_values` su `Contenuti!A1`, 19 colonne (A-S), **con la data di DOMANI** (è il giorno di pubblicazione) in formato AAAA-MM-GG. Nella colonna `Grafico / Format reel` scrivi il format usato (Explainer, Confronto o Storia in 3 atti) e il tipo di grafico principale, perché è da lì che domani la Ricerca capisce dove siamo nella rotazione. Nella colonna `Key terms` metti il `term` del reel. Se la chiamata non riesce, riprova una volta e aggiungi al messaggio una riga `⚠️ archivio non aggiornato`.

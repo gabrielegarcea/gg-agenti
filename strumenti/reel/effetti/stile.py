@@ -7,14 +7,21 @@ lo stile (scritto nell'archivio) con i numeri, e a fine mese si tiene quello che
 Uso:  python3 stile.py AAAA-MM-GG          (la data di PUBBLICAZIONE del reel)
 Stampa un blocco JSON da copiare nel reel.json e la riga "Stile:" da mettere nell'archivio.
 
-Ogni famiglia (titoli, transizione, sottotitoli, ...) ha il suo ordine mescolato una volta per sempre
+Ogni famiglia (transizione, camera, sottotitoli, ...) ha il suo ordine mescolato una volta per sempre
 (seme fisso) e avanza di uno al giorno: lo stesso effetto torna solo dopo che sono passati tutti gli altri.
+I titoli dei capitoli NON ruotano (GG, 20 nov 2026): sempre "rise", in Anton.
 """
 import datetime, json, os, random, sys
 
 ESCLUSI = {"trans": {"strobe"},   # strobe: lampeggio a ~14 Hz, rischio per chi soffre di epilessia fotosensibile
-           "text": {"word-roll", "strike-swap", "lead-flip", "recede", "acronym"},
-           "num": {"roman"}}   # roman e acronym hanno senso solo su dati scritti apposta (edizioni, sigle)   # servono parole scritte apposta o lasciano il testo grigio: si usano solo a mano
+           "text": {"word-roll", "strike-swap", "lead-flip", "recede", "acronym",   # servono parole scritte apposta o lasciano il testo grigio: si usano solo a mano
+                    "handwrite", "font-settle"},   # cambiano carattere (Caveat, JetBrains Mono): vedi FONT_FISSI
+           "kar": {"typewriter", "handwrite", "label-maker", "split-flap"},   # sottotitoli in Mono o Caveat
+           "num": {"roman"}}   # roman e acronym hanno senso solo su dati scritti apposta (edizioni, sigle)
+# FONT_FISSI (GG, 20 nov 2026): la rotazione misura quale MOVIMENTO funziona, non cambia l'identita' visiva.
+# I caratteri restano Anton e Inter come nei caroselli: niente rotazione dei titoli dei capitoli (sempre "rise",
+# in Anton) e fuori ogni effetto che sostituisce il font del testo.
+TITOLI = "rise"
 D0 = datetime.date(2026, 11, 23)  # giorno 0 = lancio
 H = os.path.dirname(os.path.abspath(__file__))
 
@@ -30,7 +37,7 @@ def main():
     pick = lambda kind, seme, off=0: (lambda L: L[(k + off) % len(L)])(famiglia(cat, kind, seme))
     testo = famiglia(cat, "text", "testo")
     s = {
-        "style": {"titles": pick("text", "titoli"), "transition": pick("trans", "trans"),
+        "style": {"titles": TITOLI, "transition": pick("trans", "trans"),
                   "camera": pick("cam", "cam"), "kar": pick("kar", "kar"),
                   "bg": pick("bg", "bg"), "bgOpts": {"o": 0.5}},
         "cover.anim": pick("text", "cover"),
