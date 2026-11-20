@@ -42,11 +42,14 @@ walk(cfg);
 
 const CSS = `
 @font-face{font-family:Inter;font-weight:500;src:url(${font('inter', 'inter-latin-500-normal.woff2')})}
+@font-face{font-family:Inter;font-weight:600;src:url(${font('inter', 'inter-latin-600-normal.woff2')})}
 @font-face{font-family:Inter;font-weight:700;src:url(${font('inter', 'inter-latin-700-normal.woff2')})}
 @font-face{font-family:Inter;font-weight:800;src:url(${font('inter', 'inter-latin-800-normal.woff2')})}
 @font-face{font-family:Inter;font-weight:900;src:url(${font('inter', 'inter-latin-900-normal.woff2')})}
-@font-face{font-family:Mono;font-weight:400;src:url(${font('jetbrains-mono', 'jetbrains-mono-latin-400-normal.woff2')})}
-@font-face{font-family:Mono;font-weight:700;src:url(${font('jetbrains-mono', 'jetbrains-mono-latin-700-normal.woff2')})}
+/* GG, 20 nov 2026: due soli font, Anton e Inter. "Mono" resta come nome perche' gli effetti lo usano in tanti punti,
+   ma punta ai file di Inter: 400 -> Inter 600, 700 -> Inter 800 (gli stessi pesi delle etichette dei caroselli). */
+@font-face{font-family:Mono;font-weight:400;src:url(${font('inter', 'inter-latin-600-normal.woff2')})}
+@font-face{font-family:Mono;font-weight:700;src:url(${font('inter', 'inter-latin-800-normal.woff2')})}
 @font-face{font-family:Anton;font-weight:400;src:url(${font('anton', 'anton-latin-400-normal.woff2')})}
 @font-face{font-family:Hand;font-weight:700;src:url(${font('caveat', 'caveat-latin-700-normal.woff2')})}
 :root{--paper:#F4F1EA;--ink:#0B1F3A;--blue:#1F4FD1;--orange:#FF6A13;--gray:#B4AEA2;--line:#DDD7CB;--mark:#FFC9A3}
@@ -478,7 +481,7 @@ window.draw = function (t) {
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
   const pageErr = []; page.on('pageerror', e => { pageErr.push(e.message); console.error('ERRORE nella pagina: ' + e.message); });
   await page.setContent(`<html><head><style>${CSS}</style></head><body></body></html>`);
-  await page.evaluate(async () => { for (const f of ['500 20px Inter', '700 20px Inter', '800 20px Inter', '900 20px Inter', '400 20px Mono', '700 20px Mono', '700 20px Hand', '400 20px Anton']) await document.fonts.load(f, 'Aa0€'); });
+  await page.evaluate(async () => { for (const f of ['500 20px Inter', '600 20px Inter', '700 20px Inter', '800 20px Inter', '900 20px Inter', '400 20px Mono', '700 20px Mono', '700 20px Hand', '400 20px Anton']) await document.fonts.load(f, 'Aa0€'); });
   await page.evaluate(([c, t, l]) => { window.CFG = c; window.TL = t; window.LOGO = l; }, [cfg, tl, LOGO_SVG]);
   // un file di effetti alla volta: se uno e' rotto gli altri funzionano lo stesso (e lo si dice)
   for (const x of FX_JS) { const n0 = pageErr.length; await page.addScriptTag({ content: x.src }); if (pageErr.length > n0) { console.error('ATTENZIONE: effetti/' + x.f + ' ha un errore ed e\' stato saltato'); pageErr.length = n0; } }
